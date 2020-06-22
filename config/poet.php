@@ -28,11 +28,7 @@ return [
                 'tag' => array(
                     'taxonomy' => 'tag'
                 ),
-                'date' => array(
-                    'title'       => 'Date',
-                    'meta_key'    => 'date',
-                    'date_format' => 'd/m/Y'
-                ),
+                'date',
             ),
         ],
 

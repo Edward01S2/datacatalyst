@@ -18,7 +18,7 @@
               <p class="font-light">{!! $x['excerpt'] !!} <a class="underline text-c-blue-100 hover:text-c-blue-200" href="{!! $x['url'] !!}">Read More</a></p>
               <div class="flex items-center">
                 @if($x['terms']['icon'])
-                  @svg($x['terms']['icon'], 'mr-1 w-4 h-4 fill-current', ['aria-label' => $x['terms']['name'], 'style' => 'color: ' . $x['terms']['color']])
+                  @svg($x['terms']['icon'], 'mr-1 mb-1 w-4 h-4 fill-current', ['aria-label' => $x['terms']['name'], 'style' => 'color: ' . $x['terms']['color']])
                 @endif 
                 <span class="uppercase font-light text-xs tracking-none">{!! $x['terms']['name'] !!}</span>
               </div>
@@ -45,7 +45,7 @@
                   </a>
                   <div class="flex items-center">
                     @if($x['terms']['icon'])
-                      @svg($x['terms']['icon'], 'mr-1 w-4 h-4 fill-current', ['aria-label' => $x['terms']['name'], 'style' => 'color: ' . $x['terms']['color']])
+                      @svg($x['terms']['icon'], 'mr-1 mb-1 w-4 h-4 fill-current', ['aria-label' => $x['terms']['name'], 'style' => 'color: ' . $x['terms']['color']])
                     @endif
                     <span class="uppercase font-light text-xs tracking-none">{!! $x['terms']['name'] !!}</span>
                   </div>

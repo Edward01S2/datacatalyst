@@ -1,1 +1,11495 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[4],{"+Gz/":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.HoverMode=void 0,function(t){t.bubble="bubble",t.connect="connect",t.grab="grab",t.repulse="repulse",t.slow="slow"}(e.HoverMode||(e.HoverMode={}))},"+HUL":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.ShapeType=void 0,function(t){t.char="char",t.character="character",t.circle="circle",t.edge="edge",t.image="image",t.images="images",t.line="line",t.polygon="polygon",t.square="square",t.star="star",t.triangle="triangle"}(e.ShapeType||(e.ShapeType={}))},"+UjZ":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Collisions=void 0;const o=i("ZlLd");e.Collisions=class{constructor(){this.enable=!1,this.mode=o.CollisionMode.bounce}load(t){void 0!==t&&(void 0!==t.enable&&(this.enable=t.enable),void 0!==t.mode&&(this.mode=t.mode))}}},"/6af":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Range=void 0;e.Range=class{constructor(t,e){this.position={x:t,y:e}}}},"/XgI":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Trail=void 0;const o=i("vRcM");e.Trail=class{constructor(){this.enable=!1,this.length=10,this.fillColor=new o.OptionsColor,this.fillColor.value="#000000"}load(t){void 0!==t&&(void 0!==t.enable&&(this.enable=t.enable),this.fillColor=o.OptionsColor.create(this.fillColor,t.fillColor),void 0!==t.length&&(this.length=t.length))}}},"01Bu":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.PolygonDrawer=void 0;const o=i("gYxR");class s extends o.PolygonDrawerBase{getSidesData(t,e){var i,o;const s=t.shapeData,n=null!==(o=null!==(i=null==s?void 0:s.sides)&&void 0!==i?i:null==s?void 0:s.nb_sides)&&void 0!==o?o:5;return{count:{denominator:1,numerator:n},length:2.66*e/(n/3)}}getCenter(t,e){var i,o;const s=t.shapeData;return{x:-e/((null!==(o=null!==(i=null==s?void 0:s.sides)&&void 0!==i?i:null==s?void 0:s.nb_sides)&&void 0!==o?o:5)/3.5),y:-e/.76}}}e.PolygonDrawer=s},"0pRb":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Particles=void 0;const o=i("slsB"),s=i("C9b5"),n=i("1WdJ");e.Particles=class{constructor(t){this.container=t,this.array=[],this.interactionManager=new n.InteractionManager(t);const e=this.container.canvas.size;this.linksColors={},this.quadTree=new s.QuadTree(new s.Rectangle(0,0,e.width,e.height),4)}get count(){return this.array.length}init(){const t=this.container,e=t.options;let i=!1;for(const[,e]of t.plugins)if(void 0!==e.particlesInitialization&&(i=e.particlesInitialization()),i)break;if(!i)for(let t=this.count;t<e.particles.number.value;t++)this.addParticle();if(e.infection.enable)for(let t=0;t<e.infection.infections;t++){const t=this.array.filter(t=>void 0===t.infectionStage);s.Utils.itemFromArray(t).startInfection(0)}this.interactionManager.init(),t.noise.init()}redraw(){this.clear(),this.init(),this.draw(0)}removeAt(t,e){if(t>=0&&t<=this.count)for(const i of this.array.splice(t,null!=e?e:1))i.destroy()}remove(t){this.removeAt(this.array.indexOf(t))}update(t){const e=this.container,i=[];e.noise.update();for(const o of this.array){o.bubble.inRange=!1;for(const[,i]of e.plugins){if(o.destroyed)break;i.particleUpdate&&i.particleUpdate(o,t)}o.destroyed||o.update(t),o.destroyed?i.push(o):this.quadTree.insert(new s.Point(o.getPosition(),o))}for(const t of i)this.remove(t);this.interactionManager.interact(t)}draw(t){const e=this.container;e.canvas.clear();const i=this.container.canvas.size;this.quadTree=new s.QuadTree(new s.Rectangle(0,0,i.width,i.height),4),this.update(t);for(const[,i]of e.plugins)e.canvas.drawPlugin(i,t);for(const e of this.array)e.draw(t)}clear(){this.array=[]}push(t,e){var i;const o=this.container,s=o.options,n=s.particles.number.limit*o.density;if(this.pushing=!0,n>0){const e=this.count+t-n;e>0&&this.removeQuantity(e)}let r;e&&(r=null!==(i=e.position)&&void 0!==i?i:{x:0,y:0});for(let e=0;e<t;e++)this.addParticle(r);s.particles.move.enable||this.container.play(),this.pushing=!1}addParticle(t,e){const i=new o.Particle(this.container,t,e);return this.array.push(i),i}removeQuantity(t){const e=this.container.options;this.removeAt(0,t),e.particles.move.enable||this.container.play()}}},"1WdJ":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.InteractionManager=void 0;const o=i("GMZW"),s=i("iWbZ"),n=i("wjdy"),r=i("3d63"),a=i("Fqm0"),l=i("eFzc"),c=i("6uQx"),d=i("qOOR");e.InteractionManager=class{constructor(t){this.container=t,this.externalInteractors=[new n.Bubbler(t),new r.Connector(t),new o.Grabber(t),new s.Repulser(t)],this.particleInteractors=[new l.Attractor(t),new c.Collider(t),new d.Infecter(t),new a.Linker(t)]}init(){}interact(t){this.externalInteract(t),this.particlesInteract(t)}externalInteract(t){for(const e of this.externalInteractors)e.isEnabled()&&e.interact(t)}particlesInteract(t){for(const e of this.container.particles.array){for(const t of this.externalInteractors)t.reset(e);for(const i of this.particleInteractors)i.isEnabled(e)&&i.interact(e,t)}}}},"1X1F":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Shadow=void 0;const o=i("vRcM");e.Shadow=class{constructor(){this.blur=0,this.color=new o.OptionsColor,this.enable=!1,this.offset={x:0,y:0},this.color.value="#000000"}load(t){void 0!==t&&(void 0!==t.blur&&(this.blur=t.blur),this.color=o.OptionsColor.create(this.color,t.color),void 0!==t.enable&&(this.enable=t.enable),void 0!==t.offset&&(void 0!==t.offset.x&&(this.offset.x=t.offset.x),void 0!==t.offset.y&&(this.offset.y=t.offset.y)))}}},"2FAX":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.NoiseDelay=void 0;const o=i("OXHI");e.NoiseDelay=class{constructor(){this.random=new o.NoiseRandom,this.value=0}load(t){var e;void 0!==t&&(null===(e=this.random)||void 0===e||e.load(t.random),void 0!==t.value&&(this.value=t.value))}}},"2kAo":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.EventListeners=void 0;const o=i("ZlLd"),s=i("ZRNA");class n{constructor(t){this.container=t,this.canPush=!0,this.mouseMoveHandler=t=>this.mouseTouchMove(t),this.touchStartHandler=t=>this.mouseTouchMove(t),this.touchMoveHandler=t=>this.mouseTouchMove(t),this.touchEndHandler=()=>this.mouseTouchFinish(),this.mouseLeaveHandler=()=>this.mouseTouchFinish(),this.touchCancelHandler=()=>this.mouseTouchFinish(),this.touchEndClickHandler=t=>this.mouseTouchClick(t),this.mouseUpHandler=t=>this.mouseTouchClick(t),this.visibilityChangeHandler=()=>this.handleVisibilityChange(),this.resizeHandler=()=>this.handleWindowResize()}static manageListener(t,e,i,o,s){if(o){let o={passive:!0};"boolean"==typeof s?o.capture=s:void 0!==s&&(o=s),t.addEventListener(e,i,o)}else{const o=s;t.removeEventListener(e,i,o)}}addListeners(){this.manageListeners(!0)}removeListeners(){this.manageListeners(!1)}manageListeners(t){const e=this.container,i=e.options,r=i.interactivity.detectsOn;r===o.InteractivityDetect.window?e.interactivity.element=window:r===o.InteractivityDetect.parent&&e.canvas.element?e.interactivity.element=e.canvas.element.parentNode:e.interactivity.element=e.canvas.element;const a=e.interactivity.element;a&&(i.interactivity.events.onHover.enable||i.interactivity.events.onClick.enable)&&(n.manageListener(a,s.Constants.mouseMoveEvent,this.mouseMoveHandler,t),n.manageListener(a,s.Constants.touchStartEvent,this.touchStartHandler,t),n.manageListener(a,s.Constants.touchMoveEvent,this.touchMoveHandler,t),i.interactivity.events.onClick.enable||n.manageListener(a,s.Constants.touchEndEvent,this.touchEndHandler,t),n.manageListener(a,s.Constants.mouseLeaveEvent,this.mouseLeaveHandler,t),n.manageListener(a,s.Constants.touchCancelEvent,this.touchCancelHandler,t)),i.interactivity.events.onClick.enable&&a&&(n.manageListener(a,s.Constants.touchEndEvent,this.touchEndClickHandler,t),n.manageListener(a,s.Constants.mouseUpEvent,this.mouseUpHandler,t)),i.interactivity.events.resize&&n.manageListener(window,s.Constants.resizeEvent,this.resizeHandler,t),document&&n.manageListener(document,s.Constants.visibilityChangeEvent,this.visibilityChangeHandler,t,!1)}handleWindowResize(){const t=this.container,e=t.options,i=t.canvas.element;if(!i)return;const o=t.retina.pixelRatio;t.canvas.size.width=i.offsetWidth*o,t.canvas.size.height=i.offsetHeight*o,i.width=t.canvas.size.width,i.height=t.canvas.size.height,e.particles.move.enable||t.particles.redraw(),t.densityAutoParticles();for(const[,e]of t.plugins)void 0!==e.resize&&e.resize()}handleVisibilityChange(){const t=this.container;t.options.pauseOnBlur&&((null===document||void 0===document?void 0:document.hidden)?(t.pageHidden=!0,t.pause()):(t.pageHidden=!1,t.getAnimationStatus()?t.play(!0):t.draw()))}mouseTouchMove(t){var e,i,n;const r=this.container,a=r.options;let l;const c=r.canvas.element;if(t.type.startsWith("mouse")){this.canPush=!0;const i=t;if(void 0===(null===(e=r.interactivity)||void 0===e?void 0:e.element))return;if(r.interactivity.element===window){if(c){const t=c.getBoundingClientRect();l={x:i.clientX-t.left,y:i.clientY-t.top}}}else if(a.interactivity.detectsOn===o.InteractivityDetect.parent){const t=i.target,e=i.currentTarget;if(t&&e){const o=t.getBoundingClientRect(),s=e.getBoundingClientRect();l={x:i.offsetX+o.left-s.left,y:i.offsetY+o.top-s.top}}else l={x:i.offsetX||i.clientX,y:i.offsetY||i.clientY}}else i.target===r.canvas.element&&(l={x:i.offsetX||i.clientX,y:i.offsetY||i.clientY})}else{this.canPush="touchmove"!==t.type;const e=t,o=e.touches[e.touches.length-1],s=null==c?void 0:c.getBoundingClientRect();l={x:o.clientX-(null!==(i=null==s?void 0:s.left)&&void 0!==i?i:0),y:o.clientY-(null!==(n=null==s?void 0:s.top)&&void 0!==n?n:0)}}const d=r.retina.pixelRatio;l&&(l.x*=d,l.y*=d),r.interactivity.mouse.position=l,r.interactivity.status=s.Constants.mouseMoveEvent}mouseTouchFinish(){const t=this.container;delete t.interactivity.mouse.position,t.interactivity.status=s.Constants.mouseLeaveEvent}mouseTouchClick(t){const e=this.container,i=e.options;let o=!1;const s=e.interactivity.mouse.position;if(void 0!==s&&i.interactivity.events.onClick.enable){for(const[,t]of e.plugins)if(void 0!==t.clickPositionValid&&(o=t.clickPositionValid(s),o))break;o||this.doMouseTouchClick(t)}}doMouseTouchClick(t){const e=this.container,i=e.options;if(this.canPush){const t=e.interactivity.mouse.position;if(!t)return;e.interactivity.mouse.clickPosition={x:t.x,y:t.y},e.interactivity.mouse.clickTime=(new Date).getTime();const o=i.interactivity.events.onClick;if(o.mode instanceof Array)for(const t of o.mode)this.handleClickMode(t);else this.handleClickMode(o.mode)}"touchend"===t.type&&setTimeout(()=>this.mouseTouchFinish(),500)}handleClickMode(t){const e=this.container,i=e.options,s=i.interactivity.modes.push.quantity,n=i.interactivity.modes.remove.quantity;switch(t){case o.ClickMode.push:s>0&&(i.particles.move.enable||1===s?e.particles.push(s,e.interactivity.mouse):s>1&&e.particles.push(s));break;case o.ClickMode.remove:e.particles.removeQuantity(n);break;case o.ClickMode.bubble:e.bubble.clicking=!0;break;case o.ClickMode.repulse:e.repulse.clicking=!0,e.repulse.count=0;for(const t of e.repulse.particles)t.velocity.horizontal=t.initialVelocity.horizontal,t.velocity.vertical=t.initialVelocity.vertical;e.repulse.particles=[],e.repulse.finish=!1,setTimeout(()=>{e.destroyed||(e.repulse.clicking=!1)},1e3*i.interactivity.modes.repulse.duration);break;case o.ClickMode.pause:e.getAnimationStatus()?e.pause():e.play()}for(const[,i]of e.plugins)i.handleClickMode&&i.handleClickMode(t)}}e.EventListeners=n},"3R7e":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Opacity=void 0;const o=i("NiW4"),s=i("AGKx");e.Opacity=class{constructor(){this.animation=new o.OpacityAnimation,this.random=new s.OpacityRandom,this.value=1}get anim(){return this.animation}set anim(t){this.animation=t}load(t){var e;void 0!==t&&(this.animation.load(null!==(e=t.animation)&&void 0!==e?e:t.anim),void 0!==t.random&&("boolean"==typeof t.random?this.random.enable=t.random:this.random.load(t.random)),void 0!==t.value&&(this.value=t.value))}}},"3d63":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Connector=void 0;const o=i("C9b5"),s=i("ubkD");e.Connector=class{constructor(t){this.container=t}isEnabled(){const t=this.container,e=t.interactivity.mouse,i=t.options.interactivity.events;if(!i.onHover.enable||!e.position)return!1;const n=i.onHover.mode;return o.Utils.isInArray(s.HoverMode.connect,n)}reset(){}interact(){const t=this.container;if(t.options.interactivity.events.onHover.enable&&"mousemove"===t.interactivity.status){const e=t.interactivity.mouse.position;if(!e)return;const i=Math.abs(t.retina.connectModeRadius),s=t.particles.quadTree.query(new o.Circle(e.x,e.y,i));let n=0;for(const e of s){const i=e.getPosition();for(const o of s.slice(n+1)){const s=o.getPosition(),n=Math.abs(t.retina.connectModeDistance),r=Math.abs(i.x-s.x),a=Math.abs(i.y-s.y);r<n&&a<n&&t.canvas.drawConnectLine(e,o)}++n}}}}},"3yRE":function(t,e,i){t.exports=function(){"use strict";function t(t,e,i){return e in t?Object.defineProperty(t,e,{value:i,enumerable:!0,configurable:!0,writable:!0}):t[e]=i,t}function e(t,e){var i=Object.keys(t);if(Object.getOwnPropertySymbols){var o=Object.getOwnPropertySymbols(t);e&&(o=o.filter((function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable}))),i.push.apply(i,o)}return i}function i(i){for(var o=1;o<arguments.length;o++){var s=null!=arguments[o]?arguments[o]:{};o%2?e(Object(s),!0).forEach((function(e){t(i,e,s[e])})):Object.getOwnPropertyDescriptors?Object.defineProperties(i,Object.getOwnPropertyDescriptors(s)):e(Object(s)).forEach((function(t){Object.defineProperty(i,t,Object.getOwnPropertyDescriptor(s,t))}))}return i}function o(t){return Array.from(new Set(t))}function s(){return navigator.userAgent.includes("Node.js")||navigator.userAgent.includes("jsdom")}function n(t,e){var i;return function(){var o=this,s=arguments,n=function(){i=null,t.apply(o,s)};clearTimeout(i),i=setTimeout(n,e)}}function r(t,e,i={}){return new Function(["$data",...Object.keys(i)],`var result; with($data) { result = ${t} }; return result`)(e,...Object.values(i))}const a=/^x-(on|bind|data|text|html|model|if|for|show|cloak|transition|ref)\b/;function l(t){const e=d(t.name);return a.test(e)}function c(t,e){return Array.from(t.attributes).filter(l).map(t=>{const e=d(t.name),i=e.match(a),o=e.match(/:([a-zA-Z\-:]+)/),s=e.match(/\.[^.\]]+(?=[^\]]*$)/g)||[];return{type:i?i[1]:null,value:o?o[1]:null,modifiers:s.map(t=>t.replace(".","")),expression:t.value}}).filter(t=>!e||t.type===e)}function d(t){return t.startsWith("@")?t.replace("@","x-on:"):t.startsWith(":")?t.replace(":","x-bind:"):t}function u(t,e,i=!1){if(i)return e();const o=c(t,"transition"),s=c(t,"show")[0];if(s&&s.modifiers.includes("transition")){let i=s.modifiers;if(i.includes("out")&&!i.includes("in"))return e();const o=i.includes("in")&&i.includes("out");i=o?i.filter((t,e)=>e<i.indexOf("out")):i,function(t,e,i){const o={duration:v(e,"duration",150),origin:v(e,"origin","center"),first:{opacity:0,scale:v(e,"scale",95)},second:{opacity:1,scale:100}};p(t,e,i,()=>{},o)}(t,i,e)}else o.filter(t=>["enter","enter-start","enter-end"].includes(t.value)).length>0?function(t,e,i){const o=(e.find(t=>"enter"===t.value)||{expression:""}).expression.split(" ").filter(t=>""!==t),s=(e.find(t=>"enter-start"===t.value)||{expression:""}).expression.split(" ").filter(t=>""!==t),n=(e.find(t=>"enter-end"===t.value)||{expression:""}).expression.split(" ").filter(t=>""!==t);f(t,o,s,n,i,()=>{})}(t,o,e):e()}function h(t,e,i=!1){if(i)return e();const o=c(t,"transition"),s=c(t,"show")[0];if(s&&s.modifiers.includes("transition")){let i=s.modifiers;if(i.includes("in")&&!i.includes("out"))return e();const o=i.includes("in")&&i.includes("out");i=o?i.filter((t,e)=>e>i.indexOf("out")):i,function(t,e,i,o){const s={duration:i?v(e,"duration",150):v(e,"duration",150)/2,origin:v(e,"origin","center"),first:{opacity:1,scale:100},second:{opacity:0,scale:v(e,"scale",95)}};p(t,e,()=>{},o,s)}(t,i,o,e)}else o.filter(t=>["leave","leave-start","leave-end"].includes(t.value)).length>0?function(t,e,i){const o=(e.find(t=>"leave"===t.value)||{expression:""}).expression.split(" ").filter(t=>""!==t),s=(e.find(t=>"leave-start"===t.value)||{expression:""}).expression.split(" ").filter(t=>""!==t),n=(e.find(t=>"leave-end"===t.value)||{expression:""}).expression.split(" ").filter(t=>""!==t);f(t,o,s,n,()=>{},i)}(t,o,e):e()}function v(t,e,i){if(-1===t.indexOf(e))return i;const o=t[t.indexOf(e)+1];if(!o)return i;if("scale"===e&&!m(o))return i;if("duration"===e){let t=o.match(/([0-9]+)ms/);if(t)return t[1]}return"origin"===e&&["top","right","left","center","bottom"].includes(t[t.indexOf(e)+2])?[o,t[t.indexOf(e)+2]].join(" "):o}function p(t,e,i,o,s){const n=t.style.opacity,r=t.style.transform,a=t.style.transformOrigin,l=!e.includes("opacity")&&!e.includes("scale"),c=l||e.includes("opacity"),d=l||e.includes("scale"),u={start(){c&&(t.style.opacity=s.first.opacity),d&&(t.style.transform=`scale(${s.first.scale/100})`)},during(){d&&(t.style.transformOrigin=s.origin),t.style.transitionProperty=[c?"opacity":"",d?"transform":""].join(" ").trim(),t.style.transitionDuration=s.duration/1e3+"s",t.style.transitionTimingFunction="cubic-bezier(0.4, 0.0, 0.2, 1)"},show(){i()},end(){c&&(t.style.opacity=s.second.opacity),d&&(t.style.transform=`scale(${s.second.scale/100})`)},hide(){o()},cleanup(){c&&(t.style.opacity=n),d&&(t.style.transform=r),d&&(t.style.transformOrigin=a),t.style.transitionProperty=null,t.style.transitionDuration=null,t.style.transitionTimingFunction=null}};y(t,u)}function f(t,e,i,o,s,n){const r=t.__x_original_classes||[],a={start(){t.classList.add(...i)},during(){t.classList.add(...e)},show(){s()},end(){t.classList.remove(...i.filter(t=>!r.includes(t))),t.classList.add(...o)},hide(){n()},cleanup(){t.classList.remove(...e.filter(t=>!r.includes(t))),t.classList.remove(...o.filter(t=>!r.includes(t)))}};y(t,a)}function y(t,e){e.start(),e.during(),requestAnimationFrame(()=>{let i=1e3*Number(getComputedStyle(t).transitionDuration.replace(/,.*/,"").replace("s",""));e.show(),requestAnimationFrame(()=>{e.end(),setTimeout(()=>{e.hide(),t.isConnected&&e.cleanup()},i)})})}function m(t){return!isNaN(t)}function b(t,e,o,s,n){"template"!==e.tagName.toLowerCase()&&console.warn("Alpine: [x-for] directive should only be added to <template> tags.");let r=function(t){let e=/,([^,\}\]]*)(?:,([^,\}\]]*))?$/,i=t.match(/([\s\S]*?)\s+(?:in|of)\s+([\s\S]*)/);if(!i)return;let o={};o.items=i[2].trim();let s=i[1].trim().replace(/^\(|\)$/g,""),n=s.match(e);return n?(o.item=s.replace(e,"").trim(),o.index=n[1].trim(),n[2]&&(o.collection=n[2].trim())):o.item=s,o}(o),a=function(t,e,i,o){let s=c(e,"if")[0];return s&&!t.evaluateReturnExpression(e,s.expression)?[]:t.evaluateReturnExpression(e,i.items,o)}(t,e,r,n),l=e;a.forEach((o,d)=>{let h=function(t,e,o,s,n){let r=n?i({},n):{};return r[t.item]=e,t.index&&(r[t.index]=o),t.collection&&(r[t.collection]=s),r}(r,o,d,a,n()),v=function(t,e,i,o){let s=c(e,"bind").filter(t=>"key"===t.value)[0];return s?t.evaluateReturnExpression(e,s.expression,()=>o):i}(t,e,d,h),p=function(t,e){if(!t)return;if(t.__x_for_key===e)return t;let i=t;for(;i;){if(i.__x_for_key===e)return i.parentElement.insertBefore(i,t);i=!(!i.nextElementSibling||void 0===i.nextElementSibling.__x_for_key)&&i.nextElementSibling}}(l.nextElementSibling,v);p?(delete p.__x_for_key,p.__x_for=h,t.updateElements(p,()=>p.__x_for)):(p=function(t,e){let i=document.importNode(t.content,!0);return 1!==i.childElementCount&&console.warn("Alpine: <template> tag with [x-for] encountered with multiple element roots. Make sure <template> only has a single child node."),e.parentElement.insertBefore(i,e.nextElementSibling),e.nextElementSibling}(e,l),u(p,()=>{},s),p.__x_for=h,t.initializeElements(p,()=>p.__x_for)),l=p,l.__x_for_key=v}),function(t){for(var e=!(!t.nextElementSibling||void 0===t.nextElementSibling.__x_for_key)&&t.nextElementSibling;e;){let t=e,i=e.nextElementSibling;h(e,()=>{t.remove()}),e=!(!i||void 0===i.__x_for_key)&&i}}(l)}function g(t,e,i,s,n,r){var a=t.evaluateReturnExpression(e,s,n);if("value"===i)if(void 0===a&&s.match(/\./).length&&(a=""),"radio"===e.type)void 0===e.attributes.value&&"bind"===r?e.value=a:"bind"!==r&&(e.checked=e.value==a);else if("checkbox"===e.type){if(Array.isArray(a)){let t=!1;a.forEach(i=>{i==e.value&&(t=!0)}),e.checked=t}else e.checked=!!a;"string"==typeof a&&(e.value=a)}else if("SELECT"===e.tagName)!function(t,e){const i=[].concat(e).map(t=>t+"");Array.from(t.options).forEach(t=>{t.selected=i.includes(t.value||t.text)})}(e,a);else{if(e.value===a)return;e.value=a}else if("class"===i)if(Array.isArray(a)){const t=e.__x_original_classes||[];e.setAttribute("class",o(t.concat(a)).join(" "))}else if("object"==typeof a)Object.keys(a).sort((t,e)=>a[t]-a[e]).forEach(t=>{a[t]?t.split(" ").filter(Boolean).forEach(t=>e.classList.add(t)):t.split(" ").filter(Boolean).forEach(t=>e.classList.remove(t))});else{const t=e.__x_original_classes||[],i=a.split(" ").filter(Boolean);e.setAttribute("class",o(t.concat(i)).join(" "))}else[null,void 0,!1].includes(a)?e.removeAttribute(i):function(t){return["disabled","checked","required","readonly","hidden","open","selected","autofocus","itemscope","multiple","novalidate","allowfullscreen","allowpaymentrequest","formnovalidate","autoplay","controls","loop","muted","playsinline","default","ismap","reversed","async","defer","nomodule"].includes(t)}(i)?e.setAttribute(i,i):e.setAttribute(i,a)}function w(t,e,i,o,s,r={}){if(o.includes("away")){let n=a=>{e.contains(a.target)||e.offsetWidth<1&&e.offsetHeight<1||(P(t,s,a,r),o.includes("once")&&document.removeEventListener(i,n))};document.addEventListener(i,n)}else{let a=o.includes("window")?window:o.includes("document")?document:e,l=n=>{a!==window&&a!==document||document.body.contains(e)?function(t){return["keydown","keyup"].includes(t)}(i)&&function(t,e){let i=e.filter(t=>!["window","document","prevent","stop"].includes(t));if(i.includes("debounce")){let t=i.indexOf("debounce");i.splice(t,m((i[t+1]||"invalid-wait").split("ms")[0])?2:1)}if(0===i.length)return!1;if(1===i.length&&i[0]===x(t.key))return!1;const o=["ctrl","shift","alt","meta","cmd","super"].filter(t=>i.includes(t));return i=i.filter(t=>!o.includes(t)),!(o.length>0&&o.filter(e=>("cmd"!==e&&"super"!==e||(e="meta"),t[e+"Key"])).length===o.length&&i[0]===x(t.key))}(n,o)||(o.includes("prevent")&&n.preventDefault(),o.includes("stop")&&n.stopPropagation(),o.includes("self")&&n.target!==e)||(!1===P(t,s,n,r)?n.preventDefault():o.includes("once")&&a.removeEventListener(i,l)):a.removeEventListener(i,l)};if(o.includes("debounce")){let t=o[o.indexOf("debounce")+1]||"invalid-wait",e=m(t.split("ms")[0])?Number(t.split("ms")[0]):250;l=n(l,e)}a.addEventListener(i,l)}}function P(t,e,o,s){return t.evaluateCommandExpression(o.target,e,()=>i({},s(),{$event:o}))}function x(t){switch(t){case"/":return"slash";case" ":case"Spacebar":return"space";default:return t&&t.replace(/([a-z])([A-Z])/g,"$1-$2").replace(/[_\s]/,"-").toLowerCase()}}function M(t,e,i){return"radio"===t.type&&(t.hasAttribute("name")||t.setAttribute("name",i)),(i,o)=>{if(i instanceof CustomEvent&&i.detail)return i.detail;if("checkbox"===t.type)return Array.isArray(o)?i.target.checked?o.concat([i.target.value]):o.filter(t=>t!==i.target.value):i.target.checked;if("select"===t.tagName.toLowerCase()&&t.multiple)return e.includes("number")?Array.from(i.target.selectedOptions).map(t=>{const e=t.value||t.text,i=e?parseFloat(e):null;return isNaN(i)?e:i}):Array.from(i.target.selectedOptions).map(t=>t.value||t.text);{const t=i.target.value,o=t?parseFloat(t):null;return e.includes("number")?isNaN(o)?t:o:e.includes("trim")?t.trim():t}}}const{isArray:O}=Array,{getPrototypeOf:_,create:k,defineProperty:C,defineProperties:S,isExtensible:z,getOwnPropertyDescriptor:A,getOwnPropertyNames:T,getOwnPropertySymbols:E,preventExtensions:R,hasOwnProperty:D}=Object,{push:I,concat:j,map:L}=Array.prototype;function U(t){return void 0===t}function B(t){return"function"==typeof t}const H=new WeakMap;function V(t,e){H.set(t,e)}const F=t=>H.get(t)||t;function q(t,e){return t.valueIsObservable(e)?t.getProxy(e):e}function N(t,e,i){j.call(T(i),E(i)).forEach(o=>{let s=A(i,o);s.configurable||(s=tt(t,s,q)),C(e,o,s)}),R(e)}class W{constructor(t,e){this.originalTarget=e,this.membrane=t}get(t,e){const{originalTarget:i,membrane:o}=this,s=i[e],{valueObserved:n}=o;return n(i,e),o.getProxy(s)}set(t,e,i){const{originalTarget:o,membrane:{valueMutated:s}}=this;return o[e]!==i?(o[e]=i,s(o,e)):"length"===e&&O(o)&&s(o,e),!0}deleteProperty(t,e){const{originalTarget:i,membrane:{valueMutated:o}}=this;return delete i[e],o(i,e),!0}apply(t,e,i){}construct(t,e,i){}has(t,e){const{originalTarget:i,membrane:{valueObserved:o}}=this;return o(i,e),e in i}ownKeys(t){const{originalTarget:e}=this;return j.call(T(e),E(e))}isExtensible(t){const e=z(t);if(!e)return e;const{originalTarget:i,membrane:o}=this,s=z(i);return s||N(o,t,i),s}setPrototypeOf(t,e){}getPrototypeOf(t){const{originalTarget:e}=this;return _(e)}getOwnPropertyDescriptor(t,e){const{originalTarget:i,membrane:o}=this,{valueObserved:s}=this.membrane;s(i,e);let n=A(i,e);if(U(n))return n;const r=A(t,e);return U(r)?(n=tt(o,n,q),n.configurable||C(t,e,n),n):r}preventExtensions(t){const{originalTarget:e,membrane:i}=this;return N(i,t,e),R(e),!0}defineProperty(t,e,i){const{originalTarget:o,membrane:s}=this,{valueMutated:n}=s,{configurable:r}=i;if(D.call(i,"writable")&&!D.call(i,"value")){const t=A(o,e);i.value=t.value}return C(o,e,function(t){return D.call(t,"value")&&(t.value=F(t.value)),t}(i)),!1===r&&C(t,e,tt(s,i,q)),n(o,e),!0}}function $(t,e){return t.valueIsObservable(e)?t.getReadOnlyProxy(e):e}class G{constructor(t,e){this.originalTarget=e,this.membrane=t}get(t,e){const{membrane:i,originalTarget:o}=this,s=o[e],{valueObserved:n}=i;return n(o,e),i.getReadOnlyProxy(s)}set(t,e,i){return!1}deleteProperty(t,e){return!1}apply(t,e,i){}construct(t,e,i){}has(t,e){const{originalTarget:i,membrane:{valueObserved:o}}=this;return o(i,e),e in i}ownKeys(t){const{originalTarget:e}=this;return j.call(T(e),E(e))}setPrototypeOf(t,e){}getOwnPropertyDescriptor(t,e){const{originalTarget:i,membrane:o}=this,{valueObserved:s}=o;s(i,e);let n=A(i,e);if(U(n))return n;const r=A(t,e);return U(r)?(n=tt(o,n,$),D.call(n,"set")&&(n.set=void 0),n.configurable||C(t,e,n),n):r}preventExtensions(t){return!1}defineProperty(t,e,i){return!1}}function Z(t){let e=void 0;return O(t)?e=[]:"object"==typeof t&&(e={}),e}const X=Object.prototype;function Q(t){if(null===t)return!1;if("object"!=typeof t)return!1;if(O(t))return!0;const e=_(t);return e===X||null===e||null===_(e)}const J=(t,e)=>{},K=(t,e)=>{},Y=t=>t;function tt(t,e,i){const{set:o,get:s}=e;return D.call(e,"value")?e.value=i(t,e.value):(U(s)||(e.get=function(){return i(t,s.call(F(this)))}),U(o)||(e.set=function(e){o.call(F(this),t.unwrapProxy(e))})),e}class et{constructor(t){if(this.valueDistortion=Y,this.valueMutated=K,this.valueObserved=J,this.valueIsObservable=Q,this.objectGraph=new WeakMap,!U(t)){const{valueDistortion:e,valueMutated:i,valueObserved:o,valueIsObservable:s}=t;this.valueDistortion=B(e)?e:Y,this.valueMutated=B(i)?i:K,this.valueObserved=B(o)?o:J,this.valueIsObservable=B(s)?s:Q}}getProxy(t){const e=F(t),i=this.valueDistortion(e);if(this.valueIsObservable(i)){const o=this.getReactiveState(e,i);return o.readOnly===t?t:o.reactive}return i}getReadOnlyProxy(t){t=F(t);const e=this.valueDistortion(t);return this.valueIsObservable(e)?this.getReactiveState(t,e).readOnly:e}unwrapProxy(t){return F(t)}getReactiveState(t,e){const{objectGraph:i}=this;let o=i.get(e);if(o)return o;const s=this;return o={get reactive(){const i=new W(s,e),o=new Proxy(Z(e),i);return V(o,t),C(this,"reactive",{value:o}),o},get readOnly(){const i=new G(s,e),o=new Proxy(Z(e),i);return V(o,t),C(this,"readOnly",{value:o}),o}},i.set(e,o),o}}class it{constructor(t,e=null){this.$el=t;const i=this.$el.getAttribute("x-data"),o=""===i?"{}":i,s=this.$el.getAttribute("x-init");this.unobservedData=e||r(o,{});let{membrane:n,data:a}=this.wrapDataInObservable(this.unobservedData);var l;this.$data=a,this.membrane=n,this.unobservedData.$el=this.$el,this.unobservedData.$refs=this.getRefsProxy(),this.nextTickStack=[],this.unobservedData.$nextTick=t=>{this.nextTickStack.push(t)},this.watchers={},this.unobservedData.$watch=(t,e)=>{this.watchers[t]||(this.watchers[t]=[]),this.watchers[t].push(e)},this.showDirectiveStack=[],this.showDirectiveLastElement,s&&!e&&(this.pauseReactivity=!0,l=this.evaluateReturnExpression(this.$el,s),this.pauseReactivity=!1),this.initializeElements(this.$el),this.listenForNewElementsToInitialize(),"function"==typeof l&&l.call(this.$data)}getUnobservedData(){return function(t,e){let i=t.unwrapProxy(e),o={};return Object.keys(i).forEach(t=>{["$el","$refs","$nextTick","$watch"].includes(t)||(o[t]=i[t])}),o}(this.membrane,this.$data)}wrapDataInObservable(t){var e=this;let i=n((function(){e.updateElements(e.$el)}),0);return function(t,e){let i=new et({valueMutated(t,i){e(t,i)}});return{data:i.getProxy(t),membrane:i}}(t,(t,o)=>{e.watchers[o]?e.watchers[o].forEach(e=>e(t[o])):Object.keys(e.watchers).filter(t=>t.includes(".")).forEach(i=>{let s=i.split(".");o===s[s.length-1]&&s.reduce((s,n)=>(Object.is(t,s)&&e.watchers[i].forEach(e=>e(t[o])),s[n]),e.getUnobservedData())}),e.pauseReactivity||i()})}walkAndSkipNestedComponents(t,e,i=(()=>{})){!function t(e,i){if(!1===i(e))return;let o=e.firstElementChild;for(;o;)t(o,i),o=o.nextElementSibling}(t,t=>t.hasAttribute("x-data")&&!t.isSameNode(this.$el)?(t.__x||i(t),!1):e(t))}initializeElements(t,e=(()=>{})){this.walkAndSkipNestedComponents(t,t=>void 0===t.__x_for_key&&void 0===t.__x_inserted_me&&void this.initializeElement(t,e),t=>{t.__x=new it(t)}),this.executeAndClearRemainingShowDirectiveStack(),this.executeAndClearNextTickStack(t)}initializeElement(t,e){t.hasAttribute("class")&&c(t).length>0&&(t.__x_original_classes=t.getAttribute("class").split(" ")),this.registerListeners(t,e),this.resolveBoundAttributes(t,!0,e)}updateElements(t,e=(()=>{})){this.walkAndSkipNestedComponents(t,t=>{if(void 0!==t.__x_for_key&&!t.isSameNode(this.$el))return!1;this.updateElement(t,e)},t=>{t.__x=new it(t)}),this.executeAndClearRemainingShowDirectiveStack(),this.executeAndClearNextTickStack(t)}executeAndClearNextTickStack(t){if(t===this.$el)for(;this.nextTickStack.length>0;)this.nextTickStack.shift()()}executeAndClearRemainingShowDirectiveStack(){this.showDirectiveStack.reverse().map(t=>new Promise(e=>{t(t=>{e(t)})})).reduce((t,e)=>t.then(()=>e.then(t=>t())),Promise.resolve(()=>{})),this.showDirectiveStack=[],this.showDirectiveLastElement=void 0}updateElement(t,e){this.resolveBoundAttributes(t,!1,e)}registerListeners(t,e){c(t).forEach(({type:o,value:s,modifiers:n,expression:r})=>{switch(o){case"on":w(this,t,s,n,r,e);break;case"model":!function(t,e,o,s,n){var r="select"===e.tagName.toLowerCase()||["checkbox","radio"].includes(e.type)||o.includes("lazy")?"change":"input";w(t,e,r,o,`${s} = rightSideOfExpression($event, ${s})`,()=>i({},n(),{rightSideOfExpression:M(e,o,s)}))}(this,t,n,r,e)}})}resolveBoundAttributes(t,e=!1,i){let o=c(t);if(void 0!==t.type&&"radio"===t.type){const t=o.findIndex(t=>"model"===t.type);t>-1&&o.push(o.splice(t,1)[0])}o.forEach(({type:s,value:n,modifiers:r,expression:a})=>{switch(s){case"model":g(this,t,"value",a,i,s);break;case"bind":if("template"===t.tagName.toLowerCase()&&"key"===n)return;g(this,t,n,a,i,s);break;case"text":var l=this.evaluateReturnExpression(t,a,i);!function(t,e,i){void 0===e&&i.match(/\./).length&&(e=""),t.innerText=e}(t,l,a);break;case"html":!function(t,e,i,o){e.innerHTML=t.evaluateReturnExpression(e,i,o)}(this,t,a,i);break;case"show":l=this.evaluateReturnExpression(t,a,i),function(t,e,i,o,s=!1){const n=()=>{e.style.display="none"},r=()=>{1===e.style.length&&"none"===e.style.display?e.removeAttribute("style"):e.style.removeProperty("display")};if(!0===s)return void(i?r():n());const a=t=>{i?(""!==e.style.display&&u(e,()=>{r()}),t(()=>{})):"none"!==e.style.display?h(e,()=>{t(()=>{n()})}):t(()=>{})};o.includes("immediate")?a(t=>t()):(t.showDirectiveLastElement&&!t.showDirectiveLastElement.contains(e)&&t.executeAndClearRemainingShowDirectiveStack(),t.showDirectiveStack.push(a),t.showDirectiveLastElement=e)}(this,t,l,r,e);break;case"if":if(o.filter(t=>"for"===t.type).length>0)return;l=this.evaluateReturnExpression(t,a,i),function(t,e,i,o,s){"template"!==e.nodeName.toLowerCase()&&console.warn("Alpine: [x-if] directive should only be added to <template> tags. See https://github.com/alpinejs/alpine#x-if");const n=e.nextElementSibling&&!0===e.nextElementSibling.__x_inserted_me;if(i&&!n){const i=document.importNode(e.content,!0);e.parentElement.insertBefore(i,e.nextElementSibling),u(e.nextElementSibling,()=>{},o),t.initializeElements(e.nextElementSibling,s),e.nextElementSibling.__x_inserted_me=!0}else!i&&n&&h(e.nextElementSibling,()=>{e.nextElementSibling.remove()},o)}(this,t,l,e,i);break;case"for":b(this,t,a,e,i);break;case"cloak":t.removeAttribute("x-cloak")}})}evaluateReturnExpression(t,e,o=(()=>{})){return r(e,this.$data,i({},o(),{$dispatch:this.getDispatchFunction(t)}))}evaluateCommandExpression(t,e,o=(()=>{})){return function(t,e,i={}){if(Object.keys(e).includes(t)){let o=new Function(["dataContext",...Object.keys(i)],`with(dataContext) { return ${t} }`)(e,...Object.values(i));if("function"==typeof o)return o.call(e,i.$event)}return new Function(["dataContext",...Object.keys(i)],`with(dataContext) { ${t} }`)(e,...Object.values(i))}(e,this.$data,i({},o(),{$dispatch:this.getDispatchFunction(t)}))}getDispatchFunction(t){return(e,i={})=>{t.dispatchEvent(new CustomEvent(e,{detail:i,bubbles:!0}))}}listenForNewElementsToInitialize(){const t=this.$el;new MutationObserver(t=>{for(let e=0;e<t.length;e++){const i=t[e].target.closest("[x-data]");if(i&&i.isSameNode(this.$el)){if("attributes"===t[e].type&&"x-data"===t[e].attributeName){const i=r(t[e].target.getAttribute("x-data"),{});Object.keys(i).forEach(t=>{this.$data[t]!==i[t]&&(this.$data[t]=i[t])})}t[e].addedNodes.length>0&&t[e].addedNodes.forEach(t=>{1!==t.nodeType||t.__x_inserted_me||(t.matches("[x-data]")?t.__x=new it(t):this.initializeElements(t))})}}}).observe(t,{childList:!0,attributes:!0,subtree:!0})}getRefsProxy(){var t=this;return new Proxy({},{get(e,i){return"$isAlpineProxy"===i||(t.walkAndSkipNestedComponents(t.$el,t=>{t.hasAttribute("x-ref")&&t.getAttribute("x-ref")===i&&(o=t)}),o);var o}})}}const ot={version:"2.3.5",start:async function(){s()||await new Promise(t=>{"loading"==document.readyState?document.addEventListener("DOMContentLoaded",t):t()}),this.discoverComponents(t=>{this.initializeComponent(t)}),document.addEventListener("turbolinks:load",()=>{this.discoverUninitializedComponents(t=>{this.initializeComponent(t)})}),this.listenForNewUninitializedComponentsAtRunTime(t=>{this.initializeComponent(t)})},discoverComponents:function(t){document.querySelectorAll("[x-data]").forEach(e=>{t(e)})},discoverUninitializedComponents:function(t,e=null){const i=(e||document).querySelectorAll("[x-data]");Array.from(i).filter(t=>void 0===t.__x).forEach(e=>{t(e)})},listenForNewUninitializedComponentsAtRunTime:function(t){const e=document.querySelector("body");new MutationObserver(t=>{for(let e=0;e<t.length;e++)t[e].addedNodes.length>0&&t[e].addedNodes.forEach(t=>{1===t.nodeType&&(t.parentElement&&t.parentElement.closest("[x-data]")||this.discoverUninitializedComponents(t=>{this.initializeComponent(t)},t.parentElement))})}).observe(e,{childList:!0,attributes:!0,subtree:!0})},initializeComponent:function(t){t.__x||(t.__x=new it(t))},clone:function(t,e){e.__x||(e.__x=new it(e,t.getUnobservedData()))}};return s()||(window.Alpine=ot,window.deferLoadingAlpine?window.deferLoadingAlpine((function(){window.Alpine.start()})):window.Alpine.start()),ot}()},"4tm2":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Push=void 0;e.Push=class{constructor(){this.quantity=4}get particles_nb(){return this.quantity}set particles_nb(t){this.quantity=t}load(t){var e;if(void 0===t)return;const i=null!==(e=t.quantity)&&void 0!==e?e:t.particles_nb;void 0!==i&&(this.quantity=i)}}},"56Cg":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.InfectionStage=void 0;const o=i("vRcM");e.InfectionStage=class{constructor(){this.color=new o.OptionsColor,this.color.value="#ff0000",this.radius=0,this.rate=1}load(t){void 0!==t&&(void 0!==t.color&&(this.color=o.OptionsColor.create(this.color,t.color)),this.duration=t.duration,this.infectedStage=t.infectedStage,void 0!==t.radius&&(this.radius=t.radius),void 0!==t.rate&&(this.rate=t.rate))}}},"67oe":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Mover=void 0;const o=i("C9b5"),s=i("ZlLd");e.Mover=class{constructor(t,e){this.container=t,this.particle=e}move(t){this.moveParticle(t),this.moveParallax()}moveParticle(t){var e;const i=this.particle,o=i.particlesOptions;if(!o.move.enable)return;const s=this.container,n=s.options,r=this.getProximitySpeedFactor(),a=n.fpsLimit>0?60*t/1e3:3.6,l=(null!==(e=i.moveSpeed)&&void 0!==e?e:s.retina.moveSpeed)/2*r*a;this.applyNoise(t),i.position.x+=i.velocity.horizontal*l,i.position.y+=i.velocity.vertical*l,o.move.vibrate&&(i.position.x+=Math.sin(i.position.x*Math.cos(i.position.y)),i.position.y+=Math.cos(i.position.y*Math.sin(i.position.x)))}applyNoise(t){const e=this.particle;if(!e.particlesOptions.move.noise.enable)return;const i=this.container;if(e.lastNoiseTime<=e.noiseDelay)return void(e.lastNoiseTime+=t);const s=i.noise.generate(e);e.velocity.horizontal+=Math.cos(s.angle)*s.length,e.velocity.horizontal=o.Utils.clamp(e.velocity.horizontal,-1,1),e.velocity.vertical+=Math.sin(s.angle)*s.length,e.velocity.vertical=o.Utils.clamp(e.velocity.vertical,-1,1),e.lastNoiseTime-=e.noiseDelay}moveParallax(){const t=this.container,e=t.options;if(!e.interactivity.events.onHover.parallax.enable)return;const i=this.particle,o=e.interactivity.events.onHover.parallax.force,s=t.interactivity.mouse.position;if(!s)return;const n=window.innerHeight/2,r=window.innerWidth/2,a=e.interactivity.events.onHover.parallax.smooth,l=(s.x-r)*(i.size.value/o),c=(s.y-n)*(i.size.value/o);i.offset.x+=(l-i.offset.x)/a,i.offset.y+=(c-i.offset.y)/a}getProximitySpeedFactor(){const t=this.container,e=t.options;if(!o.Utils.isInArray(s.HoverMode.slow,e.interactivity.events.onHover.mode))return 1;const i=this.container.interactivity.mouse.position;if(!i)return 1;const n=this.particle.getPosition(),r=o.Utils.getDistance(i,n),a=t.retina.slowModeRadius;if(r>a)return 1;return(r/a||0)/e.interactivity.modes.slow.factor}}},"6a9T":function(t,e,i){"use strict";var o=this&&this.__createBinding||(Object.create?function(t,e,i,o){void 0===o&&(o=i),Object.defineProperty(t,o,{enumerable:!0,get:function(){return e[i]}})}:function(t,e,i,o){void 0===o&&(o=i),t[o]=e[i]}),s=this&&this.__exportStar||function(t,e){for(var i in t)"default"===i||e.hasOwnProperty(i)||o(e,t,i)};Object.defineProperty(e,"__esModule",{value:!0}),e.PolygonMaskPlugin=void 0;const n=i("ehru"),r=i("vGWO"),a=i("qtyS");const l=new class{constructor(){this.id="polygonMask"}getPlugin(t){return new n.PolygonMaskInstance(t)}needsPlugin(t){var e,i,o;return null!==(i=null===(e=null==t?void 0:t.polygon)||void 0===e?void 0:e.enable)&&void 0!==i?i:void 0!==(null===(o=null==t?void 0:t.polygon)||void 0===o?void 0:o.type)&&t.polygon.type!==a.Type.none}loadOptions(t,e){if(!this.needsPlugin(e))return;const i=t;void 0===i.polygon&&(i.polygon=new r.PolygonMask),i.polygon.load(null==e?void 0:e.polygon)}};e.PolygonMaskPlugin=l,s(i("qtyS"),e)},"6uQx":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Collider=void 0;const o=i("C9b5"),s=i("ZlLd");class n{constructor(t){this.container=t}static rotate(t,e){return{horizontal:t.horizontal*Math.cos(e)-t.vertical*Math.sin(e),vertical:t.horizontal*Math.sin(e)+t.vertical*Math.cos(e)}}static collisionVelocity(t,e,i,o){return{horizontal:t.horizontal*(i-o)/(i+o)+2*e.horizontal*o/(i+o),vertical:t.vertical}}static bounce(t,e){const i=t.getPosition(),o=e.getPosition(),s=t.velocity.horizontal-e.velocity.horizontal,r=t.velocity.vertical-e.velocity.vertical;if(s*(o.x-i.x)+r*(o.y-i.y)>=0){const s=-Math.atan2(o.y-i.y,o.x-i.x),r=t.size.value,a=e.size.value,l=n.rotate(t.velocity,s),c=n.rotate(e.velocity,s),d=n.collisionVelocity(l,c,r,a),u=n.collisionVelocity(c,l,r,a),h=n.rotate(d,-s),v=n.rotate(u,-s);t.velocity.horizontal=h.horizontal,t.velocity.vertical=h.vertical,e.velocity.horizontal=v.horizontal,e.velocity.vertical=v.vertical}}static destroy(t,e){void 0===t.size.value&&void 0!==e.size.value?t.destroy():void 0!==t.size.value&&void 0===e.size.value?e.destroy():void 0!==t.size.value&&void 0!==e.size.value&&(t.size.value>=e.size.value?e.destroy():t.destroy())}static getRadius(t,e){return t.bubble.radius||t.size.value||e}isEnabled(t){return t.particlesOptions.collisions.enable}reset(){}interact(t){const e=this.container,i=t.getPosition(),s=e.particles.quadTree.query(new o.Circle(i.x,i.y,2*t.size.value));for(const r of s){if(t===r||!r.particlesOptions.collisions.enable||t.particlesOptions.collisions.mode!==r.particlesOptions.collisions.mode)continue;const s=r.getPosition(),a=o.Utils.getDistance(i,s),l=e.retina.sizeValue;a<=n.getRadius(t,l)+n.getRadius(r,l)&&this.resolveCollision(t,r)}}resolveCollision(t,e){switch(t.particlesOptions.collisions.mode){case s.CollisionMode.absorb:this.absorb(t,e);break;case s.CollisionMode.bounce:n.bounce(t,e);break;case s.CollisionMode.destroy:n.destroy(t,e)}}absorb(t,e){const i=this.container,s=i.options.fpsLimit/1e3;if(void 0===t.size.value&&void 0!==e.size.value)t.destroy();else if(void 0!==t.size.value&&void 0===e.size.value)e.destroy();else if(void 0!==t.size.value&&void 0!==e.size.value)if(t.size.value>=e.size.value){const n=o.Utils.clamp(t.size.value/e.size.value,0,e.size.value)*s;t.size.value+=n,e.size.value-=n,e.size.value<=i.retina.pixelRatio&&(e.size.value=0,e.destroy())}else{const n=o.Utils.clamp(e.size.value/t.size.value,0,t.size.value)*s;t.size.value-=n,e.size.value+=n,t.size.value<=i.retina.pixelRatio&&(t.size.value=0,t.destroy())}}}e.Collider=n},"7Ohm":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.EmitterLife=void 0;e.EmitterLife=class{load(t){void 0!==t&&(void 0!==t.count&&(this.count=t.count),void 0!==t.delay&&(this.delay=t.delay),void 0!==t.duration&&(this.duration=t.duration))}}},"7UW+":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.SizeMode=void 0,function(t){t.precise="precise",t.percent="percent"}(e.SizeMode||(e.SizeMode={}))},"7puq":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Events=void 0;const o=i("Ckc7"),s=i("G7pQ"),n=i("W13A");e.Events=class{constructor(){this.onClick=new o.ClickEvent,this.onDiv=new s.DivEvent,this.onHover=new n.HoverEvent,this.resize=!0}get onclick(){return this.onClick}set onclick(t){this.onClick=t}get ondiv(){return this.onDiv}set ondiv(t){this.onDiv=t}get onhover(){return this.onHover}set onhover(t){this.onHover=t}load(t){var e,i,o;if(void 0===t)return;this.onClick.load(null!==(e=t.onClick)&&void 0!==e?e:t.onclick);const n=null!==(i=t.onDiv)&&void 0!==i?i:t.ondiv;void 0!==n&&(n instanceof Array?this.onDiv=n.map(t=>{const e=new s.DivEvent;return e.load(t),e}):(this.onDiv=new s.DivEvent,this.onDiv.load(n))),this.onHover.load(null!==(o=t.onHover)&&void 0!==o?o:t.onhover),void 0!==t.resize&&(this.resize=t.resize)}}},"887v":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Inline=void 0;const o=i("fReP");e.Inline=class{constructor(){this.arrangement=o.InlineArrangement.onePerPoint}load(t){void 0!==t&&void 0!==t.arrangement&&(this.arrangement=t.arrangement)}}},"89Jo":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.InteractivityDetect=void 0,function(t){t.canvas="canvas",t.parent="parent",t.window="window"}(e.InteractivityDetect||(e.InteractivityDetect={}))},"9XT8":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.RepulseDiv=void 0;const o=i("Tdtd");class s extends o.RepulseBase{constructor(){super(),this.ids=[]}load(t){super.load(t),void 0!==t&&void 0!==t.ids&&(this.ids=t.ids)}}e.RepulseDiv=s},AGKx:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.OpacityRandom=void 0;e.OpacityRandom=class{constructor(){this.enable=!1,this.minimumValue=1}load(t){void 0!==t&&(void 0!==t.enable&&(this.enable=t.enable),void 0!==t.minimumValue&&(this.minimumValue=t.minimumValue))}}},C6n9:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.ColorUtils=void 0;const o=i("lPaE"),s=i("ZRNA");class n{static colorToRgb(t){var e,i;if(void 0===t)return;const r="string"==typeof t?{value:t}:t;let a;if("string"==typeof r.value)a=r.value===s.Constants.randomColorValue?this.getRandomRgbColor():n.stringToRgb(r.value);else if(r.value instanceof Array){const t=o.Utils.itemFromArray(r.value);a=n.colorToRgb({value:t})}else{const t=r.value,o=null!==(e=t.rgb)&&void 0!==e?e:r.value;if(void 0!==o.r)a=o;else{const e=null!==(i=t.hsl)&&void 0!==i?i:r.value;void 0!==e.h&&(a=n.hslToRgb(e))}}return a}static colorToHsl(t){const e=this.colorToRgb(t);return void 0!==e?this.rgbToHsl(e):e}static rgbToHsl(t){const e=t.r/255,i=t.g/255,o=t.b/255,s=Math.max(e,i,o),n=Math.min(e,i,o),r={h:0,l:(s+n)/2,s:0};return s!=n&&(r.s=r.l<.5?(s-n)/(s+n):(s-n)/(2-s-n),r.h=e===s?(i-o)/(s-n):r.h=i===s?2+(o-e)/(s-n):4+(e-i)/(s-n)),r.l*=100,r.s*=100,r.h*=60,r.h<0&&(r.h+=360),r}static stringToAlpha(t){var e;return null===(e=n.stringToRgba(t))||void 0===e?void 0:e.a}static stringToRgb(t){return n.stringToRgba(t)}static hslToRgb(t){const e={b:0,g:0,r:0},i={h:t.h/360,l:t.l/100,s:t.s/100};if(0===i.s)e.b=i.l,e.g=i.l,e.r=i.l;else{const t=i.l<.5?i.l*(1+i.s):i.l+i.s-i.l*i.s,o=2*i.l-t;e.r=n.hue2rgb(o,t,i.h+1/3),e.g=n.hue2rgb(o,t,i.h),e.b=n.hue2rgb(o,t,i.h-1/3)}return e.r=Math.floor(255*e.r),e.g=Math.floor(255*e.g),e.b=Math.floor(255*e.b),e}static hslaToRgba(t){const e=n.hslToRgb(t);return{a:t.a,b:e.b,g:e.g,r:e.r}}static getRandomRgbColor(t){var e;const i=t||0,o=i+i*Math.pow(16,2)+i*Math.pow(16,4),s=16777215^o,n=Math.floor(Math.random()*s|o).toString(16);return null!==(e=this.stringToRgb("#"+n))&&void 0!==e?e:{b:0,g:0,r:0}}static getStyleFromRgb(t,e){return`rgba(${t.r}, ${t.g}, ${t.b}, ${null!=e?e:1})`}static getStyleFromHsl(t,e){return`hsla(${t.h}, ${t.s}%, ${t.l}%, ${null!=e?e:1})`}static mix(t,e,i,s){let n=t,r=e;return void 0===n.r&&(n=this.hslToRgb(t)),void 0===r.r&&(r=this.hslToRgb(e)),{b:o.Utils.mix(n.b,r.b,i,s),g:o.Utils.mix(n.g,r.g,i,s),r:o.Utils.mix(n.r,r.r,i,s)}}static hue2rgb(t,e,i){let o=i;return o<0&&(o+=1),o>1&&(o-=1),o<1/6?t+6*(e-t)*o:o<.5?e:o<2/3?t+(e-t)*(2/3-o)*6:t}static stringToRgba(t){if(t.startsWith("rgb")){const e=/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*([\d.]+)\s*)?\)/i.exec(t);return e?{a:e.length>4?parseFloat(e[5]):1,b:parseInt(e[3],10),g:parseInt(e[2],10),r:parseInt(e[1],10)}:void 0}if(t.startsWith("hsl")){const e=/hsla?\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*(,\s*([\d.]+)\s*)?\)/i.exec(t);return e?n.hslaToRgba({a:e.length>4?parseFloat(e[5]):1,h:parseInt(e[1],10),l:parseInt(e[3],10),s:parseInt(e[2],10)}):void 0}{const e=/^#?([a-f\d])([a-f\d])([a-f\d])([a-f\d])?$/i,i=t.replace(e,(t,e,i,o,s)=>e+e+i+i+o+o+(void 0!==s?s+s:"")),o=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i.exec(i);return o?{a:void 0!==o[4]?parseInt(o[4],16)/255:1,b:parseInt(o[3],16),g:parseInt(o[2],16),r:parseInt(o[1],16)}:void 0}}}e.ColorUtils=n},C9b5:function(t,e,i){"use strict";var o=this&&this.__createBinding||(Object.create?function(t,e,i,o){void 0===o&&(o=i),Object.defineProperty(t,o,{enumerable:!0,get:function(){return e[i]}})}:function(t,e,i,o){void 0===o&&(o=i),t[o]=e[i]}),s=this&&this.__exportStar||function(t,e){for(var i in t)"default"===i||e.hasOwnProperty(i)||o(e,t,i)};Object.defineProperty(e,"__esModule",{value:!0}),s(i("iiaq"),e),s(i("Erz+"),e),s(i("EGR3"),e),s(i("C6n9"),e),s(i("ZRNA"),e),s(i("2kAo"),e),s(i("KIMX"),e),s(i("J15q"),e),s(i("ub5Q"),e),s(i("/6af"),e),s(i("Xvid"),e),s(i("lPaE"),e)},CPUN:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.BackgroundMaskCover=void 0;const o=i("vRcM");e.BackgroundMaskCover=class{constructor(){this.color=new o.OptionsColor,this.opacity=1}load(t){void 0!==t&&(void 0!==t.color&&(this.color=o.OptionsColor.create(this.color,t.color)),void 0!==t.opacity&&(this.opacity=t.opacity))}}},CeJ7:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.ProcessBubbleType=void 0,function(t){t.color="color",t.opacity="opacity",t.size="size"}(e.ProcessBubbleType||(e.ProcessBubbleType={}))},Ckc7:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.ClickEvent=void 0;e.ClickEvent=class{constructor(){this.enable=!1,this.mode=[]}load(t){void 0!==t&&(void 0!==t.enable&&(this.enable=t.enable),void 0!==t.mode&&(this.mode=t.mode))}}},D98Q:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.EmitterClickMode=void 0;const o=i("ZJaX");Object.defineProperty(e,"EmitterClickMode",{enumerable:!0,get:function(){return o.EmitterClickMode}})},DLAq:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Rotate=void 0;const o=i("k9Lu"),s=i("ZlLd");e.Rotate=class{constructor(){this.animation=new o.RotateAnimation,this.direction=s.RotateDirection.clockwise,this.random=!1,this.value=0}load(t){void 0!==t&&(this.animation.load(t.animation),void 0!==t.random&&(this.random=t.random),void 0!==t.direction&&(this.direction=t.direction),void 0!==t.value&&(this.value=t.value))}}},Dp6u:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Links=void 0;const o=i("ERyf"),s=i("cWpP"),n=i("vRcM");e.Links=class{constructor(){this.blink=!1,this.color=new n.OptionsColor,this.consent=!1,this.distance=100,this.enable=!1,this.opacity=1,this.shadow=new o.LinksShadow,this.triangles=new s.LinksTriangle,this.width=1,this.warp=!1}load(t){void 0!==t&&(void 0!==t.id&&(this.id=t.id),void 0!==t.blink&&(this.blink=t.blink),this.color=n.OptionsColor.create(this.color,t.color),void 0!==t.consent&&(this.consent=t.consent),void 0!==t.distance&&(this.distance=t.distance),void 0!==t.enable&&(this.enable=t.enable),void 0!==t.opacity&&(this.opacity=t.opacity),this.shadow.load(t.shadow),this.triangles.load(t.triangles),void 0!==t.width&&(this.width=t.width),void 0!==t.warp&&(this.warp=t.warp))}}},EGR3:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.CircleWarp=void 0;const o=i("Xvid"),s=i("Erz+");class n extends s.Circle{constructor(t,e,i,o){super(t,e,i),this.canvasSize=o,this.canvasSize={height:o.height,width:o.width}}contains(t){if(super.contains(t))return!0;const e={x:t.x-this.canvasSize.width,y:t.y};if(super.contains(e))return!0;const i={x:t.x-this.canvasSize.width,y:t.y-this.canvasSize.height};if(super.contains(i))return!0;const o={x:t.x,y:t.y-this.canvasSize.height};return super.contains(o)}intersects(t){if(super.intersects(t))return!0;const e=t,i=t,n={x:t.position.x-this.canvasSize.width,y:t.position.y-this.canvasSize.height};if(void 0!==i.radius){const t=new s.Circle(n.x,n.y,2*i.radius);return super.intersects(t)}if(void 0!==e.size){const t=new o.Rectangle(n.x,n.y,2*e.size.width,2*e.size.height);return super.intersects(t)}return!1}}e.CircleWarp=n},ERyf:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.LinksShadow=void 0;const o=i("vRcM");e.LinksShadow=class{constructor(){this.blur=5,this.color=new o.OptionsColor,this.enable=!1,this.color.value="lime"}load(t){void 0!==t&&(void 0!==t.blur&&(this.blur=t.blur),this.color=o.OptionsColor.create(this.color,t.color),void 0!==t.enable&&(this.enable=t.enable))}}},EZQt:function(t,e,i){"use strict";var o=this&&this.__awaiter||function(t,e,i,o){return new(i||(i=Promise))((function(s,n){function r(t){try{l(o.next(t))}catch(t){n(t)}}function a(t){try{l(o.throw(t))}catch(t){n(t)}}function l(t){var e;t.done?s(t.value):(e=t.value,e instanceof i?e:new i((function(t){t(e)}))).then(r,a)}l((o=o.apply(t,e||[])).next())}))};Object.defineProperty(e,"__esModule",{value:!0}),e.Loader=void 0;const s=i("Tx5y"),n=i("C9b5"),r=[];class a{static dom(){return r}static domItem(t){const e=a.dom(),i=e[t];if(i&&!i.destroyed)return i;e.splice(t,1)}static loadFromArray(t,e,i){return o(this,void 0,void 0,(function*(){return a.load(t,n.Utils.itemFromArray(e,i))}))}static setFromArray(t,e,i,s){return o(this,void 0,void 0,(function*(){return a.set(t,e,n.Utils.itemFromArray(i,s))}))}static load(t,e){return o(this,void 0,void 0,(function*(){const i=document.getElementById(t);if(i)return this.set(t,i,e)}))}static set(t,e,i){return o(this,void 0,void 0,(function*(){const o=a.dom(),r=o.findIndex(e=>e.id===t);if(r>=0){const t=this.domItem(r);t&&!t.destroyed&&(t.destroy(),o.splice(r,1))}let l,c;if("canvas"===e.tagName)l=e,c=!1;else{const t=e.getElementsByTagName("canvas");t.length?(l=t[0],l.className||(l.className=n.Constants.canvasClass),c=!1):(c=!0,l=document.createElement("canvas"),l.className=n.Constants.canvasClass,l.style.width="100%",l.style.height="100%",e.appendChild(l))}const d=new s.Container(t,i);return r>=0?o.splice(r,0,d):o.push(d),d.canvas.loadCanvas(l,c),yield d.start(),d}))}static loadJSON(t,e){return o(this,void 0,void 0,(function*(){const i=yield fetch(e);if(i.ok){const e=yield i.json();return e instanceof Array?a.loadFromArray(t,e):a.load(t,e)}this.fetchError(i.status)}))}static setJSON(t,e,i){return o(this,void 0,void 0,(function*(){const o=yield fetch(i);if(o.ok){const i=yield o.json();return i instanceof Array?a.setFromArray(t,e,i):a.set(t,e,i)}this.fetchError(o.status)}))}static setOnClickHandler(t){const e=a.dom();if(0===e.length)throw new Error("Can only set click handlers after calling tsParticles.load() or tsParticles.loadJSON()");for(const i of e){const e=i.interactivity.element;e&&e.addEventListener("click",t)}}static fetchError(t){console.error("Error tsParticles - fetch status: "+t),console.error("Error tsParticles - File config not found")}}e.Loader=a},Ej6A:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.AbsorberSize=void 0;const o=i("dFlz");e.AbsorberSize=class{constructor(){this.density=5,this.random=new o.AbsorberRandomSize,this.value=50}load(t){void 0!==t&&(void 0!==t.density&&(this.density=t.density),void 0!==t.value&&(this.value=t.value),void 0!==t.random&&("boolean"==typeof t.random?this.random.load({enable:t.random}):this.random.load(t.random)),void 0!==t.limit&&(this.limit=t.limit))}}},"Erz+":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Circle=void 0;const o=i("/6af");class s extends o.Range{constructor(t,e,i){super(t,e),this.radius=i}contains(t){return Math.pow(t.x-this.position.x,2)+Math.pow(t.y-this.position.y,2)<=this.radius*this.radius}intersects(t){const e=t,i=t,o=this.position,s=t.position,n=Math.abs(s.x-o.x),r=Math.abs(s.y-o.y),a=this.radius;if(void 0!==i.radius){return a+i.radius>Math.sqrt(n*n+r+r)}if(void 0!==e.size){const t=e.size.width,i=e.size.height,o=Math.pow(n-t,2)+Math.pow(r-i,2);return!(n>a+t||r>a+i)&&(n<=t||r<=i||o<=a*a)}return!1}}e.Circle=s},F5ry:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Attract=void 0;e.Attract=class{constructor(){this.enable=!1,this.rotate={x:3e3,y:3e3}}get rotateX(){return this.rotate.x}set rotateX(t){this.rotate.x=t}get rotateY(){return this.rotate.y}set rotateY(t){this.rotate.y=t}load(t){var e,i,o,s;if(void 0===t)return;void 0!==t.enable&&(this.enable=t.enable);const n=null!==(i=null===(e=t.rotate)||void 0===e?void 0:e.x)&&void 0!==i?i:t.rotateX;void 0!==n&&(this.rotate.x=n);const r=null!==(s=null===(o=t.rotate)||void 0===o?void 0:o.y)&&void 0!==s?s:t.rotateY;void 0!==r&&(this.rotate.y=r)}}},Fqm0:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Linker=void 0;const o=i("C9b5");e.Linker=class{constructor(t){this.container=t}isEnabled(t){return t.particlesOptions.links.enable}reset(){}interact(t){var e;const i=this.container,s=t.particlesOptions.links,n=s.opacity,r=null!==(e=t.linksDistance)&&void 0!==e?e:i.retina.linksDistance,a=i.canvas.size,l=s.warp,c=t.getPosition(),d=l?new o.CircleWarp(c.x,c.y,r,a):new o.Circle(c.x,c.y,r),u=i.particles.quadTree.query(d);for(const e of u){const d=e.particlesOptions.links;if(t===e||!d.enable||s.id!==d.id)continue;const u=e.getPosition();let h=o.Utils.getDistance(c,u);if(l&&h>r){const t={x:u.x-a.width,y:u.y};if(h=o.Utils.getDistance(c,t),h>r){const t={x:u.x-a.width,y:u.y-a.height};if(h=o.Utils.getDistance(c,t),h>r){const t={x:u.x,y:u.y-a.height};h=o.Utils.getDistance(c,t)}}}if(h>r)return;const v=n-h*n/r;if(v>0){const s=t.particlesOptions.links;let n=void 0!==s.id?i.particles.linksColors[s.id]:i.particles.linksColor;if(!n){const t=s.color,e="string"==typeof t?t:t.value;n=e===o.Constants.randomColorValue?s.consent?o.ColorUtils.colorToRgb({value:e}):s.blink?o.Constants.randomColorValue:o.Constants.midColorValue:o.ColorUtils.colorToRgb({value:e}),void 0!==s.id?i.particles.linksColors[s.id]=n:i.particles.linksColor=n}-1===e.links.map(t=>t.destination).indexOf(t)&&-1===t.links.map(t=>t.destination).indexOf(e)&&t.links.push({destination:e,opacity:v})}}}}},FvHc:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.AbsorberClickMode=void 0;const o=i("q39K");Object.defineProperty(e,"AbsorberClickMode",{enumerable:!0,get:function(){return o.AbsorberClickMode}})},"G1+O":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.SizeRandom=void 0;e.SizeRandom=class{constructor(){this.enable=!1,this.minimumValue=1}load(t){void 0!==t&&(void 0!==t.enable&&(this.enable=t.enable),void 0!==t.minimumValue&&(this.minimumValue=t.minimumValue))}}},G7pQ:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.DivEvent=void 0;const o=i("ZlLd");e.DivEvent=class{constructor(){this.ids=[],this.enable=!1,this.mode=[],this.type=o.DivType.circle}get elementId(){return this.ids}set elementId(t){this.ids=t}get el(){return this.elementId}set el(t){this.elementId=t}load(t){var e,i;if(void 0===t)return;const o=null!==(i=null!==(e=t.ids)&&void 0!==e?e:t.elementId)&&void 0!==i?i:t.el;void 0!==o&&(this.ids=o),void 0!==t.enable&&(this.enable=t.enable),void 0!==t.mode&&(this.mode=t.mode),void 0!==t.type&&(this.type=t.type)}}},GMZW:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Grabber=void 0;const o=i("C9b5"),s=i("ubkD");e.Grabber=class{constructor(t){this.container=t}isEnabled(){const t=this.container,e=t.interactivity.mouse,i=t.options.interactivity.events;if(!i.onHover.enable||!e.position)return!1;const n=i.onHover.mode;return o.Utils.isInArray(s.HoverMode.grab,n)}reset(){}interact(){var t,e;const i=this.container,s=i.options.interactivity;if(s.events.onHover.enable&&i.interactivity.status===o.Constants.mouseMoveEvent){const n=i.interactivity.mouse.position;if(void 0===n)return;const r=i.retina.grabModeDistance,a=i.particles.quadTree.query(new o.Circle(n.x,n.y,r));for(const r of a){const a=r.getPosition(),l=o.Utils.getDistance(a,n);if(l<=i.retina.grabModeDistance){const a=s.modes.grab.links,c=a.opacity,d=c-l*c/i.retina.grabModeDistance;if(d>0){const s=null!==(t=a.color)&&void 0!==t?t:r.particlesOptions.links.color;let l;if(i.particles.grabLineColor||(i.particles.grabLineColor=s===o.Constants.randomColorValue||(null===(e=s)||void 0===e?void 0:e.value)===o.Constants.randomColorValue?o.Constants.randomColorValue:o.ColorUtils.colorToRgb(s)),l=i.particles.grabLineColor===o.Constants.randomColorValue?o.ColorUtils.getRandomRgbColor():i.particles.grabLineColor,void 0===l)return;i.canvas.drawGrabLine(r,l,d,n)}}}}}}},GMfk:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Interactivity=void 0;const o=i("ZlLd"),s=i("7puq"),n=i("mwEM");e.Interactivity=class{constructor(){this.detectsOn=o.InteractivityDetect.canvas,this.events=new s.Events,this.modes=new n.Modes}get detect_on(){return this.detectsOn}set detect_on(t){this.detectsOn=t}load(t){var e,i,s;if(void 0===t)return;const n=null!==(e=t.detectsOn)&&void 0!==e?e:t.detect_on;void 0!==n&&(this.detectsOn=n),this.events.load(t.events),this.modes.load(t.modes),!0===(null===(s=null===(i=t.modes)||void 0===i?void 0:i.slow)||void 0===s?void 0:s.active)&&(this.events.onHover.mode instanceof Array?this.events.onHover.mode.indexOf(o.HoverMode.slow)<0&&this.events.onHover.mode.push(o.HoverMode.slow):this.events.onHover.mode!==o.HoverMode.slow&&(this.events.onHover.mode=[this.events.onHover.mode,o.HoverMode.slow]))}}},GbOK:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Twinkle=void 0;const o=i("J8hw");e.Twinkle=class{constructor(){this.lines=new o.TwinkleValues,this.particles=new o.TwinkleValues}load(t){void 0!==t&&(this.lines.load(t.lines),this.particles.load(t.particles))}}},"HMt+":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.DivType=void 0,function(t){t.circle="circle",t.rectangle="rectangle"}(e.DivType||(e.DivType={}))},Iy9P:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Stroke=void 0;const o=i("vRcM");e.Stroke=class{constructor(){this.color=new o.OptionsColor,this.width=0,this.opacity=1,this.color.value="#ff0000"}load(t){void 0!==t&&(this.color=o.OptionsColor.create(this.color,t.color),void 0!==t.width&&(this.width=t.width),void 0!==t.opacity&&(this.opacity=t.opacity))}}},J15q:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Point=void 0;e.Point=class{constructor(t,e){this.position=t,this.particle=e}}},J8hw:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.TwinkleValues=void 0;const o=i("vRcM");e.TwinkleValues=class{constructor(){this.enable=!1,this.frequency=.05,this.opacity=1}load(t){void 0!==t&&(void 0!==t.color&&(this.color=o.OptionsColor.create(this.color,t.color)),void 0!==t.enable&&(this.enable=t.enable),void 0!==t.frequency&&(this.frequency=t.frequency),void 0!==t.opacity&&(this.opacity=t.opacity))}}},KIMX:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Plugins=void 0;class o{static getPlugin(t){return this.plugins.filter(e=>e.id===t)[0]}static addPlugin(t){this.getPlugin(t.id)||this.plugins.push(t)}static getAvailablePlugins(t){const e=new Map,i=this.plugins.filter(e=>e.needsPlugin(t.options));for(const o of i)e.set(o.id,o.getPlugin(t));return e}static loadOptions(t,e){for(const i of this.plugins)i.loadOptions(t,e)}static getPreset(t){return this.presets.get(t)}static addPreset(t,e){this.getPreset(t)||this.presets.set(t,e)}static addShapeDrawer(t,e){this.getShapeDrawer(t)||this.drawers.set(t,e)}static getShapeDrawer(t){return this.drawers.get(t)}static getSupportedShapes(){return this.drawers.keys()}}e.Plugins=o,o.plugins=[],o.presets=new Map,o.drawers=new Map},KbmP:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.LocalSvg=void 0;e.LocalSvg=class{constructor(){this.path=[],this.size={height:0,width:0}}load(t){void 0!==t&&(void 0!==t.path&&(this.path=t.path),void 0!==t.size&&(void 0!==t.size.width&&(this.size.width=t.size.width),void 0!==t.size.height&&(this.size.height=t.size.height)))}}},KdG0:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.EmitterRate=void 0;e.EmitterRate=class{constructor(){this.quantity=1,this.delay=.1}load(t){void 0!==t&&(void 0!==t.quantity&&(this.quantity=t.quantity),void 0!==t.delay&&(this.delay=t.delay))}}},KttE:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.ConnectLinks=void 0;e.ConnectLinks=class{constructor(){this.opacity=.5}load(t){void 0!==t&&void 0!==t.opacity&&(this.opacity=t.opacity)}}},LPIU:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Remove=void 0;e.Remove=class{constructor(){this.quantity=2}get particles_nb(){return this.quantity}set particles_nb(t){this.quantity=t}load(t){var e;if(void 0===t)return;const i=null!==(e=t.quantity)&&void 0!==e?e:t.particles_nb;void 0!==i&&(this.quantity=i)}}},LfGR:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Draw=void 0;const o=i("sJdS"),s=i("vRcM");e.Draw=class{constructor(){this.enable=!1,this.stroke=new o.DrawStroke}get lineWidth(){return this.stroke.width}set lineWidth(t){this.stroke.width=t}get lineColor(){return this.stroke.color}set lineColor(t){this.stroke.color=s.OptionsColor.create(this.stroke.color,t)}load(t){var e;if(void 0!==t){void 0!==t.enable&&(this.enable=t.enable);const i=null!==(e=t.stroke)&&void 0!==e?e:{color:t.lineColor,width:t.lineWidth};this.stroke.load(i)}}}},LpZt:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Size=void 0;const o=i("brjH"),s=i("G1+O");e.Size=class{constructor(){this.animation=new o.SizeAnimation,this.random=new s.SizeRandom,this.value=3}get anim(){return this.animation}set anim(t){this.animation=t}load(t){var e;if(void 0===t)return;const i=null!==(e=t.animation)&&void 0!==e?e:t.anim;void 0!==i&&this.animation.load(i),void 0!==t.random&&("boolean"==typeof t.random?this.random.enable=t.random:this.random.load(t.random)),void 0!==t.value&&(this.value=t.value)}}},Lut8:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.CircleDrawer=void 0;e.CircleDrawer=class{draw(t,e,i){t.arc(0,0,i,0,2*Math.PI,!1)}}},N6qZ:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Particles=void 0;const o=i("Dp6u"),s=i("bwoT"),n=i("p47b"),r=i("3R7e"),a=i("tNle"),l=i("LpZt"),c=i("DLAq"),d=i("1X1F"),u=i("Iy9P"),h=i("+UjZ"),v=i("GbOK"),p=i("W31w");e.Particles=class{constructor(){this.collisions=new h.Collisions,this.color=new p.AnimatableColor,this.links=new o.Links,this.move=new s.Move,this.number=new n.ParticlesNumber,this.opacity=new r.Opacity,this.rotate=new c.Rotate,this.shadow=new d.Shadow,this.shape=new a.Shape,this.size=new l.Size,this.stroke=new u.Stroke,this.twinkle=new v.Twinkle}get line_linked(){return this.links}set line_linked(t){this.links=t}get lineLinked(){return this.links}set lineLinked(t){this.links=t}load(t){var e,i,o,s,n,r,a;if(void 0===t)return;void 0!==t.color&&(this.color=p.AnimatableColor.create(this.color,t.color));const l=null!==(i=null!==(e=t.links)&&void 0!==e?e:t.lineLinked)&&void 0!==i?i:t.line_linked;void 0!==l&&this.links.load(l),this.move.load(t.move),this.number.load(t.number),this.opacity.load(t.opacity),this.rotate.load(t.rotate),this.shape.load(t.shape),this.size.load(t.size),this.shadow.load(t.shadow),this.twinkle.load(t.twinkle);const c=null!==(s=null===(o=t.move)||void 0===o?void 0:o.collisions)&&void 0!==s?s:null===(n=t.move)||void 0===n?void 0:n.bounce;void 0!==c&&(this.collisions.enable=c),this.collisions.load(t.collisions);const d=null!==(r=t.stroke)&&void 0!==r?r:null===(a=t.shape)||void 0===a?void 0:a.stroke;void 0!==d&&(d instanceof Array?this.stroke=d.map(t=>{const e=new u.Stroke;return e.load(t),e}):(this.stroke instanceof Array&&(this.stroke=new u.Stroke),this.stroke.load(d)))}}},NiW4:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.OpacityAnimation=void 0;e.OpacityAnimation=class{constructor(){this.enable=!1,this.minimumValue=0,this.speed=2,this.sync=!1}get opacity_min(){return this.minimumValue}set opacity_min(t){this.minimumValue=t}load(t){var e;if(void 0===t)return;void 0!==t.enable&&(this.enable=t.enable);const i=null!==(e=t.minimumValue)&&void 0!==e?e:t.opacity_min;void 0!==i&&(this.minimumValue=i),void 0!==t.speed&&(this.speed=t.speed),void 0!==t.sync&&(this.sync=t.sync)}}},OGap:function(t,e,i){"use strict";var o=this&&this.__createBinding||(Object.create?function(t,e,i,o){void 0===o&&(o=i),Object.defineProperty(t,o,{enumerable:!0,get:function(){return e[i]}})}:function(t,e,i,o){void 0===o&&(o=i),t[o]=e[i]}),s=this&&this.__exportStar||function(t,e){for(var i in t)"default"===i||e.hasOwnProperty(i)||o(e,t,i)};Object.defineProperty(e,"__esModule",{value:!0}),e.tsParticles=e.pJSDom=e.particlesJS=void 0;const n=i("vH5O"),r=new(i("z6mI").Main);e.tsParticles=r,r.init();const{particlesJS:a,pJSDom:l}=n.initPjs(r);e.particlesJS=a,e.pJSDom=l,s(i("ZlLd"),e)},OXHI:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.NoiseRandom=void 0;e.NoiseRandom=class{constructor(){this.enable=!1,this.minimumValue=0}load(t){void 0!==t&&(void 0!==t.enable&&(this.enable=t.enable),void 0!==t.minimumValue&&(this.minimumValue=t.minimumValue))}}},PFhk:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.EmitterSize=void 0;const o=i("ZlLd");e.EmitterSize=class{constructor(){this.mode=o.SizeMode.percent,this.height=0,this.width=0}load(t){void 0!==t&&(void 0!==t.mode&&(this.mode=t.mode),void 0!==t.height&&(this.height=t.height),void 0!==t.width&&(this.width=t.width))}}},PT87:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.OpacityAnimationStatus=void 0,function(t){t[t.increasing=0]="increasing",t[t.decreasing=1]="decreasing"}(e.OpacityAnimationStatus||(e.OpacityAnimationStatus={}))},PeBj:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Slow=void 0;e.Slow=class{constructor(){this.factor=3,this.radius=200}get active(){return!1}set active(t){}load(t){void 0!==t&&(void 0!==t.factor&&(this.factor=t.factor),void 0!==t.radius&&(this.radius=t.radius))}}},QD5p:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.FrameManager=void 0;e.FrameManager=class{constructor(t){this.container=t}nextFrame(t){const e=this.container,i=e.options,o=i.fpsLimit>0?i.fpsLimit:60;if(void 0!==e.lastFrameTime&&t<e.lastFrameTime+1e3/o)return void e.draw();const s=t-e.lastFrameTime;e.lastFrameTime=t,e.particles.draw(s),i.particles.move.enable&&e.getAnimationStatus()&&e.draw()}}},QENi:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.DivMode=void 0,function(t){t.bubble="bubble",t.repulse="repulse"}(e.DivMode||(e.DivMode={}))},Qbha:function(t,e,i){"use strict";var o=this&&this.__awaiter||function(t,e,i,o){return new(i||(i=Promise))((function(s,n){function r(t){try{l(o.next(t))}catch(t){n(t)}}function a(t){try{l(o.throw(t))}catch(t){n(t)}}function l(t){var e;t.done?s(t.value):(e=t.value,e instanceof i?e:new i((function(t){t(e)}))).then(r,a)}l((o=o.apply(t,e||[])).next())}))};Object.defineProperty(e,"__esModule",{value:!0}),e.TextDrawer=void 0;const s=i("C9b5"),n=i("ZlLd");e.TextDrawer=class{init(t){var e;return o(this,void 0,void 0,(function*(){const i=t.options;if(s.Utils.isInArray(n.ShapeType.char,i.particles.shape.type)||s.Utils.isInArray(n.ShapeType.character,i.particles.shape.type)){const t=null!==(e=i.particles.shape.options[n.ShapeType.character])&&void 0!==e?e:i.particles.shape.options[n.ShapeType.char];if(t instanceof Array)for(const e of t)yield s.Utils.loadFont(e);else void 0!==t&&(yield s.Utils.loadFont(t))}}))}draw(t,e,i){const o=e.shapeData;if(void 0===o)return;const n=o.value;if(void 0===n)return;const r=e;void 0===r.text&&(r.text=n instanceof Array?s.Utils.itemFromArray(n,e.randomIndexData):n);const a=r.text,l=o.style,c=o.weight,d=2*Math.round(i),u=o.font,h=e.fill;t.font=`${l} ${c} ${d}px "${u}"`;const v={x:-i/2,y:i/2};h?t.fillText(a,v.x,v.y):t.strokeText(a,v.x,v.y)}}},QkZH:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Background=void 0;const o=i("vRcM");e.Background=class{load(t){void 0!==t&&(void 0!==t.color&&(this.color=o.OptionsColor.create(this.color,t.color)),void 0!==t.image&&(this.image=t.image),void 0!==t.position&&(this.position=t.position),void 0!==t.repeat&&(this.repeat=t.repeat),void 0!==t.size&&(this.size=t.size),void 0!==t.opacity&&(this.opacity=t.opacity))}}},QyzU:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Emitters=void 0;const o=i("URwT"),s=i("C9b5"),n=i("nxdw"),r=i("D98Q");e.Emitters=class{constructor(t){this.container=t,this.array=[],this.emitters=[],this.interactivityEmitters=[]}init(t){var e,i;if(!t)return;t.emitters&&(t.emitters instanceof Array?this.emitters=t.emitters.map(t=>{const e=new n.Emitter;return e.load(t),e}):(this.emitters instanceof Array&&(this.emitters=new n.Emitter),this.emitters.load(t.emitters)));const s=null===(i=null===(e=t.interactivity)||void 0===e?void 0:e.modes)||void 0===i?void 0:i.emitters;if(s&&(s instanceof Array?this.interactivityEmitters=s.map(t=>{const e=new n.Emitter;return e.load(t),e}):(this.interactivityEmitters instanceof Array&&(this.interactivityEmitters=new n.Emitter),this.interactivityEmitters.load(s))),this.emitters instanceof Array)for(const t of this.emitters){const e=new o.EmitterInstance(this,this.container,t);this.addEmitter(e)}else{const t=this.emitters,e=new o.EmitterInstance(this,this.container,t);this.addEmitter(e)}}play(){for(const t of this.array)t.play()}pause(){for(const t of this.array)t.pause()}stop(){this.array=[]}handleClickMode(t){const e=this.container,i=this.emitters,n=this.interactivityEmitters;if(t===r.EmitterClickMode.emitter){let t;n instanceof Array?n.length>0&&(t=s.Utils.itemFromArray(n)):t=n;const r=null!=t?t:i instanceof Array?s.Utils.itemFromArray(i):i,a=e.interactivity.mouse.clickPosition,l=new o.EmitterInstance(this,this.container,s.Utils.deepExtend({},r),a);this.addEmitter(l)}}resize(){for(const t of this.array)t.resize()}addEmitter(t){this.array.push(t)}removeEmitter(t){const e=this.array.indexOf(t);e>=0&&this.array.splice(e,1)}}},RroA:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Infection=void 0;const o=i("56Cg");e.Infection=class{constructor(){this.cure=!1,this.delay=0,this.enable=!1,this.infections=0,this.stages=[]}load(t){void 0!==t&&(void 0!==t.cure&&(this.cure=t.cure),void 0!==t.delay&&(this.delay=t.delay),void 0!==t.enable&&(this.enable=t.enable),void 0!==t.infections&&(this.infections=t.infections),void 0!==t.stages&&(this.stages=t.stages.map(t=>{const e=new o.InfectionStage;return e.load(t),e})))}}},Rxhr:function(t,e,i){"use strict";var o=this&&this.__createBinding||(Object.create?function(t,e,i,o){void 0===o&&(o=i),Object.defineProperty(t,o,{enumerable:!0,get:function(){return e[i]}})}:function(t,e,i,o){void 0===o&&(o=i),t[o]=e[i]}),s=this&&this.__exportStar||function(t,e){for(var i in t)"default"===i||e.hasOwnProperty(i)||o(e,t,i)};Object.defineProperty(e,"__esModule",{value:!0}),e.AbsorbersPlugin=void 0;const n=i("hQOV"),r=i("C9b5"),a=i("FvHc"),l=i("iot7");const c=new class{constructor(){this.id="absorbers"}getPlugin(t){return new n.Absorbers(t)}needsPlugin(t){var e,i,o;if(!(null==t?void 0:t.absorbers))return!1;const s=t.absorbers;let n=!1;return s instanceof Array?s.length&&(n=!0):(void 0!==s||(null===(o=null===(i=null===(e=t.interactivity)||void 0===e?void 0:e.events)||void 0===i?void 0:i.onClick)||void 0===o?void 0:o.mode)&&r.Utils.isInArray(a.AbsorberClickMode.absorber,t.interactivity.events.onClick.mode))&&(n=!0),n}loadOptions(t,e){var i,o;if(!this.needsPlugin(e))return;const s=t;void 0===s.absorbers&&(s.absorbers=new l.Absorber),(null==e?void 0:e.absorbers)&&((null==e?void 0:e.absorbers)instanceof Array?s.absorbers=null==e?void 0:e.absorbers.map(t=>{const e=new l.Absorber;return e.load(t),e}):(s.absorbers instanceof Array&&(s.absorbers=new l.Absorber),s.absorbers.load(null==e?void 0:e.absorbers)));const n=null===(o=null===(i=null==e?void 0:e.interactivity)||void 0===i?void 0:i.modes)||void 0===o?void 0:o.absorbers;n&&(n instanceof Array?s.interactivity.modes.absorbers=n.map(t=>{const e=new l.Absorber;return e.load(t),e}):((s.interactivity.modes.absorbers instanceof Array||void 0===s.interactivity.modes.absorbers)&&(s.interactivity.modes.absorbers=new l.Absorber),s.interactivity.modes.absorbers.load(n)))}};e.AbsorbersPlugin=c,s(i("FvHc"),e)},T7WN:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Noise=void 0;const o=i("2FAX");e.Noise=class{constructor(){this.delay=new o.NoiseDelay,this.enable=!1}load(t){void 0!==t&&(this.delay.load(t.delay),void 0!==t.enable&&(this.enable=t.enable))}}},Tdtd:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.RepulseBase=void 0;e.RepulseBase=class{constructor(){this.distance=200,this.duration=.4,this.speed=1}load(t){void 0!==t&&(void 0!==t.distance&&(this.distance=t.distance),void 0!==t.duration&&(this.duration=t.duration),void 0!==t.speed&&(this.speed=t.speed))}}},Tx5y:function(t,e,i){"use strict";var o=this&&this.__awaiter||function(t,e,i,o){return new(i||(i=Promise))((function(s,n){function r(t){try{l(o.next(t))}catch(t){n(t)}}function a(t){try{l(o.throw(t))}catch(t){n(t)}}function l(t){var e;t.done?s(t.value):(e=t.value,e instanceof i?e:new i((function(t){t(e)}))).then(r,a)}l((o=o.apply(t,e||[])).next())}))};Object.defineProperty(e,"__esModule",{value:!0}),e.Container=void 0;const s=i("xqYR"),n=i("0pRb"),r=i("qZoD"),a=i("QD5p"),l=i("Vmap"),c=i("C9b5");e.Container=class{constructor(t,e,...i){this.id=t,this.sourceOptions=e,this.started=!1,this.destroyed=!1,this.paused=!0,this.lastFrameTime=0,this.pageHidden=!1,this.retina=new r.Retina(this),this.canvas=new s.Canvas(this),this.particles=new n.Particles(this),this.drawer=new a.FrameManager(this),this.noise={generate:()=>({angle:Math.random()*Math.PI*2,length:Math.random()}),init:()=>{},update:()=>{}},this.interactivity={mouse:{}},this.bubble={},this.repulse={particles:[]},this.plugins=new Map,this.drawers=new Map,this.density=1,this.options=new l.Options;for(const t of i)this.options.load(c.Plugins.getPreset(t));const o=c.Plugins.getSupportedShapes();for(const t of o){const e=c.Plugins.getShapeDrawer(t);e&&this.drawers.set(t,e)}this.sourceOptions&&this.options.load(this.sourceOptions),this.eventListeners=new c.EventListeners(this)}play(t){const e=this.paused||t;if(this.paused&&(this.paused=!1),e){for(const[,t]of this.plugins)t.play&&t.play();this.lastFrameTime=performance.now()}this.draw()}pause(){if(void 0!==this.drawAnimationFrame&&(c.Utils.cancelAnimation(this.drawAnimationFrame),delete this.drawAnimationFrame),!this.paused){for(const[,t]of this.plugins)t.pause&&t.pause();this.pageHidden||(this.paused=!0)}}draw(){this.drawAnimationFrame=c.Utils.animate(t=>{var e;return null===(e=this.drawer)||void 0===e?void 0:e.nextFrame(t)})}getAnimationStatus(){return!this.paused}setNoise(t,e,i){t&&("function"==typeof t?(this.noise.generate=t,e&&(this.noise.init=e),i&&(this.noise.update=i)):(t.generate&&(this.noise.generate=t.generate),t.init&&(this.noise.init=t.init),t.update&&(this.noise.update=t.update)))}densityAutoParticles(){this.initDensityFactor();const t=this.options.particles.number,e=t.value,i=t.limit>0?t.limit:e,o=Math.min(e,i)*this.density,s=this.particles.count;s<o?this.particles.push(Math.abs(o-s)):s>o&&this.particles.removeQuantity(s-o)}destroy(){this.stop(),this.canvas.destroy(),delete this.interactivity,delete this.options,delete this.retina,delete this.canvas,delete this.particles,delete this.bubble,delete this.repulse,delete this.drawer,delete this.eventListeners;for(const[,t]of this.drawers)t.destroy&&t.destroy(this);this.drawers=new Map,this.destroyed=!0}exportImg(t){this.exportImage(t)}exportImage(t,e,i){var o;return null===(o=this.canvas.element)||void 0===o?void 0:o.toBlob(t,null!=e?e:"image/png",i)}exportConfiguration(){return JSON.stringify(this.options,void 0,2)}refresh(){return o(this,void 0,void 0,(function*(){this.stop(),yield this.start()}))}stop(){if(this.started){this.started=!1,this.eventListeners.removeListeners(),this.pause(),this.particles.clear(),this.canvas.clear();for(const[,t]of this.plugins)t.stop&&t.stop();this.plugins=new Map,this.particles.linksColors={},delete this.particles.linksColor}}start(){return o(this,void 0,void 0,(function*(){if(!this.started){yield this.init(),this.started=!0,this.eventListeners.addListeners();for(const[,t]of this.plugins)void 0!==t.startAsync?yield t.startAsync():void 0!==t.start&&t.start();this.play()}}))}init(){return o(this,void 0,void 0,(function*(){this.retina.init(),this.canvas.init();const t=c.Plugins.getAvailablePlugins(this);for(const[e,i]of t)this.plugins.set(e,i);for(const[,t]of this.drawers)t.init&&(yield t.init(this));for(const[,t]of this.plugins)t.init?t.init(this.options):void 0!==t.initAsync&&(yield t.initAsync(this.options));this.particles.init(),this.densityAutoParticles()}))}initDensityFactor(){const t=this.options.particles.number.density;if(!this.canvas.element||!t.enable)return;const e=this.canvas.element,i=this.retina.pixelRatio;this.density=e.width*e.height/(t.factor*i*t.area)}}},"U/fs":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.BackgroundMask=void 0;const o=i("CPUN");e.BackgroundMask=class{constructor(){this.cover=new o.BackgroundMaskCover,this.enable=!1}load(t){if(void 0!==t){if(void 0!==t.cover){const e=t.cover,i="string"==typeof t.cover?{color:t.cover}:t.cover;this.cover.load(void 0!==e.color?e:{color:i})}void 0!==t.enable&&(this.enable=t.enable)}}}},URwT:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.EmitterInstance=void 0;const o=i("C9b5"),s=i("ZlLd"),n=i("PFhk");e.EmitterInstance=class{constructor(t,e,i,r){var a,l,c;this.emitters=t,this.container=e,this.initialPosition=r,this.emitterOptions=o.Utils.deepExtend({},i),this.position=null!==(a=this.initialPosition)&&void 0!==a?a:this.calcPosition();let d=o.Utils.deepExtend({},this.emitterOptions.particles);void 0===d&&(d={}),void 0===d.move&&(d.move={}),void 0===d.move.direction&&(d.move.direction=this.emitterOptions.direction),this.particlesOptions=d,this.size=null!==(l=this.emitterOptions.size)&&void 0!==l?l:(()=>{const t=new n.EmitterSize;return t.load({height:0,mode:s.SizeMode.percent,width:0}),t})(),this.lifeCount=null!==(c=this.emitterOptions.life.count)&&void 0!==c?c:-1,this.play()}play(){(this.lifeCount>0||!this.emitterOptions.life.count)&&(void 0===this.startInterval&&(this.startInterval=window.setInterval(()=>{this.emit()},1e3*this.emitterOptions.rate.delay)),this.lifeCount>0&&this.prepareToDie())}pause(){const t=this.startInterval;void 0!==t&&(clearInterval(t),delete this.startInterval)}resize(){const t=this.initialPosition;this.position=t&&o.Utils.isPointInside(t,this.container.canvas.size)?t:this.calcPosition()}prepareToDie(){var t;this.lifeCount>0&&void 0!==(null===(t=this.emitterOptions.life)||void 0===t?void 0:t.duration)&&window.setTimeout(()=>{var t;this.pause(),this.lifeCount--,this.lifeCount>0?(this.position=this.calcPosition(),window.setTimeout(()=>{this.play()},null!==(t=this.emitterOptions.life.delay)&&void 0!==t?t:0)):this.destroy()},1e3*this.emitterOptions.life.duration)}destroy(){this.emitters.removeEmitter(this)}calcPosition(){var t;const e=this.container,i=null!==(t=this.emitterOptions.position)&&void 0!==t?t:{x:100*Math.random(),y:100*Math.random()};return{x:i.x/100*e.canvas.size.width,y:i.y/100*e.canvas.size.height}}emit(){const t=this.container,e=this.position,i=this.size.mode===s.SizeMode.percent?t.canvas.size.width*this.size.width/100:this.size.width,o=this.size.mode===s.SizeMode.percent?t.canvas.size.height*this.size.height/100:this.size.height;for(let s=0;s<this.emitterOptions.rate.quantity;s++)t.particles.addParticle({x:e.x+i*(Math.random()-.5),y:e.y+o*(Math.random()-.5)},this.particlesOptions)}}},UfkC:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.MoveDirection=void 0,function(t){t.bottom="bottom",t.bottomLeft="bottom-left",t.bottomRight="bottom-right",t.left="left",t.none="none",t.right="right",t.top="top",t.topLeft="top-left",t.topRight="top-right"}(e.MoveDirection||(e.MoveDirection={}))},Vmap:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Options=void 0;const o=i("GMfk"),s=i("N6qZ"),n=i("U/fs"),r=i("QkZH"),a=i("RroA"),l=i("C9b5");e.Options=class{constructor(){this.background=new r.Background,this.backgroundMask=new n.BackgroundMask,this.detectRetina=!0,this.fpsLimit=30,this.infection=new a.Infection,this.interactivity=new o.Interactivity,this.particles=new s.Particles,this.pauseOnBlur=!0}get fps_limit(){return this.fpsLimit}set fps_limit(t){this.fpsLimit=t}get retina_detect(){return this.detectRetina}set retina_detect(t){this.detectRetina=t}load(t){var e,i;if(void 0===t)return;if(void 0!==t.preset)if(t.preset instanceof Array)for(const e of t.preset)this.importPreset(e);else this.importPreset(t.preset);const o=null!==(e=t.detectRetina)&&void 0!==e?e:t.retina_detect;void 0!==o&&(this.detectRetina=o);const s=null!==(i=t.fpsLimit)&&void 0!==i?i:t.fps_limit;void 0!==s&&(this.fpsLimit=s),void 0!==t.pauseOnBlur&&(this.pauseOnBlur=t.pauseOnBlur),this.background.load(t.background),this.particles.load(t.particles),this.infection.load(t.infection),this.interactivity.load(t.interactivity),this.backgroundMask.load(t.backgroundMask),l.Plugins.loadOptions(this,t)}importPreset(t){this.load(l.Plugins.getPreset(t))}}},W13A:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.HoverEvent=void 0;const o=i("aP84");e.HoverEvent=class{constructor(){this.enable=!1,this.mode=[],this.parallax=new o.Parallax}load(t){void 0!==t&&(void 0!==t.enable&&(this.enable=t.enable),void 0!==t.mode&&(this.mode=t.mode),this.parallax.load(t.parallax))}}},W31w:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.AnimatableColor=void 0;const o=i("vRcM"),s=i("ZDl6");class n extends o.OptionsColor{constructor(){super(),this.animation=new s.ColorAnimation}static create(t,e){const i=null!=t?t:new n;return void 0!==e&&i.load("string"==typeof e?{value:e}:e),i}load(t){super.load(t),this.animation.load(null==t?void 0:t.animation)}}e.AnimatableColor=n},WiB2:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.SizeAnimationStatus=void 0,function(t){t[t.increasing=0]="increasing",t[t.decreasing=1]="decreasing"}(e.SizeAnimationStatus||(e.SizeAnimationStatus={}))},Wu3R:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Type=void 0,function(t){t.inline="inline",t.inside="inside",t.outside="outside",t.none="none"}(e.Type||(e.Type={}))},XGcx:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.BubbleBase=void 0;const o=i("vRcM");e.BubbleBase=class{constructor(){this.distance=200,this.duration=.4}load(t){void 0!==t&&(void 0!==t.distance&&(this.distance=t.distance),void 0!==t.duration&&(this.duration=t.duration),void 0!==t.opacity&&(this.opacity=t.opacity),void 0!==t.color&&(t.color instanceof Array?this.color=t.color.map(t=>o.OptionsColor.create(void 0,t)):(this.color instanceof Array&&(this.color=new o.OptionsColor),this.color=o.OptionsColor.create(this.color,t.color))),void 0!==t.size&&(this.size=t.size))}}},XIwB:function(t,e,i){"use strict";var o=this&&this.__awaiter||function(t,e,i,o){return new(i||(i=Promise))((function(s,n){function r(t){try{l(o.next(t))}catch(t){n(t)}}function a(t){try{l(o.throw(t))}catch(t){n(t)}}function l(t){var e;t.done?s(t.value):(e=t.value,e instanceof i?e:new i((function(t){t(e)}))).then(r,a)}l((o=o.apply(t,e||[])).next())}))};Object.defineProperty(e,"__esModule",{value:!0}),e.MainSlim=void 0;const s=i("pmYS"),n=i("Qbha"),r=i("vfib"),a=i("C9b5"),l=i("muAV"),c=i("yEg2"),d=i("Lut8"),u=i("YU+L"),h=i("XqMA"),v=i("01Bu"),p=i("EZQt");e.MainSlim=class{constructor(){this.initialized=!1;const t=new s.SquareDrawer,e=new n.TextDrawer,i=new r.ImageDrawer;a.Plugins.addShapeDrawer(l.ShapeType.line,new c.LineDrawer),a.Plugins.addShapeDrawer(l.ShapeType.circle,new d.CircleDrawer),a.Plugins.addShapeDrawer(l.ShapeType.edge,t),a.Plugins.addShapeDrawer(l.ShapeType.square,t),a.Plugins.addShapeDrawer(l.ShapeType.triangle,new u.TriangleDrawer),a.Plugins.addShapeDrawer(l.ShapeType.star,new h.StarDrawer),a.Plugins.addShapeDrawer(l.ShapeType.polygon,new v.PolygonDrawer),a.Plugins.addShapeDrawer(l.ShapeType.char,e),a.Plugins.addShapeDrawer(l.ShapeType.character,e),a.Plugins.addShapeDrawer(l.ShapeType.image,i),a.Plugins.addShapeDrawer(l.ShapeType.images,i)}init(){this.initialized||(this.initialized=!0)}loadFromArray(t,e,i){return o(this,void 0,void 0,(function*(){return p.Loader.loadFromArray(t,e,i)}))}load(t,e){return o(this,void 0,void 0,(function*(){return p.Loader.load(t,e)}))}loadJSON(t,e){return p.Loader.loadJSON(t,e)}setOnClickHandler(t){p.Loader.setOnClickHandler(t)}dom(){return p.Loader.dom()}domItem(t){return p.Loader.domItem(t)}addShape(t,e,i,o,s){let n;n="function"==typeof e?{afterEffect:o,destroy:s,draw:e,init:i}:e,a.Plugins.addShapeDrawer(t,n)}addPreset(t,e){a.Plugins.addPreset(t,e)}addPlugin(t){a.Plugins.addPlugin(t)}}},XqMA:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.StarDrawer=void 0;e.StarDrawer=class{draw(t,e,i){var o,s,n;const r=e.shapeData,a=null!==(s=null!==(o=null==r?void 0:r.sides)&&void 0!==o?o:null==r?void 0:r.nb_sides)&&void 0!==s?s:5,l=null!==(n=null==r?void 0:r.inset)&&void 0!==n?n:2;t.moveTo(0,0-i);for(let e=0;e<a;e++)t.rotate(Math.PI/a),t.lineTo(0,0-i*l),t.rotate(Math.PI/a),t.lineTo(0,0-i)}}},Xvid:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Rectangle=void 0;const o=i("/6af");class s extends o.Range{constructor(t,e,i,o){super(t,e),this.size={height:o,width:i}}contains(t){return t.x>=this.position.x&&t.x<=this.position.x+this.size.width&&t.y>=this.position.y&&t.y<=this.position.y+this.size.height}intersects(t){const e=t,i=t,o=this.size.width,s=this.size.height,n=this.position,r=t.position;if(void 0!==i.radius)return i.intersects(this);if(void 0!==e.size){const t=e.size,i=t.width,a=t.height;return r.x-i<n.x+o&&r.x+i>n.x-o&&r.y-a<n.y+s&&r.y+a>n.y-s}return!1}}e.Rectangle=s},"YU+L":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.TriangleDrawer=void 0;const o=i("gYxR");class s extends o.PolygonDrawerBase{getSidesData(t,e){return{count:{denominator:2,numerator:3},length:2*e}}getCenter(t,e){return{x:-e,y:e/1.66}}}e.TriangleDrawer=s},ZDl6:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.ColorAnimation=void 0;e.ColorAnimation=class{constructor(){this.enable=!1,this.speed=1,this.sync=!0}load(t){void 0!==t&&(void 0!==t.enable&&(this.enable=t.enable),void 0!==t.speed&&(this.speed=t.speed),void 0!==t.sync&&(this.sync=t.sync))}}},ZJaX:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.EmitterClickMode=void 0,function(t){t.emitter="emitter"}(e.EmitterClickMode||(e.EmitterClickMode={}))},ZRNA:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Constants=void 0;class o{}e.Constants=o,o.canvasClass="tsparticles-canvas-el",o.randomColorValue="random",o.midColorValue="mid",o.touchEndEvent="touchend",o.mouseUpEvent="mouseup",o.mouseMoveEvent="mousemove",o.touchStartEvent="touchstart",o.touchMoveEvent="touchmove",o.mouseLeaveEvent="mouseleave",o.touchCancelEvent="touchcancel",o.resizeEvent="resize",o.visibilityChangeEvent="visibilitychange",o.noPolygonDataLoaded="No polygon data loaded.",o.noPolygonFound="No polygon found, you need to specify SVG url in config."},ZlLd:function(t,e,i){"use strict";var o=this&&this.__createBinding||(Object.create?function(t,e,i,o){void 0===o&&(o=i),Object.defineProperty(t,o,{enumerable:!0,get:function(){return e[i]}})}:function(t,e,i,o){void 0===o&&(o=i),t[o]=e[i]}),s=this&&this.__exportStar||function(t,e){for(var i in t)"default"===i||e.hasOwnProperty(i)||o(e,t,i)};Object.defineProperty(e,"__esModule",{value:!0}),s(i("wSea"),e),s(i("ubkD"),e),s(i("v9tW"),e),s(i("muAV"),e),s(i("89Jo"),e)},a9mD:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.DestroyType=void 0,function(t){t.none="none",t.max="max",t.min="min"}(e.DestroyType||(e.DestroyType={}))},aP84:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Parallax=void 0;e.Parallax=class{constructor(){this.enable=!1,this.force=2,this.smooth=10}load(t){void 0!==t&&(void 0!==t.enable&&(this.enable=t.enable),void 0!==t.force&&(this.force=t.force),void 0!==t.smooth&&(this.smooth=t.smooth))}}},acFK:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Updater=void 0;const o=i("C9b5"),s=i("67oe"),n=i("ZlLd");class r{constructor(t,e){this.container=t,this.particle=e,this.mover=new s.Mover(t,e)}static checkBounds(t,e,i,o,s){(t+e>i&&o>0||t-e<0&&o<0)&&s()}update(t){this.mover.move(t),this.updateOpacity(t),this.updateSize(t),this.updateAngle(t),this.updateColor(t),this.fixOutOfCanvasPosition(),this.updateOutMode(t)}updateOpacity(t){const e=this.container.options,i=this.particle,o=e.fpsLimit>0?60*t/1e3:3.6;if(i.particlesOptions.opacity.animation.enable){switch(i.opacity.status){case n.OpacityAnimationStatus.increasing:i.opacity.value>=i.particlesOptions.opacity.value?i.opacity.status=n.OpacityAnimationStatus.decreasing:i.opacity.value+=(i.opacity.velocity||0)*o;break;case n.OpacityAnimationStatus.decreasing:i.opacity.value<=i.particlesOptions.opacity.animation.minimumValue?i.opacity.status=n.OpacityAnimationStatus.increasing:i.opacity.value-=(i.opacity.velocity||0)*o}i.opacity.value<0&&(i.opacity.value=0)}}updateSize(t){var e;const i=this.container,o=i.options,s=this.particle,r=o.fpsLimit>0?60*t/1e3:3.6,a=s.particlesOptions.size,l=a.animation;if(l.enable){switch(s.size.status){case n.SizeAnimationStatus.increasing:s.size.value>=(null!==(e=s.sizeValue)&&void 0!==e?e:i.retina.sizeValue)?s.size.status=n.SizeAnimationStatus.decreasing:s.size.value+=(s.size.velocity||0)*r;break;case n.SizeAnimationStatus.decreasing:s.size.value<=l.minimumValue?s.size.status=n.SizeAnimationStatus.increasing:s.size.value-=(s.size.velocity||0)*r}switch(l.destroy){case n.DestroyType.max:s.size.value>=a.value*i.retina.pixelRatio&&s.destroy();break;case n.DestroyType.min:s.size.value<=l.minimumValue*i.retina.pixelRatio&&s.destroy()}s.size.value<0&&!s.destroyed&&(s.size.value=0)}}updateAngle(t){const e=this.container.options,i=this.particle,o=e.fpsLimit>0?60*t/1e3:3.6;if(i.particlesOptions.rotate.animation.enable)switch(i.rotateDirection){case n.RotateDirection.clockwise:i.angle+=i.particlesOptions.rotate.animation.speed*Math.PI/18*o,i.angle>360&&(i.angle-=360);break;case n.RotateDirection.counterClockwise:default:i.angle-=i.particlesOptions.rotate.animation.speed*Math.PI/18*o,i.angle<0&&(i.angle+=360)}}updateColor(t){const e=this.container.options,i=this.particle;if(void 0===i.color)return;const o=e.fpsLimit>0?60*t/1e3:3.6;i.particlesOptions.color.animation.enable&&(i.color.h+=(i.colorVelocity||0)*o,i.color.h>360&&(i.color.h-=360))}fixOutOfCanvasPosition(){const t=this.container,e=this.particle,i=e.particlesOptions.move.outMode,s=e.particlesOptions.move.warp,r=t.canvas.size;let a;if(a=i===n.OutMode.bounce?{bottom:r.height,left:e.size.value,right:r.width,top:e.size.value}:i===n.OutMode.bounceHorizontal?{bottom:r.height+e.size.value-e.offset.y,left:e.size.value,right:r.width,top:-e.size.value-e.offset.y}:i===n.OutMode.bounceVertical?{bottom:r.height,left:-e.size.value-e.offset.x,right:r.width+e.size.value+e.offset.x,top:e.size.value}:{bottom:r.height+e.size.value-e.offset.y,left:-e.size.value-e.offset.x,right:r.width+e.size.value+e.offset.x,top:-e.size.value-e.offset.y},i===n.OutMode.destroy){const i=e.size.value;o.Utils.isPointInside(e.position,t.canvas.size,i)||t.particles.remove(e)}else{const t=e.size.value,i=o.Utils.calculateBounds(e.position,t);i.left>r.width-e.offset.x?(e.position.x=a.left,s||(e.position.y=Math.random()*r.height)):i.right<-e.offset.x&&(e.position.x=a.right,s||(e.position.y=Math.random()*r.height)),i.top>r.height-e.offset.y?(s||(e.position.x=Math.random()*r.width),e.position.y=a.top):i.bottom<-e.offset.y&&(s||(e.position.x=Math.random()*r.width),e.position.y=a.bottom)}}updateOutMode(t){switch(this.particle.particlesOptions.move.outMode){case n.OutMode.bounce:case n.OutMode.bounceVertical:case n.OutMode.bounceHorizontal:this.updateBounce(t)}}updateBounce(t){const e=this.container,i=this.particle;let o=!1;for(const[,s]of e.plugins)if(void 0!==s.particleBounce&&(o=s.particleBounce(i,t)),o)break;if(!o){const t=i.particlesOptions.move.outMode,o=i.getPosition();if(t===n.OutMode.bounce||t===n.OutMode.bounceHorizontal){const t=i.size.value,s=i.velocity.horizontal;r.checkBounds(o.x,t,e.canvas.size.width,s,()=>{i.velocity.horizontal*=-1})}if(t===n.OutMode.bounce||t===n.OutMode.bounceVertical){const t=i.size.value,s=i.velocity.vertical;r.checkBounds(o.y,t,e.canvas.size.height,s,()=>{i.velocity.vertical*=-1})}}}}e.Updater=r},brjH:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.SizeAnimation=void 0;const o=i("ZlLd");e.SizeAnimation=class{constructor(){this.destroy=o.DestroyType.none,this.enable=!1,this.minimumValue=0,this.speed=5,this.startValue=o.StartValueType.max,this.sync=!1}get size_min(){return this.minimumValue}set size_min(t){this.minimumValue=t}load(t){var e;if(void 0===t)return;void 0!==t.destroy&&(this.destroy=t.destroy),void 0!==t.enable&&(this.enable=t.enable);const i=null!==(e=t.minimumValue)&&void 0!==e?e:t.size_min;void 0!==i&&(this.minimumValue=i),void 0!==t.speed&&(this.speed=t.speed),void 0!==t.startValue&&(this.startValue=t.startValue),void 0!==t.sync&&(this.sync=t.sync)}}},bwoT:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Move=void 0;const o=i("F5ry"),s=i("ZlLd"),n=i("/XgI"),r=i("T7WN");e.Move=class{constructor(){this.angle=90,this.attract=new o.Attract,this.direction=s.MoveDirection.none,this.enable=!1,this.noise=new r.Noise,this.outMode=s.OutMode.out,this.random=!1,this.speed=2,this.straight=!1,this.trail=new n.Trail,this.vibrate=!1,this.warp=!1}get collisions(){return!1}set collisions(t){}get bounce(){return this.collisions}set bounce(t){this.collisions=t}get out_mode(){return this.outMode}set out_mode(t){this.outMode=t}load(t){var e;if(void 0===t)return;void 0!==t.angle&&(this.angle=t.angle),this.attract.load(t.attract),void 0!==t.direction&&(this.direction=t.direction),void 0!==t.enable&&(this.enable=t.enable),this.noise.load(t.noise);const i=null!==(e=t.outMode)&&void 0!==e?e:t.out_mode;void 0!==i&&(this.outMode=i),void 0!==t.random&&(this.random=t.random),void 0!==t.speed&&(this.speed=t.speed),void 0!==t.straight&&(this.straight=t.straight),this.trail.load(t.trail),void 0!==t.vibrate&&(this.vibrate=t.vibrate),void 0!==t.warp&&(this.warp=t.warp)}}},cWpP:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.LinksTriangle=void 0;const o=i("vRcM");e.LinksTriangle=class{constructor(){this.enable=!1}load(t){void 0!==t&&(void 0!==t.color&&(this.color=o.OptionsColor.create(this.color,t.color)),void 0!==t.enable&&(this.enable=t.enable),void 0!==t.opacity&&(this.opacity=t.opacity))}}},d0ux:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.AbsorberInstance=void 0;const o=i("C9b5");e.AbsorberInstance=class{constructor(t,e,i,s){var n,r;this.absorbers=t,this.container=e,this.initialPosition=s,this.options=i;let a=i.size.value*e.retina.pixelRatio;const l="boolean"==typeof i.size.random?i.size.random:i.size.random.enable,c="boolean"==typeof i.size.random?1:i.size.random.minimumValue;l&&(a=o.Utils.randomInRange(c,a)),this.opacity=this.options.opacity,this.size=a*e.retina.pixelRatio,this.mass=this.size*i.size.density;const d=i.size.limit;this.limit=void 0!==d?d*e.retina.pixelRatio:d;const u="string"==typeof i.color?{value:i.color}:i.color;this.color=null!==(n=o.ColorUtils.colorToRgb(u))&&void 0!==n?n:{b:0,g:0,r:0},this.position=null!==(r=this.initialPosition)&&void 0!==r?r:this.calcPosition()}attract(t){const e=t.getPosition(),{dx:i,dy:s,distance:n}=o.Utils.getDistances(this.position,e),r=Math.atan2(i,s)*(180/Math.PI),a=this.mass/Math.pow(n,2);if(n<this.size+t.size.value){const e=.033*t.size.value;this.size>t.size.value&&n<this.size-t.size.value?t.destroy():(t.size.value-=e,t.velocity.horizontal+=Math.sin(r*(Math.PI/180))*a,t.velocity.vertical+=Math.cos(r*(Math.PI/180))*a),(void 0===this.limit||this.size<this.limit)&&(this.size+=e),this.mass+=e*this.options.size.density}else t.velocity.horizontal+=Math.sin(r*(Math.PI/180))*a,t.velocity.vertical+=Math.cos(r*(Math.PI/180))*a}resize(){const t=this.initialPosition;this.position=t&&o.Utils.isPointInside(t,this.container.canvas.size)?t:this.calcPosition()}draw(t){t.translate(this.position.x,this.position.y),t.beginPath(),t.arc(0,0,this.size,0,2*Math.PI,!1),t.closePath(),t.fillStyle=o.ColorUtils.getStyleFromRgb(this.color,this.opacity),t.fill()}calcPosition(){var t;const e=this.container,i=null!==(t=this.options.position)&&void 0!==t?t:{x:100*Math.random(),y:100*Math.random()};return{x:i.x/100*e.canvas.size.width,y:i.y/100*e.canvas.size.height}}}},dFlz:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.AbsorberRandomSize=void 0;e.AbsorberRandomSize=class{constructor(){this.enable=!1,this.minimumValue=1}load(t){void 0!==t&&(void 0!==t.enable&&(this.enable=t.enable),void 0!==t.minimumValue&&(this.minimumValue=t.minimumValue))}}},e0sz:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.ClickMode=void 0,function(t){t.bubble="bubble",t.push="push",t.remove="remove",t.repulse="repulse",t.pause="pause"}(e.ClickMode||(e.ClickMode={}))},eFzc:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Attractor=void 0;const o=i("C9b5");e.Attractor=class{constructor(t){this.container=t}interact(t){var e;const i=this.container,s=i.options,n=null!==(e=t.linksDistance)&&void 0!==e?e:i.retina.linksDistance,r=t.getPosition(),a=i.particles.quadTree.query(new o.Circle(r.x,r.y,n));for(const e of a){if(t===e||e.particlesOptions.move.attract.enable)continue;const i=e.getPosition(),{dx:n,dy:a}=o.Utils.getDistances(r,i),l=s.particles.move.attract.rotate,c=n/(1e3*l.x),d=a/(1e3*l.y);t.velocity.horizontal-=c,t.velocity.vertical-=d,e.velocity.horizontal+=c,e.velocity.vertical+=d}}isEnabled(t){return t.particlesOptions.move.attract.enable}reset(){}}},ehru:function(t,e,i){"use strict";var o=this&&this.__awaiter||function(t,e,i,o){return new(i||(i=Promise))((function(s,n){function r(t){try{l(o.next(t))}catch(t){n(t)}}function a(t){try{l(o.throw(t))}catch(t){n(t)}}function l(t){var e;t.done?s(t.value):(e=t.value,e instanceof i?e:new i((function(t){t(e)}))).then(r,a)}l((o=o.apply(t,e||[])).next())}))};Object.defineProperty(e,"__esModule",{value:!0}),e.PolygonMaskInstance=void 0;const s=i("qtyS"),n=i("C9b5"),r=i("vGWO");class a{constructor(t){this.container=t,this.dimension={height:0,width:0},this.path2DSupported=!!window.Path2D,this.options=new r.PolygonMask,this.polygonMaskMoveRadius=this.options.move.radius*t.retina.pixelRatio}static polygonBounce(t){t.velocity.horizontal=t.velocity.vertical/2-t.velocity.horizontal,t.velocity.vertical=t.velocity.horizontal/2-t.velocity.vertical}static drawPolygonMask(t,e,i){const o=n.ColorUtils.colorToRgb(i.color);if(o){t.beginPath(),t.moveTo(e[0].x,e[0].y);for(const i of e)t.lineTo(i.x,i.y);t.closePath(),t.strokeStyle=n.ColorUtils.getStyleFromRgb(o),t.lineWidth=i.width,t.stroke()}}static drawPolygonMaskPath(t,e,i,o){t.translate(o.x,o.y);const s=n.ColorUtils.colorToRgb(i.color);s&&(t.strokeStyle=n.ColorUtils.getStyleFromRgb(s,i.opacity),t.lineWidth=i.width,t.stroke(e))}static parsePaths(t,e,i){const o=[];for(const s of t){const t=s.element.pathSegList,n=t.numberOfItems,r={x:0,y:0};for(let s=0;s<n;s++){const n=t.getItem(s),a=window.SVGPathSeg;switch(n.pathSegType){case a.PATHSEG_MOVETO_ABS:case a.PATHSEG_LINETO_ABS:case a.PATHSEG_CURVETO_CUBIC_ABS:case a.PATHSEG_CURVETO_QUADRATIC_ABS:case a.PATHSEG_ARC_ABS:case a.PATHSEG_CURVETO_CUBIC_SMOOTH_ABS:case a.PATHSEG_CURVETO_QUADRATIC_SMOOTH_ABS:{const t=n;r.x=t.x,r.y=t.y;break}case a.PATHSEG_LINETO_HORIZONTAL_ABS:r.x=n.x;break;case a.PATHSEG_LINETO_VERTICAL_ABS:r.y=n.y;break;case a.PATHSEG_LINETO_REL:case a.PATHSEG_MOVETO_REL:case a.PATHSEG_CURVETO_CUBIC_REL:case a.PATHSEG_CURVETO_QUADRATIC_REL:case a.PATHSEG_ARC_REL:case a.PATHSEG_CURVETO_CUBIC_SMOOTH_REL:case a.PATHSEG_CURVETO_QUADRATIC_SMOOTH_REL:{const t=n;r.x+=t.x,r.y+=t.y;break}case a.PATHSEG_LINETO_HORIZONTAL_REL:r.x+=n.x;break;case a.PATHSEG_LINETO_VERTICAL_REL:r.y+=n.y;break;case a.PATHSEG_UNKNOWN:case a.PATHSEG_CLOSEPATH:continue}o.push({x:r.x*e+i.x,y:r.y*e+i.y})}}return o}initAsync(t){return o(this,void 0,void 0,(function*(){this.options.load(null==t?void 0:t.polygon);const e=this.options;this.polygonMaskMoveRadius=e.move.radius*this.container.retina.pixelRatio,e.enable&&(yield this.initRawData())}))}resize(){const t=this.container,e=this.options;e.enable&&e.type!==s.Type.none&&(this.redrawTimeout&&clearTimeout(this.redrawTimeout),this.redrawTimeout=window.setTimeout(()=>o(this,void 0,void 0,(function*(){yield this.initRawData(!0),t.particles.redraw()})),250))}stop(){delete this.raw,delete this.paths}particlesInitialization(){const t=this.options;return!(!t.enable||t.type!==s.Type.inline||t.inline.arrangement!==s.InlineArrangement.onePerPoint&&t.inline.arrangement!==s.InlineArrangement.perPoint)&&(this.drawPoints(),!0)}particlePosition(t,e){var i,o;const r=this.options;if(!(r.enable&&(null!==(o=null===(i=this.raw)||void 0===i?void 0:i.length)&&void 0!==o?o:0)>0))return;const a=n.Utils.deepExtend({},t||this.randomPoint());return r.type===s.Type.inline&&e&&(e.initialPosition=a),a}particleBounce(t){const e=this.options;if(e.enable&&e.type!==s.Type.none&&e.type!==s.Type.inline){if(!this.checkInsidePolygon(t.getPosition()))return a.polygonBounce(t),!0}else if(e.enable&&e.type===s.Type.inline&&t.initialPosition){if(n.Utils.getDistance(t.initialPosition,t.getPosition())>this.polygonMaskMoveRadius)return a.polygonBounce(t),!0}return!1}clickPositionValid(t){const e=this.options;return e.enable&&e.type!==s.Type.none&&e.type!==s.Type.inline&&this.checkInsidePolygon(t)}draw(t){var e;if(!(null===(e=this.paths)||void 0===e?void 0:e.length))return;const i=this.options,o=i.draw;if(!i.enable||!o.enable)return;const s=this.raw;for(const e of this.paths){const i=e.path2d,n=this.path2DSupported;t&&(n&&i&&this.offset?a.drawPolygonMaskPath(t,i,o.stroke,this.offset):s&&a.drawPolygonMask(t,s,o.stroke))}}checkInsidePolygon(t){var e,i;const o=this.container,r=this.options;if(!r.enable||r.type===s.Type.none||r.type===s.Type.inline)return!0;if(!this.raw)throw new Error(n.Constants.noPolygonFound);const a=o.canvas.size,l=null!==(e=null==t?void 0:t.x)&&void 0!==e?e:Math.random()*a.width,c=null!==(i=null==t?void 0:t.y)&&void 0!==i?i:Math.random()*a.height;let d=!1;for(let t=0,e=this.raw.length-1;t<this.raw.length;e=t++){const i=this.raw[t],o=this.raw[e];i.y>c!=o.y>c&&l<(o.x-i.x)*(c-i.y)/(o.y-i.y)+i.x&&(d=!d)}return r.type===s.Type.inside?d:r.type===s.Type.outside&&!d}parseSvgPath(t,e){var i,o,s;const n=null!=e&&e;if(void 0!==this.paths&&!n)return this.raw;const r=this.container,l=this.options,c=(new DOMParser).parseFromString(t,"image/svg+xml"),d=c.getElementsByTagName("svg")[0];let u=d.getElementsByTagName("path");u.length||(u=c.getElementsByTagName("path")),this.paths=[];for(let t=0;t<u.length;t++){const e=u.item(t);e&&this.paths.push({element:e,length:e.getTotalLength()})}const h=r.retina.pixelRatio,v=l.scale/h;this.dimension.width=parseFloat(null!==(i=d.getAttribute("width"))&&void 0!==i?i:"0")*v,this.dimension.height=parseFloat(null!==(o=d.getAttribute("height"))&&void 0!==o?o:"0")*v;const p=null!==(s=l.position)&&void 0!==s?s:{x:50,y:50};return this.offset={x:r.canvas.size.width*p.x/(100*h)-this.dimension.width/2,y:r.canvas.size.height*p.y/(100*h)-this.dimension.height/2},a.parsePaths(this.paths,v,this.offset)}downloadSvgPath(t,e){return o(this,void 0,void 0,(function*(){const i=this.options,o=t||i.url,s=null!=e&&e;if(!o||void 0!==this.paths&&!s)return this.raw;const n=yield fetch(o);if(!n.ok)throw new Error("tsParticles Error - Error occurred during polygon mask download");return this.parseSvgPath(yield n.text(),e)}))}drawPoints(){if(this.raw)for(const t of this.raw)this.container.particles.addParticle({x:t.x,y:t.y})}randomPoint(){const t=this.container,e=this.options;let i;if(e.type===s.Type.inline)switch(e.inline.arrangement){case s.InlineArrangement.randomPoint:i=this.getRandomPoint();break;case s.InlineArrangement.randomLength:i=this.getRandomPointByLength();break;case s.InlineArrangement.equidistant:i=this.getEquidistantPointByIndex(t.particles.count);break;case s.InlineArrangement.onePerPoint:case s.InlineArrangement.perPoint:default:i=this.getPointByIndex(t.particles.count)}else i={x:Math.random()*t.canvas.size.width,y:Math.random()*t.canvas.size.height};return this.checkInsidePolygon(i)?i:this.randomPoint()}getRandomPoint(){if(!this.raw||!this.raw.length)throw new Error(n.Constants.noPolygonDataLoaded);const t=n.Utils.itemFromArray(this.raw);return{x:t.x,y:t.y}}getRandomPointByLength(){var t,e,i;const o=this.options;if(!this.raw||!this.raw.length||!(null===(t=this.paths)||void 0===t?void 0:t.length))throw new Error(n.Constants.noPolygonDataLoaded);const s=n.Utils.itemFromArray(this.paths),r=Math.floor(Math.random()*s.length)+1,a=s.element.getPointAtLength(r);return{x:a.x*o.scale+((null===(e=this.offset)||void 0===e?void 0:e.x)||0),y:a.y*o.scale+((null===(i=this.offset)||void 0===i?void 0:i.y)||0)}}getEquidistantPointByIndex(t){var e,i,o,s,r,a,l;const c=this.container.options,d=this.options;if(!this.raw||!this.raw.length||!(null===(e=this.paths)||void 0===e?void 0:e.length))throw new Error(n.Constants.noPolygonDataLoaded);let u,h=0;const v=this.paths.reduce((t,e)=>t+e.length,0)/c.particles.number.value;for(const e of this.paths){const i=v*t-h;if(i<=e.length){u=e.element.getPointAtLength(i);break}h+=e.length}return{x:(null!==(i=null==u?void 0:u.x)&&void 0!==i?i:0)*d.scale+(null!==(s=null===(o=this.offset)||void 0===o?void 0:o.x)&&void 0!==s?s:0),y:(null!==(r=null==u?void 0:u.y)&&void 0!==r?r:0)*d.scale+(null!==(l=null===(a=this.offset)||void 0===a?void 0:a.y)&&void 0!==l?l:0)}}getPointByIndex(t){if(!this.raw||!this.raw.length)throw new Error(n.Constants.noPolygonDataLoaded);const e=this.raw[t%this.raw.length];return{x:e.x,y:e.y}}createPath2D(){var t,e;const i=this.options;if(this.path2DSupported&&(null===(t=this.paths)||void 0===t?void 0:t.length))for(const t of this.paths){const o=null===(e=t.element)||void 0===e?void 0:e.getAttribute("d");if(o){const e=new Path2D(o),s=document.createElementNS("http://www.w3.org/2000/svg","svg").createSVGMatrix(),n=new Path2D,r=s.scale(i.scale);n.addPath?(n.addPath(e,r),t.path2d=n):delete t.path2d}else delete t.path2d;!t.path2d&&this.raw&&(t.path2d=new Path2D,t.path2d.moveTo(this.raw[0].x,this.raw[0].y),this.raw.forEach((e,i)=>{var o;i>0&&(null===(o=t.path2d)||void 0===o||o.lineTo(e.x,e.y))}),t.path2d.closePath())}}initRawData(t){return o(this,void 0,void 0,(function*(){const e=this.options;if(e.url)this.raw=yield this.downloadSvgPath(e.url,t);else if(e.data){const i=e.data;let o;if("string"!=typeof i){const t=i.path instanceof Array?i.path.map(t=>`<path d="${t}" />`).join(""):`<path d="${i.path}" />`;o=`<svg ${'xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"'} width="${i.size.width}" height="${i.size.height}">${t}</svg>`}else o=i;this.raw=this.parseSvgPath(o,t)}this.createPath2D()}))}}e.PolygonMaskInstance=a},fReP:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.InlineArrangement=void 0,function(t){t.equidistant="equidistant",t.onePerPoint="one-per-point",t.perPoint="per-point",t.randomLength="random-length",t.randomPoint="random-point"}(e.InlineArrangement||(e.InlineArrangement={}))},foZh:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Connect=void 0;const o=i("KttE");e.Connect=class{constructor(){this.distance=80,this.links=new o.ConnectLinks,this.radius=60}get line_linked(){return this.links}set line_linked(t){this.links=t}get lineLinked(){return this.links}set lineLinked(t){this.links=t}load(t){var e,i;void 0!==t&&(void 0!==t.distance&&(this.distance=t.distance),this.links.load(null!==(i=null!==(e=t.links)&&void 0!==e?e:t.lineLinked)&&void 0!==i?i:t.line_linked),void 0!==t.radius&&(this.radius=t.radius))}}},fxbo:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.GrabLinks=void 0;const o=i("vRcM");e.GrabLinks=class{constructor(){this.opacity=1}load(t){void 0!==t&&(void 0!==t.opacity&&(this.opacity=t.opacity),void 0!==t.color&&(this.color=o.OptionsColor.create(this.color,t.color)))}}},gYxR:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.PolygonDrawerBase=void 0;e.PolygonDrawerBase=class{draw(t,e,i){const o=this.getCenter(e,i),s=this.getSidesData(e,i),n=s.count.numerator*s.count.denominator,r=s.count.numerator/s.count.denominator,a=180*(r-2)/r,l=Math.PI-Math.PI*a/180;if(t){t.beginPath(),t.translate(o.x,o.y),t.moveTo(0,0);for(let e=0;e<n;e++)t.lineTo(s.length,0),t.translate(s.length,0),t.rotate(l)}}}},hQOV:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Absorbers=void 0;const o=i("d0ux"),s=i("C9b5"),n=i("iot7"),r=i("FvHc");e.Absorbers=class{constructor(t){this.container=t,this.array=[],this.absorbers=[],this.interactivityAbsorbers=[]}init(t){var e,i;if(!t)return;t.absorbers&&(t.absorbers instanceof Array?this.absorbers=t.absorbers.map(t=>{const e=new n.Absorber;return e.load(t),e}):(this.absorbers instanceof Array&&(this.absorbers=new n.Absorber),this.absorbers.load(t.absorbers)));const s=null===(i=null===(e=t.interactivity)||void 0===e?void 0:e.modes)||void 0===i?void 0:i.absorbers;if(s&&(s instanceof Array?this.interactivityAbsorbers=s.map(t=>{const e=new n.Absorber;return e.load(t),e}):(this.interactivityAbsorbers instanceof Array&&(this.interactivityAbsorbers=new n.Absorber),this.interactivityAbsorbers.load(s))),this.absorbers instanceof Array)for(const t of this.absorbers){const e=new o.AbsorberInstance(this,this.container,t);this.addAbsorber(e)}else{const t=this.absorbers,e=new o.AbsorberInstance(this,this.container,t);this.addAbsorber(e)}}particleUpdate(t){for(const e of this.array)if(e.attract(t),t.destroyed)break}draw(t){for(const e of this.array)t.save(),e.draw(t),t.restore()}stop(){this.array=[]}resize(){for(const t of this.array)t.resize()}handleClickMode(t){const e=this.container,i=this.absorbers,n=this.interactivityAbsorbers;if(t===r.AbsorberClickMode.absorber){let t;n instanceof Array?n.length>0&&(t=s.Utils.itemFromArray(n)):t=n;const r=null!=t?t:i instanceof Array?s.Utils.itemFromArray(i):i,a=e.interactivity.mouse.clickPosition,l=new o.AbsorberInstance(this,this.container,r,a);this.addAbsorber(l)}}addAbsorber(t){this.array.push(t)}removeAbsorber(t){const e=this.array.indexOf(t);e>=0&&this.array.splice(e,1)}}},hoTk:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.RotateDirection=void 0,function(t){t.clockwise="clockwise",t.counterClockwise="counter-clockwise",t.random="random"}(e.RotateDirection||(e.RotateDirection={}))},iWbZ:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Repulser=void 0;const o=i("ZlLd"),s=i("C9b5");e.Repulser=class{constructor(t){this.container=t}isEnabled(){const t=this.container,e=t.options,i=t.interactivity.mouse,n=e.interactivity.events,r=n.onDiv,a=s.Utils.isDivModeEnabled(o.DivMode.repulse,r);if(!(a||n.onHover.enable&&i.position||n.onClick.enable&&i.clickPosition))return!1;const l=n.onHover.mode,c=n.onClick.mode;return s.Utils.isInArray(o.HoverMode.repulse,l)||s.Utils.isInArray(o.ClickMode.repulse,c)||a}reset(){}interact(){const t=this.container,e=t.options,i=t.interactivity.status===s.Constants.mouseMoveEvent,n=e.interactivity.events,r=n.onHover.enable,a=n.onHover.mode,l=n.onClick.enable,c=n.onClick.mode,d=n.onDiv;i&&r&&s.Utils.isInArray(o.HoverMode.repulse,a)?this.hoverRepulse():l&&s.Utils.isInArray(o.ClickMode.repulse,c)?this.clickRepulse():s.Utils.divModeExecute(o.DivMode.repulse,d,(t,e)=>this.singleDivRepulse(t,e))}singleDivRepulse(t,e){const i=this.container,n=document.getElementById(t);if(!n)return;const r=i.retina.pixelRatio,a={x:(n.offsetLeft+n.offsetWidth/2)*r,y:(n.offsetTop+n.offsetHeight/2)*r},l=n.offsetWidth/2*r,c=e.type===o.DivType.circle?new s.Circle(a.x,a.y,l):new s.Rectangle(n.offsetLeft*r,n.offsetTop*r,n.offsetWidth*r,n.offsetHeight*r),d=i.options.interactivity.modes.repulse.divs,u=s.Utils.divMode(d,t);this.processRepulse(a,l,c,u)}hoverRepulse(){const t=this.container,e=t.interactivity.mouse.position;if(!e)return;const i=t.retina.repulseModeDistance;this.processRepulse(e,i,new s.Circle(e.x,e.y,i))}processRepulse(t,e,i,n){var r;const a=this.container,l=a.particles.quadTree.query(i);for(const i of l){const{dx:l,dy:c,distance:d}=s.Utils.getDistances(i.position,t),u={x:l/d,y:c/d},h=100*(null!==(r=null==n?void 0:n.speed)&&void 0!==r?r:a.options.interactivity.modes.repulse.speed),v=s.Utils.clamp((1-Math.pow(d/e,2))*h,0,50),p=i.particlesOptions.move.outMode,f=i.size.value,y={x:i.position.x+u.x*v,y:i.position.y+u.y*v};if(p===o.OutMode.bounce||p===o.OutMode.bounceVertical||p===o.OutMode.bounceHorizontal){const t={horizontal:y.x-f>0&&y.x+f<a.canvas.size.width,vertical:y.y-f>0&&y.y+f<a.canvas.size.height};(p===o.OutMode.bounceVertical||t.horizontal)&&(i.position.x=y.x),(p===o.OutMode.bounceHorizontal||t.vertical)&&(i.position.y=y.y)}else i.position.x=y.x,i.position.y=y.y}}clickRepulse(){const t=this.container;if(t.repulse.finish||(t.repulse.count||(t.repulse.count=0),t.repulse.count++,t.repulse.count===t.particles.count&&(t.repulse.finish=!0)),t.repulse.clicking){const e=t.retina.repulseModeDistance,i=Math.pow(e/6,3),o=t.interactivity.mouse.clickPosition;if(void 0===o)return;const n=new s.Circle(o.x,o.y,i),r=t.particles.quadTree.query(n);for(const e of r){const{dx:n,dy:r,distance:a}=s.Utils.getDistances(o,e.position),l=a*a,c=t.options.interactivity.modes.repulse.speed,d=-i*c/l;l<=i&&(t.repulse.particles.push(e),this.processClickRepulse(e,n,r,d))}}else if(!1===t.repulse.clicking){for(const e of t.repulse.particles)e.velocity.horizontal=e.initialVelocity.horizontal,e.velocity.vertical=e.initialVelocity.vertical;t.repulse.particles=[]}}processClickRepulse(t,e,i,s){const n=this.container,r=n.options,a=Math.atan2(i,e);t.velocity.horizontal=s*Math.cos(a),t.velocity.vertical=s*Math.sin(a);const l=r.particles.move.outMode;if(l===o.OutMode.bounce||l===o.OutMode.bounceHorizontal||l===o.OutMode.bounceVertical){const e={x:t.position.x+t.velocity.horizontal,y:t.position.y+t.velocity.vertical};l!==o.OutMode.bounceVertical&&(e.x+t.size.value>n.canvas.size.width||e.x-t.size.value<0)&&(t.velocity.horizontal*=-1),l!==o.OutMode.bounceHorizontal&&(e.y+t.size.value>n.canvas.size.height||e.y-t.size.value<0)&&(t.velocity.vertical*=-1)}}}},iiaq:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.CanvasUtils=void 0;const o=i("C6n9"),s=i("lPaE");e.CanvasUtils=class{static paintBase(t,e,i){t.save(),t.fillStyle=null!=i?i:"rgba(0,0,0,0)",t.fillRect(0,0,e.width,e.height),t.restore()}static clear(t,e){t.clearRect(0,0,e.width,e.height)}static drawLinkLine(t,e,i,n,r,a,l,c,d,u,h){let v=!1;if(s.Utils.getDistance(i,n)<=r)this.drawLine(t,i,n),v=!0;else if(l){let e,o;const l={x:n.x-a.width,y:n.y},{dx:c,dy:d,distance:u}=s.Utils.getDistances(i,l);if(u<=r){const t=i.y-d/c*i.x;e={x:0,y:t},o={x:a.width,y:t}}else{const t={x:n.x,y:n.y-a.height},{dx:l,dy:c,distance:d}=s.Utils.getDistances(i,t);if(d<=r){const t=-(i.y-c/l*i.x)/(c/l);e={x:t,y:0},o={x:t,y:a.height}}else{const t={x:n.x-a.width,y:n.y-a.height},{dx:l,dy:c,distance:d}=s.Utils.getDistances(i,t);if(d<=r){const t=i.y-c/l*i.x;e={x:-t/(c/l),y:t},o={x:e.x+a.width,y:e.y+a.height}}}}e&&o&&(this.drawLine(t,i,e),this.drawLine(t,n,o),v=!0)}if(v){if(t.lineWidth=e,c&&(t.globalCompositeOperation="destination-out"),t.strokeStyle=o.ColorUtils.getStyleFromRgb(d,u),h.enable){const e=o.ColorUtils.colorToRgb(h.color);e&&(t.shadowBlur=h.blur,t.shadowColor=o.ColorUtils.getStyleFromRgb(e))}t.stroke()}}static drawLinkTriangle(t,e,i,s,n,r,a,l){this.drawTriangle(t,i,s,n),t.lineWidth=e,r&&(t.globalCompositeOperation="destination-out"),t.fillStyle=o.ColorUtils.getStyleFromRgb(a,l),t.fill()}static drawConnectLine(t,e,i,o,s){t.save(),this.drawLine(t,o,s),t.lineWidth=e,t.strokeStyle=i,t.stroke(),t.restore()}static gradient(t,e,i,s){const n=Math.floor(i.size.value/e.size.value),r=e.getColor(),a=i.getColor();if(!r||!a)return;const l=e.getPosition(),c=i.getPosition(),d=o.ColorUtils.mix(r,a,e.size.value,i.size.value),u=t.createLinearGradient(l.x,l.y,c.x,c.y);return u.addColorStop(0,o.ColorUtils.getStyleFromHsl(r,s)),u.addColorStop(n>1?1:n,o.ColorUtils.getStyleFromRgb(d,s)),u.addColorStop(1,o.ColorUtils.getStyleFromHsl(a,s)),u}static drawGrabLine(t,e,i,s,n,r){t.save(),this.drawLine(t,i,s),t.strokeStyle=o.ColorUtils.getStyleFromRgb(n,r),t.lineWidth=e,t.stroke(),t.restore()}static drawParticle(t,e,i,s,n,r,a,l,c){const d=i.getPosition();e.save(),e.translate(d.x,d.y),e.beginPath(),0!==i.angle&&e.rotate(i.angle*Math.PI/180),r&&(e.globalCompositeOperation="destination-out");const u=i.shadowColor;c.enable&&u&&(e.shadowBlur=c.blur,e.shadowColor=o.ColorUtils.getStyleFromRgb(u),e.shadowOffsetX=c.offset.x,e.shadowOffsetY=c.offset.y),e.fillStyle=n;const h=i.stroke;e.lineWidth=h.width,i.strokeColor&&(e.strokeStyle=o.ColorUtils.getStyleFromRgb(i.strokeColor,i.stroke.opacity)),i.close&&e.closePath(),this.drawShape(t,e,i,a,l,s),h.width>0&&i.strokeColor&&e.stroke(),i.fill&&e.fill(),e.restore(),e.save(),e.translate(d.x,d.y),0!==i.angle&&e.rotate(i.angle*Math.PI/180),r&&(e.globalCompositeOperation="destination-out"),this.drawShapeAfterEffect(t,e,i,a,l,s),e.restore()}static drawShape(t,e,i,o,s,n){if(!i.shape)return;const r=t.drawers.get(i.shape);r&&r.draw(e,i,o,s,n)}static drawShapeAfterEffect(t,e,i,o,s,n){if(!i.shape)return;const r=t.drawers.get(i.shape);(null==r?void 0:r.afterEffect)&&r.afterEffect(e,i,o,s,n)}static drawPlugin(t,e,i){void 0!==e.draw&&(t.save(),e.draw(t,i),t.restore())}static drawLine(t,e,i){t.beginPath(),t.moveTo(e.x,e.y),t.lineTo(i.x,i.y),t.closePath()}static drawTriangle(t,e,i,o){t.beginPath(),t.moveTo(e.x,e.y),t.lineTo(i.x,i.y),t.lineTo(o.x,o.y),t.closePath()}}},iot7:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Absorber=void 0;const o=i("Ej6A"),s=i("vRcM");e.Absorber=class{constructor(){this.color=new s.OptionsColor,this.color.value="#000000",this.opacity=1,this.size=new o.AbsorberSize}load(t){void 0!==t&&(void 0!==t.color&&(this.color=s.OptionsColor.create(this.color,t.color)),void 0!==t.opacity&&(this.opacity=t.opacity),void 0!==t.position&&(this.position={x:t.position.x,y:t.position.y}),void 0!==t.size&&this.size.load(t.size))}}},j6XU:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.MoveType=void 0,function(t){t.path="path",t.radius="radius"}(e.MoveType||(e.MoveType={}))},k9Lu:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.RotateAnimation=void 0;e.RotateAnimation=class{constructor(){this.enable=!1,this.speed=0,this.sync=!1}load(t){void 0!==t&&(void 0!==t.enable&&(this.enable=t.enable),void 0!==t.speed&&(this.speed=t.speed),void 0!==t.sync&&(this.sync=t.sync))}}},kb48:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Bubble=void 0;const o=i("s/5y"),s=i("XGcx");class n extends s.BubbleBase{load(t){super.load(t),void 0!==t&&void 0!==t.divs&&(t.divs instanceof Array?this.divs=t.divs.map(t=>{const e=new o.BubbleDiv;return e.load(t),e}):((this.divs instanceof Array||!this.divs)&&(this.divs=new o.BubbleDiv),this.divs.load(t.divs)))}}e.Bubble=n},kxr2:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Grab=void 0;const o=i("fxbo");e.Grab=class{constructor(){this.distance=100,this.links=new o.GrabLinks}get line_linked(){return this.links}set line_linked(t){this.links=t}get lineLinked(){return this.links}set lineLinked(t){this.links=t}load(t){var e,i;void 0!==t&&(void 0!==t.distance&&(this.distance=t.distance),this.links.load(null!==(i=null!==(e=t.links)&&void 0!==e?e:t.lineLinked)&&void 0!==i?i:t.line_linked))}}},lPaE:function(t,e,i){"use strict";var o=this&&this.__awaiter||function(t,e,i,o){return new(i||(i=Promise))((function(s,n){function r(t){try{l(o.next(t))}catch(t){n(t)}}function a(t){try{l(o.throw(t))}catch(t){n(t)}}function l(t){var e;t.done?s(t.value):(e=t.value,e instanceof i?e:new i((function(t){t(e)}))).then(r,a)}l((o=o.apply(t,e||[])).next())}))};Object.defineProperty(e,"__esModule",{value:!0}),e.Utils=void 0;const s=i("ZlLd"),n=i("C6n9");class r{static isSsr(){return"undefined"==typeof window||!window}static get animate(){return this.isSsr()?t=>setTimeout(t):t=>(window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||window.setTimeout)(t)}static get cancelAnimation(){return this.isSsr()?t=>clearTimeout(t):t=>(window.cancelAnimationFrame||window.webkitCancelRequestAnimationFrame||window.mozCancelRequestAnimationFrame||window.oCancelRequestAnimationFrame||window.msCancelRequestAnimationFrame||window.clearTimeout)(t)}static replaceColorSvg(t,e,i){if(!t.svgData)return"";return t.svgData.replace(/#([0-9A-F]{3,6})/gi,()=>n.ColorUtils.getStyleFromHsl(e,i))}static clamp(t,e,i){return Math.min(Math.max(t,e),i)}static isInArray(t,e){return t===e||e instanceof Array&&e.indexOf(t)>-1}static mix(t,e,i,o){return Math.floor((t*i+e*o)/(i+o))}static getParticleBaseVelocity(t){let e;switch(t.direction){case s.MoveDirection.top:e={x:0,y:-1};break;case s.MoveDirection.topRight:e={x:.5,y:-.5};break;case s.MoveDirection.right:e={x:1,y:-0};break;case s.MoveDirection.bottomRight:e={x:.5,y:.5};break;case s.MoveDirection.bottom:e={x:0,y:1};break;case s.MoveDirection.bottomLeft:e={x:-.5,y:1};break;case s.MoveDirection.left:e={x:-1,y:0};break;case s.MoveDirection.topLeft:e={x:-.5,y:-.5};break;default:e={x:0,y:0}}return e}static getDistances(t,e){const i=t.x-e.x,o=t.y-e.y;return{dx:i,dy:o,distance:Math.sqrt(i*i+o*o)}}static getDistance(t,e){return this.getDistances(t,e).distance}static loadFont(t){return o(this,void 0,void 0,(function*(){try{yield document.fonts.load(`${t.weight} 36px '${t.font}'`)}catch(t){}}))}static arrayRandomIndex(t){return Math.floor(Math.random()*t.length)}static itemFromArray(t,e){return t[void 0!==e?e:this.arrayRandomIndex(t)]}static randomInRange(t,e){const i=Math.max(t,e),o=Math.min(t,e);return Math.random()*(i-o)+o}static isPointInside(t,e,i){return this.areBoundsInside(this.calculateBounds(t,null!=i?i:0),e)}static areBoundsInside(t,e){return t.left<e.width&&t.right>0&&t.top<e.height&&t.bottom>0}static calculateBounds(t,e){return{bottom:t.y+e,left:t.x-e,right:t.x+e,top:t.y-e}}static loadImage(t){return new Promise((e,i)=>{const o={source:t,type:t.substr(t.length-3)};if(t){const s=new Image;s.addEventListener("load",()=>{o.element=s,e(o)}),s.addEventListener("error",()=>{i("Error tsParticles - loading image: "+t)}),s.src=t}else i("Error tsParticles - No image.src")})}static downloadSvgImage(t){return o(this,void 0,void 0,(function*(){if(t){const e={source:t,type:t.substr(t.length-3)};if("svg"!==e.type)return this.loadImage(t);const i=yield fetch(e.source);if(i.ok)return e.svgData=yield i.text(),e;throw new Error("Error tsParticles - Image not found")}throw new Error("Error tsParticles - No image.src")}))}static deepExtend(t,...e){for(const i of e){if(null==i)continue;if("object"!=typeof i){t=i;continue}const e=Array.isArray(i);!e||"object"==typeof t&&t&&Array.isArray(t)?e||"object"==typeof t&&t&&!Array.isArray(t)||(t={}):t=[];for(const e in i){if("__proto__"===e)continue;const o=i[e],s="object"==typeof o;t[e]=s&&Array.isArray(o)?o.map(i=>this.deepExtend(t[e],i)):this.deepExtend(t[e],o)}}return t}static isDivModeEnabled(t,e){return e instanceof Array?e.filter(e=>e.enable&&r.isInArray(t,e.mode)).length>0:r.isInArray(t,e.mode)}static divModeExecute(t,e,i){if(e instanceof Array)for(const o of e){const e=o.mode;o.enable&&r.isInArray(t,e)&&this.singleDivModeExecute(o,i)}else{const o=e.mode;e.enable&&r.isInArray(t,o)&&this.singleDivModeExecute(e,i)}}static singleDivModeExecute(t,e){const i=t.ids;if(i instanceof Array)for(const o of i)e(o,t);else e(i,t)}static divMode(t,e){if(e&&t)return t instanceof Array?t.find(t=>r.isInArray(e,t.ids)):r.isInArray(e,t.ids)?t:void 0}}e.Utils=r},muAV:function(t,e,i){"use strict";var o=this&&this.__createBinding||(Object.create?function(t,e,i,o){void 0===o&&(o=i),Object.defineProperty(t,o,{enumerable:!0,get:function(){return e[i]}})}:function(t,e,i,o){void 0===o&&(o=i),t[o]=e[i]}),s=this&&this.__exportStar||function(t,e){for(var i in t)"default"===i||e.hasOwnProperty(i)||o(e,t,i)};Object.defineProperty(e,"__esModule",{value:!0}),s(i("a9mD"),e),s(i("CeJ7"),e),s(i("+HUL"),e),s(i("uMnv"),e),s(i("HMt+"),e)},mwEM:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Modes=void 0;const o=i("kb48"),s=i("foZh"),n=i("kxr2"),r=i("LPIU"),a=i("4tm2"),l=i("pmlM"),c=i("PeBj");e.Modes=class{constructor(){this.bubble=new o.Bubble,this.connect=new s.Connect,this.grab=new n.Grab,this.push=new a.Push,this.remove=new r.Remove,this.repulse=new l.Repulse,this.slow=new c.Slow}load(t){void 0!==t&&(this.bubble.load(t.bubble),this.connect.load(t.connect),this.grab.load(t.grab),this.push.load(t.push),this.remove.load(t.remove),this.repulse.load(t.repulse),this.slow.load(t.slow))}}},nxdw:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Emitter=void 0;const o=i("ZlLd"),s=i("KdG0"),n=i("7Ohm"),r=i("C9b5"),a=i("PFhk");e.Emitter=class{constructor(){this.direction=o.MoveDirection.none,this.life=new n.EmitterLife,this.rate=new s.EmitterRate}load(t){void 0!==t&&(void 0!==t.size&&(void 0===this.size&&(this.size=new a.EmitterSize),this.size.load(t.size)),void 0!==t.direction&&(this.direction=t.direction),this.life.load(t.life),void 0!==t.particles&&(this.particles=r.Utils.deepExtend({},t.particles)),this.rate.load(t.rate),void 0!==t.position&&(this.position={x:t.position.x,y:t.position.y}))}}},p47b:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.ParticlesNumber=void 0;const o=i("p4Tk");e.ParticlesNumber=class{constructor(){this.density=new o.Density,this.limit=0,this.value=100}get max(){return this.limit}set max(t){this.limit=t}load(t){var e;if(void 0===t)return;this.density.load(t.density);const i=null!==(e=t.limit)&&void 0!==e?e:t.max;void 0!==i&&(this.limit=i),void 0!==t.value&&(this.value=t.value)}}},p4Tk:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Density=void 0;e.Density=class{constructor(){this.enable=!1,this.area=800,this.factor=1e3}get value_area(){return this.area}set value_area(t){this.area=t}load(t){var e;if(void 0===t)return;void 0!==t.enable&&(this.enable=t.enable);const i=null!==(e=t.area)&&void 0!==e?e:t.value_area;void 0!==i&&(this.area=i),void 0!==t.factor&&(this.factor=t.factor)}}},pPzP:function(t,e,i){"use strict";var o=this&&this.__createBinding||(Object.create?function(t,e,i,o){void 0===o&&(o=i),Object.defineProperty(t,o,{enumerable:!0,get:function(){return e[i]}})}:function(t,e,i,o){void 0===o&&(o=i),t[o]=e[i]}),s=this&&this.__exportStar||function(t,e){for(var i in t)"default"===i||e.hasOwnProperty(i)||o(e,t,i)};Object.defineProperty(e,"__esModule",{value:!0}),e.EmittersPlugin=void 0;const n=i("C9b5"),r=i("QyzU"),a=i("D98Q"),l=i("nxdw");const c=new class{constructor(){this.id="emitters"}getPlugin(t){return new r.Emitters(t)}needsPlugin(t){var e,i,o;if(!(null==t?void 0:t.emitters))return!1;const s=t.emitters;let r=!1;return s instanceof Array?s.length&&(r=!0):(void 0!==s||(null===(o=null===(i=null===(e=t.interactivity)||void 0===e?void 0:e.events)||void 0===i?void 0:i.onClick)||void 0===o?void 0:o.mode)&&n.Utils.isInArray(a.EmitterClickMode.emitter,t.interactivity.events.onClick.mode))&&(r=!0),r}loadOptions(t,e){var i,o;if(!this.needsPlugin(e))return;const s=t;void 0===s.emitters&&(s.emitters=new l.Emitter),(null==e?void 0:e.emitters)&&((null==e?void 0:e.emitters)instanceof Array?s.emitters=null==e?void 0:e.emitters.map(t=>{const e=new l.Emitter;return e.load(t),e}):(s.emitters instanceof Array&&(s.emitters=new l.Emitter),s.emitters.load(null==e?void 0:e.emitters)));const n=null===(o=null===(i=null==e?void 0:e.interactivity)||void 0===i?void 0:i.modes)||void 0===o?void 0:o.emitters;n&&(n instanceof Array?s.interactivity.modes.emitters=n.map(t=>{const e=new l.Emitter;return e.load(t),e}):((s.interactivity.modes.emitters instanceof Array||void 0===s.interactivity.modes.emitters)&&(s.interactivity.modes.emitters=new l.Emitter),s.interactivity.modes.emitters.load(n)))}};e.EmittersPlugin=c,s(i("D98Q"),e)},pmYS:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.SquareDrawer=void 0;e.SquareDrawer=class{draw(t,e,i){t.rect(-i,-i,2*i,2*i)}}},pmlM:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Repulse=void 0;const o=i("9XT8"),s=i("Tdtd");class n extends s.RepulseBase{load(t){super.load(t),void 0!==(null==t?void 0:t.divs)&&(t.divs instanceof Array?this.divs=t.divs.map(t=>{const e=new o.RepulseDiv;return e.load(t),e}):((this.divs instanceof Array||!this.divs)&&(this.divs=new o.RepulseDiv),this.divs.load(t.divs)))}}e.Repulse=n},q39K:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.AbsorberClickMode=void 0,function(t){t.absorber="absorber"}(e.AbsorberClickMode||(e.AbsorberClickMode={}))},qOOR:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Infecter=void 0;const o=i("C9b5");e.Infecter=class{constructor(t){this.container=t}isEnabled(){return this.container.options.infection.enable}reset(){}interact(t,e){var i,s;if(t.updateInfection(e),void 0===t.infectionStage)return;const n=this.container,r=n.options.infection;if(!r.enable||r.stages.length<1)return;const a=r.stages[t.infectionStage],l=n.retina.pixelRatio,c=2*t.size.value+a.radius*l,d=t.getPosition(),u=null!==(i=a.infectedStage)&&void 0!==i?i:t.infectionStage,h=n.particles.quadTree.query(new o.Circle(d.x,d.y,c)).filter(e=>void 0===e.infectionStage||e.infectionStage!==t.infectionStage),v=a.rate,p=h.length;for(const e of h)if(Math.random()<v/p)if(void 0===e.infectionStage)e.startInfection(u);else if(e.infectionStage<t.infectionStage)e.updateInfectionStage(u);else if(e.infectionStage>t.infectionStage){const i=r.stages[e.infectionStage],o=null!==(s=null==i?void 0:i.infectedStage)&&void 0!==s?s:e.infectionStage;t.updateInfectionStage(o)}}}},qZoD:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Retina=void 0;const o=i("C9b5");e.Retina=class{constructor(t){this.container=t}init(){const t=this.container,e=t.options;e.detectRetina?this.pixelRatio=o.Utils.isSsr()?1:window.devicePixelRatio:this.pixelRatio=1;const i=this.pixelRatio;if(t.canvas.element){const e=t.canvas.element;t.canvas.size.width=e.offsetWidth*i,t.canvas.size.height=e.offsetHeight*i}const s=e.particles;this.linksDistance=s.links.distance*i,this.linksWidth=s.links.width*i,this.moveSpeed=s.move.speed*i,this.sizeValue=s.size.value*i,this.sizeAnimationSpeed=s.size.animation.speed*i;const n=e.interactivity.modes;this.connectModeDistance=n.connect.distance*i,this.connectModeRadius=n.connect.radius*i,this.grabModeDistance=n.grab.distance*i,this.repulseModeDistance=n.repulse.distance*i,this.slowModeRadius=n.slow.radius*i,this.bubbleModeDistance=n.bubble.distance*i,n.bubble.size&&(this.bubbleModeSize=n.bubble.size*i)}initParticle(t){const e=t.particlesOptions,i=this.pixelRatio;t.linksDistance=e.links.distance*i,t.linksWidth=e.links.width*i,t.moveSpeed=e.move.speed*i,t.sizeValue=e.size.value*i,"boolean"!=typeof e.size.random&&(t.randomMinimumSize=e.size.random.minimumValue*i),t.sizeAnimationSpeed=e.size.animation.speed*i}}},qtyS:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Type=e.MoveType=e.InlineArrangement=void 0;const o=i("fReP");Object.defineProperty(e,"InlineArrangement",{enumerable:!0,get:function(){return o.InlineArrangement}});const s=i("j6XU");Object.defineProperty(e,"MoveType",{enumerable:!0,get:function(){return s.MoveType}});const n=i("Wu3R");Object.defineProperty(e,"Type",{enumerable:!0,get:function(){return n.Type}})},"s/5y":function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.BubbleDiv=void 0;const o=i("XGcx");class s extends o.BubbleBase{constructor(){super(),this.ids=[]}load(t){super.load(t),void 0!==t&&void 0!==t.ids&&(this.ids=t.ids)}}e.BubbleDiv=s},sJdS:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.DrawStroke=void 0;const o=i("vRcM"),s=i("C9b5");e.DrawStroke=class{constructor(){this.color=new o.OptionsColor,this.width=.5,this.opacity=1}load(t){var e;void 0!==t&&(this.color=o.OptionsColor.create(this.color,t.color),"string"==typeof this.color.value&&(this.opacity=null!==(e=s.ColorUtils.stringToAlpha(this.color.value))&&void 0!==e?e:this.opacity),void 0!==t.opacity&&(this.opacity=t.opacity),void 0!==t.width&&(this.width=t.width))}}},slsB:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Particle=void 0;const o=i("acFK"),s=i("N6qZ"),n=i("tNle"),r=i("ZlLd"),a=i("C9b5");e.Particle=class{constructor(t,e,i){var l,c,d,u,h,v,p,f,y,m,b,g,w,P,x,M,O;this.container=t,this.fill=!0,this.close=!0,this.links=[],this.lastNoiseTime=0,this.destroyed=!1;const _=t.options,k=new s.Particles;if(k.load(_.particles),void 0!==(null==i?void 0:i.shape)){const t=null!==(l=i.shape.type)&&void 0!==l?l:k.shape.type;this.shape=t instanceof Array?a.Utils.itemFromArray(t):t;const e=new n.Shape;if(e.load(i.shape),void 0!==this.shape){const t=e.options[this.shape];void 0!==t&&(this.shapeData=a.Utils.deepExtend({},t instanceof Array?a.Utils.itemFromArray(t):t),this.fill=null!==(d=null===(c=this.shapeData)||void 0===c?void 0:c.fill)&&void 0!==d?d:this.fill,this.close=null!==(h=null===(u=this.shapeData)||void 0===u?void 0:u.close)&&void 0!==h?h:this.close)}}else{const t=k.shape.type;this.shape=t instanceof Array?a.Utils.itemFromArray(t):t;const e=k.shape.options[this.shape];e&&(this.shapeData=a.Utils.deepExtend({},e instanceof Array?a.Utils.itemFromArray(e):e),this.fill=null!==(p=null===(v=this.shapeData)||void 0===v?void 0:v.fill)&&void 0!==p?p:this.fill,this.close=null!==(y=null===(f=this.shapeData)||void 0===f?void 0:f.close)&&void 0!==y?y:this.close)}void 0!==i&&k.load(i),void 0!==(null===(m=this.shapeData)||void 0===m?void 0:m.particles)&&k.load(null===(b=this.shapeData)||void 0===b?void 0:b.particles),this.particlesOptions=k;const C=this.particlesOptions.move.noise.delay;this.noiseDelay=1e3*(C.random.enable?a.Utils.randomInRange(C.random.minimumValue,C.value):C.value),t.retina.initParticle(this);const S=this.particlesOptions.color,z=null!==(g=this.sizeValue)&&void 0!==g?g:t.retina.sizeValue,A="boolean"==typeof this.particlesOptions.size.random?this.particlesOptions.size.random:this.particlesOptions.size.random.enable;if(this.size={value:A&&void 0!==this.randomMinimumSize?a.Utils.randomInRange(this.randomMinimumSize,z):z},this.direction=this.particlesOptions.move.direction,this.bubble={inRange:!1},this.angle=this.particlesOptions.rotate.random?360*Math.random():this.particlesOptions.rotate.value,this.particlesOptions.rotate.direction===r.RotateDirection.random){const t=Math.floor(2*Math.random());this.rotateDirection=t>0?r.RotateDirection.counterClockwise:r.RotateDirection.clockwise}else this.rotateDirection=this.particlesOptions.rotate.direction;if(this.particlesOptions.size.animation.enable){switch(this.particlesOptions.size.animation.startValue){case r.StartValueType.min:if(!A){const e=t.retina.pixelRatio;this.size.value=this.particlesOptions.size.animation.minimumValue*e}}this.size.status=r.SizeAnimationStatus.increasing,this.size.velocity=(null!==(w=this.sizeAnimationSpeed)&&void 0!==w?w:t.retina.sizeAnimationSpeed)/100,this.particlesOptions.size.animation.sync||(this.size.velocity=this.size.velocity*Math.random())}this.particlesOptions.color.animation.enable?(this.colorVelocity=this.particlesOptions.color.animation.speed/100,this.particlesOptions.color.animation.sync||(this.colorVelocity=this.colorVelocity*Math.random())):this.colorVelocity=0,this.particlesOptions.rotate.animation.enable&&(this.particlesOptions.rotate.animation.sync||(this.angle=360*Math.random())),this.position=this.calcPosition(this.container,e),this.offset={x:0,y:0},this.particlesOptions.collisions.enable&&this.checkOverlap(e),this.color=a.ColorUtils.colorToHsl(S);const T=this.particlesOptions.opacity.random,E=this.particlesOptions.opacity.value;this.opacity={value:T.enable?a.Utils.randomInRange(T.minimumValue,E):E},this.particlesOptions.opacity.animation.enable&&(this.opacity.status=r.OpacityAnimationStatus.increasing,this.opacity.velocity=this.particlesOptions.opacity.animation.speed/100,this.particlesOptions.opacity.animation.sync||(this.opacity.velocity*=Math.random())),this.initialVelocity=this.calculateVelocity(),this.velocity={horizontal:this.initialVelocity.horizontal,vertical:this.initialVelocity.vertical};let R=t.drawers.get(this.shape);if(R||(R=a.Plugins.getShapeDrawer(this.shape),R&&t.drawers.set(this.shape,R)),this.shape===r.ShapeType.image||this.shape===r.ShapeType.images){const e=R,i=this.particlesOptions.shape.options[this.shape],o=e.getImages(t).images,s=o[a.Utils.arrayRandomIndex(o)],n=i instanceof Array?i.filter(t=>t.src===s.source)[0]:i,r=this.getColor();if(void 0!==(null==s?void 0:s.svgData)&&n.replaceColor&&r){const t=a.Utils.replaceColorSvg(s,r,this.opacity.value),e=new Blob([t],{type:"image/svg+xml"}),i=window.URL||window.webkitURL||window,o=i.createObjectURL(e),l=new Image;this.image={data:s,loaded:!1,ratio:n.width/n.height,replaceColor:null!==(P=n.replaceColor)&&void 0!==P?P:n.replace_color,source:n.src},l.addEventListener("load",()=>{this.image&&(this.image.loaded=!0,s.element=l),i.revokeObjectURL(o)}),l.addEventListener("error",()=>{i.revokeObjectURL(o),a.Utils.loadImage(n.src).then(t=>{this.image&&(s.element=t.element,this.image.loaded=!0)})}),l.src=o}else this.image={data:s,loaded:!0,ratio:n.width/n.height,replaceColor:null!==(x=n.replaceColor)&&void 0!==x?x:n.replace_color,source:n.src};this.image.ratio||(this.image.ratio=1),this.fill=null!==(M=n.fill)&&void 0!==M?M:this.fill,this.close=null!==(O=n.close)&&void 0!==O?O:this.close}this.stroke=this.particlesOptions.stroke instanceof Array?a.Utils.itemFromArray(this.particlesOptions.stroke):this.particlesOptions.stroke,this.strokeColor=a.ColorUtils.colorToRgb(this.stroke.color),this.shadowColor=a.ColorUtils.colorToRgb(this.particlesOptions.shadow.color),this.updater=new o.Updater(this.container,this)}update(t){this.links=[],this.updater.update(t)}draw(t){var e;!1!==(null===(e=this.image)||void 0===e?void 0:e.loaded)&&this.container.canvas.drawParticle(this,t)}isOverlapping(){const t=this.container;let e=!1,i=0;const o=this.getPosition();for(const s of t.particles.array.filter(t=>t!=this)){i++;const t=s.getPosition();if(a.Utils.getDistance(o,t)<=this.size.value+s.size.value){e=!0;break}}return{collisionFound:e,iterations:i}}checkOverlap(t){const e=this.container,i=this.isOverlapping();i.iterations>=e.particles.count?e.particles.remove(this):i.collisionFound&&(this.position.x=t?t.x:Math.random()*e.canvas.size.width,this.position.y=t?t.y:Math.random()*e.canvas.size.height,this.checkOverlap())}startInfection(t){t>this.container.options.infection.stages.length||t<0||(this.infectionDelay=0,this.infectionDelayStage=t)}updateInfectionStage(t){t>this.container.options.infection.stages.length||t<0||void 0!==this.infectionStage&&this.infectionStage>t||(void 0!==this.infectionTimeout&&window.clearTimeout(this.infectionTimeout),this.infectionStage=t,this.infectionTime=0)}updateInfection(t){const e=this.container.options,i=e.infection,o=e.infection.stages,s=o.length;if(void 0!==this.infectionDelay&&void 0!==this.infectionDelayStage){const e=this.infectionDelayStage;if(e>s||e<0)return;this.infectionDelay>1e3*i.delay?(this.infectionStage=e,this.infectionTime=0,delete this.infectionDelay,delete this.infectionDelayStage):this.infectionDelay+=t}else delete this.infectionDelay,delete this.infectionDelayStage;if(void 0!==this.infectionStage&&void 0!==this.infectionTime){const e=o[this.infectionStage];void 0!==e.duration&&e.duration>=0&&this.infectionTime>1e3*e.duration?this.nextInfectionStage():this.infectionTime+=t}else delete this.infectionStage,delete this.infectionTime}getPosition(){return{x:this.position.x+this.offset.x,y:this.position.y+this.offset.y}}getColor(){var t;return null!==(t=this.bubble.color)&&void 0!==t?t:this.color}destroy(){this.destroyed=!0}nextInfectionStage(){const t=this.container.options,e=t.infection.stages.length;if(!(e<=0||void 0===this.infectionStage)&&(this.infectionTime=0,e<=++this.infectionStage)){if(t.infection.cure)return delete this.infectionStage,void delete this.infectionTime;this.infectionStage=0,this.infectionTime=0}}calcPosition(t,e){var i,o;for(const[,i]of t.plugins){const t=void 0!==i.particlePosition?i.particlePosition(e,this):void 0;if(void 0!==t)return a.Utils.deepExtend({},t)}const s={x:null!==(i=null==e?void 0:e.x)&&void 0!==i?i:Math.random()*t.canvas.size.width,y:null!==(o=null==e?void 0:e.y)&&void 0!==o?o:Math.random()*t.canvas.size.height},n=this.particlesOptions.move.outMode;return(a.Utils.isInArray(n,r.OutMode.bounce)||a.Utils.isInArray(n,r.OutMode.bounceHorizontal))&&(s.x>t.canvas.size.width-2*this.size.value?s.x-=this.size.value:s.x<2*this.size.value&&(s.x+=this.size.value)),(a.Utils.isInArray(n,r.OutMode.bounce)||a.Utils.isInArray(n,r.OutMode.bounceVertical))&&(s.y>t.canvas.size.height-2*this.size.value?s.y-=this.size.value:s.y<2*this.size.value&&(s.y+=this.size.value)),s}calculateVelocity(){const t=a.Utils.getParticleBaseVelocity(this),e={horizontal:0,vertical:0},i=this.particlesOptions.move,o=Math.PI/180*i.angle,s=Math.PI/4,n={left:Math.sin(s+o/2)-Math.sin(s-o/2),right:Math.cos(s+o/2)-Math.cos(s-o/2)};return i.straight?(e.horizontal=t.x,e.vertical=t.y,i.random&&(e.horizontal+=a.Utils.randomInRange(n.left,n.right)/2,e.vertical+=a.Utils.randomInRange(n.left,n.right)/2)):(e.horizontal=t.x+a.Utils.randomInRange(n.left,n.right)/2,e.vertical=t.y+a.Utils.randomInRange(n.left,n.right)/2),e}}},tNle:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Shape=void 0;const o=i("ZlLd"),s=i("C9b5");e.Shape=class{constructor(){this.options={},this.type=o.ShapeType.circle}get image(){var t;return null!==(t=this.options[o.ShapeType.image])&&void 0!==t?t:this.options[o.ShapeType.images]}set image(t){this.options[o.ShapeType.image]=t,this.options[o.ShapeType.images]=t}get custom(){return this.options}set custom(t){this.options=t}get images(){return this.image instanceof Array?this.image:[this.image]}set images(t){this.image=t}get stroke(){return[]}set stroke(t){}get character(){var t;return null!==(t=this.options[o.ShapeType.character])&&void 0!==t?t:this.options[o.ShapeType.char]}set character(t){this.options[o.ShapeType.character]=t,this.options[o.ShapeType.char]=t}get polygon(){var t;return null!==(t=this.options[o.ShapeType.polygon])&&void 0!==t?t:this.options[o.ShapeType.star]}set polygon(t){this.options[o.ShapeType.polygon]=t,this.options[o.ShapeType.star]=t}load(t){var e,i,n;if(void 0===t)return;const r=null!==(e=t.options)&&void 0!==e?e:t.custom;if(void 0!==r)for(const t in r){const e=r[t];void 0!==e&&(this.options[t]=s.Utils.deepExtend(null!==(i=this.options[t])&&void 0!==i?i:{},e))}this.loadShape(t.character,o.ShapeType.character,o.ShapeType.char,!0),this.loadShape(t.polygon,o.ShapeType.polygon,o.ShapeType.star,!1),this.loadShape(null!==(n=t.image)&&void 0!==n?n:t.images,o.ShapeType.image,o.ShapeType.images,!0),void 0!==t.type&&(this.type=t.type)}loadShape(t,e,i,o){var n,r,a,l;void 0!==t&&(t instanceof Array?(this.options[e]instanceof Array||(this.options[e]=[],this.options[i]&&!o||(this.options[i]=[])),this.options[e]=s.Utils.deepExtend(null!==(n=this.options[e])&&void 0!==n?n:[],t),this.options[i]&&!o||(this.options[i]=s.Utils.deepExtend(null!==(r=this.options[i])&&void 0!==r?r:[],t))):(this.options[e]instanceof Array&&(this.options[e]={},this.options[i]&&!o||(this.options[i]={})),this.options[e]=s.Utils.deepExtend(null!==(a=this.options[e])&&void 0!==a?a:{},t),this.options[i]&&!o||(this.options[i]=s.Utils.deepExtend(null!==(l=this.options[i])&&void 0!==l?l:{},t))))}}},uMnv:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.StartValueType=void 0,function(t){t.max="max",t.min="min"}(e.StartValueType||(e.StartValueType={}))},uP41:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Move=void 0;const o=i("j6XU");e.Move=class{constructor(){this.radius=10,this.type=o.MoveType.path}load(t){void 0!==t&&(void 0!==t.radius&&(this.radius=t.radius),void 0!==t.type&&(this.type=t.type))}}},ub5Q:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.QuadTree=void 0;const o=i("Xvid");class s{constructor(t,e){this.rectangle=t,this.capacity=e,this.points=[],this.divided=!1}subdivide(){const t=this.rectangle.position.x,e=this.rectangle.position.y,i=this.rectangle.size.width,n=this.rectangle.size.height,r=this.capacity;this.northEast=new s(new o.Rectangle(t,e,i/2,n/2),r),this.northWest=new s(new o.Rectangle(t+i/2,e,i/2,n/2),r),this.southEast=new s(new o.Rectangle(t,e+n/2,i/2,n/2),r),this.southWest=new s(new o.Rectangle(t+i/2,e+n/2,i/2,n/2),r),this.divided=!0}insert(t){var e,i,o,s,n;return!!this.rectangle.contains(t.position)&&(this.points.length<this.capacity?(this.points.push(t),!0):(this.divided||this.subdivide(),null!==(n=(null===(e=this.northEast)||void 0===e?void 0:e.insert(t))||(null===(i=this.northWest)||void 0===i?void 0:i.insert(t))||(null===(o=this.southEast)||void 0===o?void 0:o.insert(t))||(null===(s=this.southWest)||void 0===s?void 0:s.insert(t)))&&void 0!==n&&n))}query(t,e){var i,o,s,n;const r=null!=e?e:[];if(!t.intersects(this.rectangle))return[];for(const e of this.points.filter(e=>t.contains(e.position)))r.push(e.particle);return this.divided&&(null===(i=this.northEast)||void 0===i||i.query(t,r),null===(o=this.northWest)||void 0===o||o.query(t,r),null===(s=this.southEast)||void 0===s||s.query(t,r),null===(n=this.southWest)||void 0===n||n.query(t,r)),r}}e.QuadTree=s},ubkD:function(t,e,i){"use strict";var o=this&&this.__createBinding||(Object.create?function(t,e,i,o){void 0===o&&(o=i),Object.defineProperty(t,o,{enumerable:!0,get:function(){return e[i]}})}:function(t,e,i,o){void 0===o&&(o=i),t[o]=e[i]}),s=this&&this.__exportStar||function(t,e){for(var i in t)"default"===i||e.hasOwnProperty(i)||o(e,t,i)};Object.defineProperty(e,"__esModule",{value:!0}),s(i("e0sz"),e),s(i("QENi"),e),s(i("+Gz/"),e),s(i("v7xC"),e),s(i("yIki"),e),s(i("7UW+"),e)},v7xC:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.CollisionMode=void 0,function(t){t.absorb="absorb",t.bounce="bounce",t.destroy="destroy"}(e.CollisionMode||(e.CollisionMode={}))},v9tW:function(t,e,i){"use strict";var o=this&&this.__createBinding||(Object.create?function(t,e,i,o){void 0===o&&(o=i),Object.defineProperty(t,o,{enumerable:!0,get:function(){return e[i]}})}:function(t,e,i,o){void 0===o&&(o=i),t[o]=e[i]}),s=this&&this.__exportStar||function(t,e){for(var i in t)"default"===i||e.hasOwnProperty(i)||o(e,t,i)};Object.defineProperty(e,"__esModule",{value:!0}),s(i("WiB2"),e),s(i("PT87"),e)},vGWO:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.PolygonMask=void 0;const o=i("Wu3R"),s=i("LfGR"),n=i("uP41"),r=i("887v"),a=i("KbmP");e.PolygonMask=class{constructor(){this.draw=new s.Draw,this.enable=!1,this.inline=new r.Inline,this.move=new n.Move,this.scale=1,this.type=o.Type.none}get inlineArrangement(){return this.inline.arrangement}set inlineArrangement(t){this.inline.arrangement=t}load(t){var e;if(void 0!==t){this.draw.load(t.draw);const i=null!==(e=t.inline)&&void 0!==e?e:{arrangement:t.inlineArrangement};void 0!==i&&this.inline.load(i),this.move.load(t.move),void 0!==t.scale&&(this.scale=t.scale),void 0!==t.type&&(this.type=t.type),void 0!==t.enable?this.enable=t.enable:this.enable=this.type!==o.Type.none,void 0!==t.url&&(this.url=t.url),void 0!==t.data&&("string"==typeof t.data?this.data=t.data:(this.data=new a.LocalSvg,this.data.load(t.data))),void 0!==t.position&&(this.position={x:t.position.x,y:t.position.y})}}}},vH5O:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.initPjs=void 0;e.initPjs=t=>{const e=(e,i)=>t.load(e,i);e.load=(e,i,o)=>{t.loadJSON(e,i).then(t=>{t&&o(t)})},e.setOnClickHandler=e=>{t.setOnClickHandler(e)};return{particlesJS:e,pJSDom:t.dom()}}},vRcM:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.OptionsColor=void 0;class o{constructor(){this.value="#fff"}static create(t,e){const i=null!=t?t:new o;return void 0!==e&&i.load("string"==typeof e?{value:e}:e),i}load(t){void 0!==(null==t?void 0:t.value)&&(this.value=t.value)}}e.OptionsColor=o},vfib:function(t,e,i){"use strict";var o=this&&this.__awaiter||function(t,e,i,o){return new(i||(i=Promise))((function(s,n){function r(t){try{l(o.next(t))}catch(t){n(t)}}function a(t){try{l(o.throw(t))}catch(t){n(t)}}function l(t){var e;t.done?s(t.value):(e=t.value,e instanceof i?e:new i((function(t){t(e)}))).then(r,a)}l((o=o.apply(t,e||[])).next())}))};Object.defineProperty(e,"__esModule",{value:!0}),e.ImageDrawer=void 0;const s=i("C9b5"),n=i("ZlLd");e.ImageDrawer=class{constructor(){this.images=[]}getImages(t){const e=this.images.filter(e=>e.id===t.id);return e.length?e[0]:(this.images.push({id:t.id,images:[]}),this.getImages(t))}addImage(t,e){const i=this.getImages(t);null==i||i.images.push(e)}init(t){var e;return o(this,void 0,void 0,(function*(){const i=t.options.particles.shape;if(!s.Utils.isInArray(n.ShapeType.image,i.type)&&!s.Utils.isInArray(n.ShapeType.images,i.type))return;const o=null!==(e=i.options[n.ShapeType.images])&&void 0!==e?e:i.options[n.ShapeType.image];if(o instanceof Array)for(const e of o)yield this.loadImageShape(t,e);else yield this.loadImageShape(t,o)}))}destroy(){this.images=[]}loadImageShape(t,e){return o(this,void 0,void 0,(function*(){try{const i=e.replaceColor?yield s.Utils.downloadSvgImage(e.src):yield s.Utils.loadImage(e.src);this.addImage(t,i)}catch(t){console.log(`tsParticles error - ${e.src} not found`)}}))}draw(t,e,i,o){var s,n;if(!t)return;const r=e.image,a=null===(s=null==r?void 0:r.data)||void 0===s?void 0:s.element;if(!a)return;const l=null!==(n=null==r?void 0:r.ratio)&&void 0!==n?n:1,c={x:-i,y:-i};(null==r?void 0:r.data.svgData)&&(null==r?void 0:r.replaceColor)||(t.globalAlpha=o),t.drawImage(a,c.x,c.y,2*i,2*i/l),(null==r?void 0:r.data.svgData)&&(null==r?void 0:r.replaceColor)||(t.globalAlpha=1)}}},wSea:function(t,e,i){"use strict";var o=this&&this.__createBinding||(Object.create?function(t,e,i,o){void 0===o&&(o=i),Object.defineProperty(t,o,{enumerable:!0,get:function(){return e[i]}})}:function(t,e,i,o){void 0===o&&(o=i),t[o]=e[i]}),s=this&&this.__exportStar||function(t,e){for(var i in t)"default"===i||e.hasOwnProperty(i)||o(e,t,i)};Object.defineProperty(e,"__esModule",{value:!0}),s(i("UfkC"),e),s(i("hoTk"),e)},wjdy:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Bubbler=void 0;const o=i("C9b5"),s=i("ZlLd");class n{constructor(t){this.container=t}static calculateBubbleValue(t,e,i,s){if(e>i){const n=t+(e-i)*s;return o.Utils.clamp(n,t,e)}if(e<i){const n=t-(i-e)*s;return o.Utils.clamp(n,e,t)}}isEnabled(){const t=this.container,e=t.options,i=t.interactivity.mouse,n=e.interactivity.events,r=n.onDiv,a=o.Utils.isDivModeEnabled(s.DivMode.bubble,r);if(!(a||n.onHover.enable&&i.position||n.onClick.enable&&i.clickPosition))return!1;const l=n.onHover.mode,c=n.onClick.mode;return o.Utils.isInArray(s.HoverMode.bubble,l)||o.Utils.isInArray(s.ClickMode.bubble,c)||a}reset(t,e){t.bubble.inRange&&!e||(delete t.bubble.divId,delete t.bubble.opacity,delete t.bubble.radius,delete t.bubble.color)}interact(){const t=this.container.options.interactivity.events,e=t.onHover,i=t.onClick,n=e.enable,r=e.mode,a=i.enable,l=i.mode,c=t.onDiv;n&&o.Utils.isInArray(s.HoverMode.bubble,r)?this.hoverBubble():a&&o.Utils.isInArray(s.ClickMode.bubble,l)?this.clickBubble():o.Utils.divModeExecute(s.DivMode.bubble,c,(t,e)=>this.singleDivHover(t,e))}singleDivHover(t,e){const i=this.container,n=document.getElementById(t);if(!n)return;const r=i.retina.pixelRatio,a={x:(n.offsetLeft+n.offsetWidth/2)*r,y:(n.offsetTop+n.offsetHeight/2)*r},l=n.offsetWidth/2*r,c=e.type===s.DivType.circle?new o.Circle(a.x,a.y,l):new o.Rectangle(n.offsetLeft*r,n.offsetTop*r,n.offsetWidth*r,n.offsetHeight*r),d=i.particles.quadTree.query(c);for(const e of d.filter(t=>c.contains(t.getPosition()))){e.bubble.inRange=!0;const s=i.options.interactivity.modes.bubble.divs,n=o.Utils.divMode(s,t);e.bubble.divId&&e.bubble.divId===t||(this.reset(e,!0),e.bubble.divId=t),this.hoverBubbleSize(e,1,n),this.hoverBubbleOpacity(e,1,n),this.hoverBubbleColor(e,n)}}process(t,e,i,o){const n=this.container,r=o.bubbleObj.optValue;if(void 0===r)return;const a=n.options.interactivity.modes.bubble.duration,l=n.retina.bubbleModeDistance,c=o.particlesObj.optValue,d=o.bubbleObj.value,u=o.particlesObj.value||0,h=o.type;if(r!==c)if(n.bubble.durationEnd)d&&(h===s.ProcessBubbleType.size&&delete t.bubble.radius,h===s.ProcessBubbleType.opacity&&delete t.bubble.opacity);else if(e<=l){if((null!=d?d:u)!==r){const e=u-i*(u-r)/a;h===s.ProcessBubbleType.size&&(t.bubble.radius=e),h===s.ProcessBubbleType.opacity&&(t.bubble.opacity=e)}}else h===s.ProcessBubbleType.size&&delete t.bubble.radius,h===s.ProcessBubbleType.opacity&&delete t.bubble.opacity}clickBubble(){var t;const e=this.container,i=e.options,n=e.interactivity.mouse.clickPosition;if(void 0===n)return;const r=e.retina.bubbleModeDistance,a=e.particles.quadTree.query(new o.Circle(n.x,n.y,r));for(const r of a){r.bubble.inRange=!0;const a=r.getPosition(),l=o.Utils.getDistance(a,n),c=((new Date).getTime()-(e.interactivity.mouse.clickTime||0))/1e3;if(e.bubble.clicking){c>i.interactivity.modes.bubble.duration&&(e.bubble.durationEnd=!0),c>2*i.interactivity.modes.bubble.duration&&(e.bubble.clicking=!1,e.bubble.durationEnd=!1);const o={bubbleObj:{optValue:e.retina.bubbleModeSize,value:r.bubble.radius},particlesObj:{optValue:null!==(t=r.sizeValue)&&void 0!==t?t:e.retina.sizeValue,value:r.size.value},type:s.ProcessBubbleType.size};this.process(r,l,c,o);const n={bubbleObj:{optValue:i.interactivity.modes.bubble.opacity,value:r.bubble.opacity},particlesObj:{optValue:r.particlesOptions.opacity.value,value:r.opacity.value},type:s.ProcessBubbleType.opacity};this.process(r,l,c,n),e.bubble.durationEnd?delete r.bubble.color:l<=e.retina.bubbleModeDistance?this.hoverBubbleColor(r):delete r.bubble.color}}}hoverBubble(){const t=this.container,e=t.interactivity.mouse.position;if(void 0===e)return;const i=t.retina.bubbleModeDistance,s=t.particles.quadTree.query(new o.Circle(e.x,e.y,i));for(const i of s){i.bubble.inRange=!0;const s=i.getPosition(),n=o.Utils.getDistance(s,e),r=1-n/t.retina.bubbleModeDistance;n<=t.retina.bubbleModeDistance?r>=0&&t.interactivity.status===o.Constants.mouseMoveEvent&&(this.hoverBubbleSize(i,r),this.hoverBubbleOpacity(i,r),this.hoverBubbleColor(i)):this.reset(i),t.interactivity.status===o.Constants.mouseLeaveEvent&&this.reset(i)}}hoverBubbleSize(t,e,i){var o;const s=this.container,r=(null==i?void 0:i.size)?i.size*s.retina.pixelRatio:s.retina.bubbleModeSize;if(void 0===r)return;const a=null!==(o=t.sizeValue)&&void 0!==o?o:s.retina.sizeValue,l=t.size.value,c=n.calculateBubbleValue(l,r,a,e);void 0!==c&&(t.bubble.radius=c)}hoverBubbleOpacity(t,e,i){var o;const s=this.container.options,r=null!==(o=null==i?void 0:i.opacity)&&void 0!==o?o:s.interactivity.modes.bubble.opacity;if(void 0===r)return;const a=t.particlesOptions.opacity.value,l=t.opacity.value,c=n.calculateBubbleValue(l,r,a,e);void 0!==c&&(t.bubble.opacity=c)}hoverBubbleColor(t,e){var i;const s=this.container.options;if(void 0===t.bubble.color){const n=null!==(i=null==e?void 0:e.color)&&void 0!==i?i:s.interactivity.modes.bubble.color;if(void 0===n)return;const r=n instanceof Array?o.Utils.itemFromArray(n):n;t.bubble.color=o.ColorUtils.colorToHsl(r)}}}e.Bubbler=n},xqYR:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Canvas=void 0;const o=i("C9b5");e.Canvas=class{constructor(t){this.container=t,this.size={height:0,width:0},this.context=null,this.generatedCanvas=!1}init(){this.resize();const t=this.container.options,e=t.backgroundMask.cover.color,i=t.particles.move.trail;this.coverColor=o.ColorUtils.colorToRgb(e),this.trailFillColor=o.ColorUtils.colorToRgb(i.fillColor),this.paint()}loadCanvas(t,e){var i;t.className||(t.className=o.Constants.canvasClass),this.generatedCanvas&&(null===(i=this.element)||void 0===i||i.remove()),this.generatedCanvas=null!=e&&e,this.element=t,this.size.height=t.offsetHeight,this.size.width=t.offsetWidth,this.context=this.element.getContext("2d"),this.container.retina.init(),this.initBackground()}destroy(){var t;this.generatedCanvas&&(null===(t=this.element)||void 0===t||t.remove()),this.context&&o.CanvasUtils.clear(this.context,this.size)}resize(){this.element&&(this.element.width=this.size.width,this.element.height=this.size.height)}paint(){const t=this.container.options;this.context&&(t.backgroundMask.enable&&t.backgroundMask.cover&&this.coverColor?this.paintBase(o.ColorUtils.getStyleFromRgb(this.coverColor)):this.paintBase())}clear(){const t=this.container.options,e=t.particles.move.trail;t.backgroundMask.enable?this.paint():e.enable&&e.length>0&&this.trailFillColor?this.paintBase(o.ColorUtils.getStyleFromRgb(this.trailFillColor,1/e.length)):this.context&&o.CanvasUtils.clear(this.context,this.size)}drawLinkTriangle(t,e,i){var s,n;const r=this.container,a=r.options,l=e.destination,c=i.destination,d=t.particlesOptions.links.triangles,u=null!==(s=d.opacity)&&void 0!==s?s:(e.opacity+i.opacity)/2,h=t.getPosition(),v=l.getPosition(),p=c.getPosition(),f=this.context;if(!f)return;let y=o.ColorUtils.colorToRgb(d.color);if(!y){const e=t.particlesOptions.links,i=void 0!==e.id?r.particles.linksColors[e.id]:r.particles.linksColor;if(i===o.Constants.randomColorValue)y=o.ColorUtils.getRandomRgbColor();else if("mid"===i){const e=t.getColor(),i=l.getColor();if(e&&i)y=o.ColorUtils.mix(e,i,t.size.value,l.size.value);else{const t=null!=e?e:i;if(!t)return;y=o.ColorUtils.hslToRgb(t)}}else y=i}const m=null!==(n=t.linksWidth)&&void 0!==n?n:r.retina.linksWidth;o.CanvasUtils.drawLinkTriangle(f,m,h,v,p,a.backgroundMask.enable,y,u)}drawLinkLine(t,e){var i;const s=this.container,n=s.options,r=e.destination;let a=e.opacity;const l=t.getPosition(),c=r.getPosition(),d=this.context;if(!d)return;let u;const h=t.particlesOptions.twinkle.lines;if(h.enable){const t=h.frequency,e=o.ColorUtils.colorToRgb(h.color);Math.random()<t&&void 0!==e&&(u=e,a=h.opacity)}if(!u){const e=t.particlesOptions.links,i=void 0!==e.id?s.particles.linksColors[e.id]:s.particles.linksColor;if(i===o.Constants.randomColorValue)u=o.ColorUtils.getRandomRgbColor();else if("mid"===i){const e=t.getColor(),i=r.getColor();if(e&&i)u=o.ColorUtils.mix(e,i,t.size.value,r.size.value);else{const t=null!=e?e:i;if(!t)return;u=o.ColorUtils.hslToRgb(t)}}else u=i}const v=null!==(i=t.linksWidth)&&void 0!==i?i:s.retina.linksWidth;o.CanvasUtils.drawLinkLine(d,v,l,c,t.particlesOptions.links.distance,s.canvas.size,t.particlesOptions.links.warp,n.backgroundMask.enable,u,a,t.particlesOptions.links.shadow)}drawConnectLine(t,e){var i;const s=this.lineStyle(t,e);if(!s)return;const n=this.context;if(!n)return;const r=t.getPosition(),a=e.getPosition();o.CanvasUtils.drawConnectLine(n,null!==(i=t.linksWidth)&&void 0!==i?i:this.container.retina.linksWidth,s,r,a)}drawGrabLine(t,e,i,s){var n;const r=this.container,a=r.canvas.context;if(!a)return;const l=t.getPosition();o.CanvasUtils.drawGrabLine(a,null!==(n=t.linksWidth)&&void 0!==n?n:r.retina.linksWidth,l,s,e,i)}drawParticle(t,e){var i,s;const n=t.getColor();if(void 0===n)return;const r=this.container.options,a=t.particlesOptions.twinkle.particles,l=a.frequency,c=o.ColorUtils.colorToRgb(a.color),d=a.enable&&Math.random()<l,u=null!==(i=t.bubble.radius)&&void 0!==i?i:t.size.value,h=d?a.opacity:null!==(s=t.bubble.opacity)&&void 0!==s?s:t.opacity.value,v=t.infectionStage,p=r.infection.stages,f=void 0!==v?p[v].color:void 0,y=o.ColorUtils.colorToRgb(f),m=d&&void 0!==c?c:null!=y?y:o.ColorUtils.hslToRgb(n),b=void 0!==m?o.ColorUtils.getStyleFromRgb(m,h):void 0;if(this.context&&b){if(t.links.length>0){this.context.save();for(const e of t.links){if(t.particlesOptions.links.triangles.enable){const i=t.links.map(t=>t.destination),o=e.destination.links.filter(t=>i.indexOf(t.destination)>=0);if(o.length)for(const i of o)this.drawLinkTriangle(t,e,i)}this.drawLinkLine(t,e)}this.context.restore()}o.CanvasUtils.drawParticle(this.container,this.context,t,e,b,r.backgroundMask.enable,u,h,t.particlesOptions.shadow)}}drawPlugin(t,e){this.context&&o.CanvasUtils.drawPlugin(this.context,t,e)}paintBase(t){this.context&&o.CanvasUtils.paintBase(this.context,this.size,t)}lineStyle(t,e){const i=this.container.options.interactivity.modes.connect;if(this.context)return o.CanvasUtils.gradient(this.context,t,e,i.links.opacity)}initBackground(){const t=this.container.options.background,e=this.element;if(!e)return;const i=e.style;if(t.color){const e=o.ColorUtils.colorToRgb(t.color);e&&(i.backgroundColor=o.ColorUtils.getStyleFromRgb(e,t.opacity))}t.image&&(i.backgroundImage=t.image),t.position&&(i.backgroundPosition=t.position),t.repeat&&(i.backgroundRepeat=t.repeat),t.size&&(i.backgroundSize=t.size)}}},yEg2:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.LineDrawer=void 0;e.LineDrawer=class{draw(t,e,i){t.moveTo(0,-i/2),t.lineTo(0,i/2)}}},yIki:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.OutMode=void 0,function(t){t.bounce="bounce",t.bounceHorizontal="bounce-horizontal",t.bounceVertical="bounce-vertical",t.out="out",t.destroy="destroy"}(e.OutMode||(e.OutMode={}))},z6mI:function(t,e,i){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Main=void 0;const o=i("XIwB"),s=i("Rxhr"),n=i("pPzP"),r=i("6a9T");class a extends o.MainSlim{constructor(){super(),this.addPlugin(s.AbsorbersPlugin),this.addPlugin(n.EmittersPlugin),this.addPlugin(r.PolygonMaskPlugin)}}e.Main=a}}]);
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["/scripts/vendor"],{
+
+/***/ "./node_modules/alpinejs/dist/alpine.js":
+/*!**********************************************!*\
+  !*** ./node_modules/alpinejs/dist/alpine.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function (global, factory) {
+   true ? module.exports = factory() :
+  undefined;
+}(this, (function () { 'use strict';
+
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(object);
+      if (enumerableOnly) symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+      keys.push.apply(keys, symbols);
+    }
+
+    return keys;
+  }
+
+  function _objectSpread2(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+
+      if (i % 2) {
+        ownKeys(Object(source), true).forEach(function (key) {
+          _defineProperty(target, key, source[key]);
+        });
+      } else if (Object.getOwnPropertyDescriptors) {
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+      } else {
+        ownKeys(Object(source)).forEach(function (key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
+      }
+    }
+
+    return target;
+  }
+
+  // Thanks @stimulus:
+  // https://github.com/stimulusjs/stimulus/blob/master/packages/%40stimulus/core/src/application.ts
+  function domReady() {
+    return new Promise(resolve => {
+      if (document.readyState == "loading") {
+        document.addEventListener("DOMContentLoaded", resolve);
+      } else {
+        resolve();
+      }
+    });
+  }
+  function arrayUnique(array) {
+    return Array.from(new Set(array));
+  }
+  function isTesting() {
+    return navigator.userAgent.includes("Node.js") || navigator.userAgent.includes("jsdom");
+  }
+  function kebabCase(subject) {
+    return subject.replace(/([a-z])([A-Z])/g, '$1-$2').replace(/[_\s]/, '-').toLowerCase();
+  }
+  function walk(el, callback) {
+    if (callback(el) === false) return;
+    let node = el.firstElementChild;
+
+    while (node) {
+      walk(node, callback);
+      node = node.nextElementSibling;
+    }
+  }
+  function debounce(func, wait) {
+    var timeout;
+    return function () {
+      var context = this,
+          args = arguments;
+
+      var later = function later() {
+        timeout = null;
+        func.apply(context, args);
+      };
+
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+  function saferEval(expression, dataContext, additionalHelperVariables = {}) {
+    return new Function(['$data', ...Object.keys(additionalHelperVariables)], `var result; with($data) { result = ${expression} }; return result`)(dataContext, ...Object.values(additionalHelperVariables));
+  }
+  function saferEvalNoReturn(expression, dataContext, additionalHelperVariables = {}) {
+    // For the cases when users pass only a function reference to the caller: `x-on:click="foo"`
+    // Where "foo" is a function. Also, we'll pass the function the event instance when we call it.
+    if (Object.keys(dataContext).includes(expression)) {
+      let methodReference = new Function(['dataContext', ...Object.keys(additionalHelperVariables)], `with(dataContext) { return ${expression} }`)(dataContext, ...Object.values(additionalHelperVariables));
+
+      if (typeof methodReference === 'function') {
+        return methodReference.call(dataContext, additionalHelperVariables['$event']);
+      }
+    }
+
+    return new Function(['dataContext', ...Object.keys(additionalHelperVariables)], `with(dataContext) { ${expression} }`)(dataContext, ...Object.values(additionalHelperVariables));
+  }
+  const xAttrRE = /^x-(on|bind|data|text|html|model|if|for|show|cloak|transition|ref)\b/;
+  function isXAttr(attr) {
+    const name = replaceAtAndColonWithStandardSyntax(attr.name);
+    return xAttrRE.test(name);
+  }
+  function getXAttrs(el, type) {
+    return Array.from(el.attributes).filter(isXAttr).map(attr => {
+      const name = replaceAtAndColonWithStandardSyntax(attr.name);
+      const typeMatch = name.match(xAttrRE);
+      const valueMatch = name.match(/:([a-zA-Z\-:]+)/);
+      const modifiers = name.match(/\.[^.\]]+(?=[^\]]*$)/g) || [];
+      return {
+        type: typeMatch ? typeMatch[1] : null,
+        value: valueMatch ? valueMatch[1] : null,
+        modifiers: modifiers.map(i => i.replace('.', '')),
+        expression: attr.value
+      };
+    }).filter(i => {
+      // If no type is passed in for filtering, bypass filter
+      if (!type) return true;
+      return i.type === type;
+    });
+  }
+  function isBooleanAttr(attrName) {
+    // As per HTML spec table https://html.spec.whatwg.org/multipage/indices.html#attributes-3:boolean-attribute
+    // Array roughly ordered by estimated usage
+    const booleanAttributes = ['disabled', 'checked', 'required', 'readonly', 'hidden', 'open', 'selected', 'autofocus', 'itemscope', 'multiple', 'novalidate', 'allowfullscreen', 'allowpaymentrequest', 'formnovalidate', 'autoplay', 'controls', 'loop', 'muted', 'playsinline', 'default', 'ismap', 'reversed', 'async', 'defer', 'nomodule'];
+    return booleanAttributes.includes(attrName);
+  }
+  function replaceAtAndColonWithStandardSyntax(name) {
+    if (name.startsWith('@')) {
+      return name.replace('@', 'x-on:');
+    } else if (name.startsWith(':')) {
+      return name.replace(':', 'x-bind:');
+    }
+
+    return name;
+  }
+  function transitionIn(el, show, forceSkip = false) {
+    // We don't want to transition on the initial page load.
+    if (forceSkip) return show();
+    const attrs = getXAttrs(el, 'transition');
+    const showAttr = getXAttrs(el, 'show')[0]; // If this is triggered by a x-show.transition.
+
+    if (showAttr && showAttr.modifiers.includes('transition')) {
+      let modifiers = showAttr.modifiers; // If x-show.transition.out, we'll skip the "in" transition.
+
+      if (modifiers.includes('out') && !modifiers.includes('in')) return show();
+      const settingBothSidesOfTransition = modifiers.includes('in') && modifiers.includes('out'); // If x-show.transition.in...out... only use "in" related modifiers for this transition.
+
+      modifiers = settingBothSidesOfTransition ? modifiers.filter((i, index) => index < modifiers.indexOf('out')) : modifiers;
+      transitionHelperIn(el, modifiers, show); // Otherwise, we can assume x-transition:enter.
+    } else if (attrs.filter(attr => ['enter', 'enter-start', 'enter-end'].includes(attr.value)).length > 0) {
+      transitionClassesIn(el, attrs, show);
+    } else {
+      // If neither, just show that damn thing.
+      show();
+    }
+  }
+  function transitionOut(el, hide, forceSkip = false) {
+    if (forceSkip) return hide();
+    const attrs = getXAttrs(el, 'transition');
+    const showAttr = getXAttrs(el, 'show')[0];
+
+    if (showAttr && showAttr.modifiers.includes('transition')) {
+      let modifiers = showAttr.modifiers;
+      if (modifiers.includes('in') && !modifiers.includes('out')) return hide();
+      const settingBothSidesOfTransition = modifiers.includes('in') && modifiers.includes('out');
+      modifiers = settingBothSidesOfTransition ? modifiers.filter((i, index) => index > modifiers.indexOf('out')) : modifiers;
+      transitionHelperOut(el, modifiers, settingBothSidesOfTransition, hide);
+    } else if (attrs.filter(attr => ['leave', 'leave-start', 'leave-end'].includes(attr.value)).length > 0) {
+      transitionClassesOut(el, attrs, hide);
+    } else {
+      hide();
+    }
+  }
+  function transitionHelperIn(el, modifiers, showCallback) {
+    // Default values inspired by: https://material.io/design/motion/speed.html#duration
+    const styleValues = {
+      duration: modifierValue(modifiers, 'duration', 150),
+      origin: modifierValue(modifiers, 'origin', 'center'),
+      first: {
+        opacity: 0,
+        scale: modifierValue(modifiers, 'scale', 95)
+      },
+      second: {
+        opacity: 1,
+        scale: 100
+      }
+    };
+    transitionHelper(el, modifiers, showCallback, () => {}, styleValues);
+  }
+  function transitionHelperOut(el, modifiers, settingBothSidesOfTransition, hideCallback) {
+    // Make the "out" transition .5x slower than the "in". (Visually better)
+    // HOWEVER, if they explicitly set a duration for the "out" transition,
+    // use that.
+    const duration = settingBothSidesOfTransition ? modifierValue(modifiers, 'duration', 150) : modifierValue(modifiers, 'duration', 150) / 2;
+    const styleValues = {
+      duration: duration,
+      origin: modifierValue(modifiers, 'origin', 'center'),
+      first: {
+        opacity: 1,
+        scale: 100
+      },
+      second: {
+        opacity: 0,
+        scale: modifierValue(modifiers, 'scale', 95)
+      }
+    };
+    transitionHelper(el, modifiers, () => {}, hideCallback, styleValues);
+  }
+
+  function modifierValue(modifiers, key, fallback) {
+    // If the modifier isn't present, use the default.
+    if (modifiers.indexOf(key) === -1) return fallback; // If it IS present, grab the value after it: x-show.transition.duration.500ms
+
+    const rawValue = modifiers[modifiers.indexOf(key) + 1];
+    if (!rawValue) return fallback;
+
+    if (key === 'scale') {
+      // Check if the very next value is NOT a number and return the fallback.
+      // If x-show.transition.scale, we'll use the default scale value.
+      // That is how a user opts out of the opacity transition.
+      if (!isNumeric(rawValue)) return fallback;
+    }
+
+    if (key === 'duration') {
+      // Support x-show.transition.duration.500ms && duration.500
+      let match = rawValue.match(/([0-9]+)ms/);
+      if (match) return match[1];
+    }
+
+    if (key === 'origin') {
+      // Support chaining origin directions: x-show.transition.top.right
+      if (['top', 'right', 'left', 'center', 'bottom'].includes(modifiers[modifiers.indexOf(key) + 2])) {
+        return [rawValue, modifiers[modifiers.indexOf(key) + 2]].join(' ');
+      }
+    }
+
+    return rawValue;
+  }
+
+  function transitionHelper(el, modifiers, hook1, hook2, styleValues) {
+    // If the user set these style values, we'll put them back when we're done with them.
+    const opacityCache = el.style.opacity;
+    const transformCache = el.style.transform;
+    const transformOriginCache = el.style.transformOrigin; // If no modifiers are present: x-show.transition, we'll default to both opacity and scale.
+
+    const noModifiers = !modifiers.includes('opacity') && !modifiers.includes('scale');
+    const transitionOpacity = noModifiers || modifiers.includes('opacity');
+    const transitionScale = noModifiers || modifiers.includes('scale'); // These are the explicit stages of a transition (same stages for in and for out).
+    // This way you can get a birds eye view of the hooks, and the differences
+    // between them.
+
+    const stages = {
+      start() {
+        if (transitionOpacity) el.style.opacity = styleValues.first.opacity;
+        if (transitionScale) el.style.transform = `scale(${styleValues.first.scale / 100})`;
+      },
+
+      during() {
+        if (transitionScale) el.style.transformOrigin = styleValues.origin;
+        el.style.transitionProperty = [transitionOpacity ? `opacity` : ``, transitionScale ? `transform` : ``].join(' ').trim();
+        el.style.transitionDuration = `${styleValues.duration / 1000}s`;
+        el.style.transitionTimingFunction = `cubic-bezier(0.4, 0.0, 0.2, 1)`;
+      },
+
+      show() {
+        hook1();
+      },
+
+      end() {
+        if (transitionOpacity) el.style.opacity = styleValues.second.opacity;
+        if (transitionScale) el.style.transform = `scale(${styleValues.second.scale / 100})`;
+      },
+
+      hide() {
+        hook2();
+      },
+
+      cleanup() {
+        if (transitionOpacity) el.style.opacity = opacityCache;
+        if (transitionScale) el.style.transform = transformCache;
+        if (transitionScale) el.style.transformOrigin = transformOriginCache;
+        el.style.transitionProperty = null;
+        el.style.transitionDuration = null;
+        el.style.transitionTimingFunction = null;
+      }
+
+    };
+    transition(el, stages);
+  }
+  function transitionClassesIn(el, directives, showCallback) {
+    const enter = (directives.find(i => i.value === 'enter') || {
+      expression: ''
+    }).expression.split(' ').filter(i => i !== '');
+    const enterStart = (directives.find(i => i.value === 'enter-start') || {
+      expression: ''
+    }).expression.split(' ').filter(i => i !== '');
+    const enterEnd = (directives.find(i => i.value === 'enter-end') || {
+      expression: ''
+    }).expression.split(' ').filter(i => i !== '');
+    transitionClasses(el, enter, enterStart, enterEnd, showCallback, () => {});
+  }
+  function transitionClassesOut(el, directives, hideCallback) {
+    const leave = (directives.find(i => i.value === 'leave') || {
+      expression: ''
+    }).expression.split(' ').filter(i => i !== '');
+    const leaveStart = (directives.find(i => i.value === 'leave-start') || {
+      expression: ''
+    }).expression.split(' ').filter(i => i !== '');
+    const leaveEnd = (directives.find(i => i.value === 'leave-end') || {
+      expression: ''
+    }).expression.split(' ').filter(i => i !== '');
+    transitionClasses(el, leave, leaveStart, leaveEnd, () => {}, hideCallback);
+  }
+  function transitionClasses(el, classesDuring, classesStart, classesEnd, hook1, hook2) {
+    const originalClasses = el.__x_original_classes || [];
+    const stages = {
+      start() {
+        el.classList.add(...classesStart);
+      },
+
+      during() {
+        el.classList.add(...classesDuring);
+      },
+
+      show() {
+        hook1();
+      },
+
+      end() {
+        // Don't remove classes that were in the original class attribute.
+        el.classList.remove(...classesStart.filter(i => !originalClasses.includes(i)));
+        el.classList.add(...classesEnd);
+      },
+
+      hide() {
+        hook2();
+      },
+
+      cleanup() {
+        el.classList.remove(...classesDuring.filter(i => !originalClasses.includes(i)));
+        el.classList.remove(...classesEnd.filter(i => !originalClasses.includes(i)));
+      }
+
+    };
+    transition(el, stages);
+  }
+  function transition(el, stages) {
+    stages.start();
+    stages.during();
+    requestAnimationFrame(() => {
+      // Note: Safari's transitionDuration property will list out comma separated transition durations
+      // for every single transition property. Let's grab the first one and call it a day.
+      let duration = Number(getComputedStyle(el).transitionDuration.replace(/,.*/, '').replace('s', '')) * 1000;
+      stages.show();
+      requestAnimationFrame(() => {
+        stages.end();
+        setTimeout(() => {
+          stages.hide(); // Adding an "isConnected" check, in case the callback
+          // removed the element from the DOM.
+
+          if (el.isConnected) {
+            stages.cleanup();
+          }
+        }, duration);
+      });
+    });
+  }
+  function isNumeric(subject) {
+    return !isNaN(subject);
+  }
+
+  function handleForDirective(component, templateEl, expression, initialUpdate, extraVars) {
+    warnIfNotTemplateTag(templateEl);
+    let iteratorNames = parseForExpression(expression);
+    let items = evaluateItemsAndReturnEmptyIfXIfIsPresentAndFalseOnElement(component, templateEl, iteratorNames, extraVars); // As we walk the array, we'll also walk the DOM (updating/creating as we go).
+
+    let currentEl = templateEl;
+    items.forEach((item, index) => {
+      let iterationScopeVariables = getIterationScopeVariables(iteratorNames, item, index, items, extraVars());
+      let currentKey = generateKeyForIteration(component, templateEl, index, iterationScopeVariables);
+      let nextEl = lookAheadForMatchingKeyedElementAndMoveItIfFound(currentEl.nextElementSibling, currentKey); // If we haven't found a matching key, insert the element at the current position.
+
+      if (!nextEl) {
+        nextEl = addElementInLoopAfterCurrentEl(templateEl, currentEl); // And transition it in if it's not the first page load.
+
+        transitionIn(nextEl, () => {}, initialUpdate);
+        nextEl.__x_for = iterationScopeVariables;
+        component.initializeElements(nextEl, () => nextEl.__x_for); // Otherwise update the element we found.
+      } else {
+        // Temporarily remove the key indicator to allow the normal "updateElements" to work.
+        delete nextEl.__x_for_key;
+        nextEl.__x_for = iterationScopeVariables;
+        component.updateElements(nextEl, () => nextEl.__x_for);
+      }
+
+      currentEl = nextEl;
+      currentEl.__x_for_key = currentKey;
+    });
+    removeAnyLeftOverElementsFromPreviousUpdate(currentEl);
+  } // This was taken from VueJS 2.* core. Thanks Vue!
+
+  function parseForExpression(expression) {
+    let forIteratorRE = /,([^,\}\]]*)(?:,([^,\}\]]*))?$/;
+    let stripParensRE = /^\(|\)$/g;
+    let forAliasRE = /([\s\S]*?)\s+(?:in|of)\s+([\s\S]*)/;
+    let inMatch = expression.match(forAliasRE);
+    if (!inMatch) return;
+    let res = {};
+    res.items = inMatch[2].trim();
+    let item = inMatch[1].trim().replace(stripParensRE, '');
+    let iteratorMatch = item.match(forIteratorRE);
+
+    if (iteratorMatch) {
+      res.item = item.replace(forIteratorRE, '').trim();
+      res.index = iteratorMatch[1].trim();
+
+      if (iteratorMatch[2]) {
+        res.collection = iteratorMatch[2].trim();
+      }
+    } else {
+      res.item = item;
+    }
+
+    return res;
+  }
+
+  function getIterationScopeVariables(iteratorNames, item, index, items, extraVars) {
+    // We must create a new object, so each iteration has a new scope
+    let scopeVariables = extraVars ? _objectSpread2({}, extraVars) : {};
+    scopeVariables[iteratorNames.item] = item;
+    if (iteratorNames.index) scopeVariables[iteratorNames.index] = index;
+    if (iteratorNames.collection) scopeVariables[iteratorNames.collection] = items;
+    return scopeVariables;
+  }
+
+  function generateKeyForIteration(component, el, index, iterationScopeVariables) {
+    let bindKeyAttribute = getXAttrs(el, 'bind').filter(attr => attr.value === 'key')[0]; // If the dev hasn't specified a key, just return the index of the iteration.
+
+    if (!bindKeyAttribute) return index;
+    return component.evaluateReturnExpression(el, bindKeyAttribute.expression, () => iterationScopeVariables);
+  }
+
+  function warnIfNotTemplateTag(el) {
+    if (el.tagName.toLowerCase() !== 'template') console.warn('Alpine: [x-for] directive should only be added to <template> tags.');
+  }
+
+  function evaluateItemsAndReturnEmptyIfXIfIsPresentAndFalseOnElement(component, el, iteratorNames, extraVars) {
+    let ifAttribute = getXAttrs(el, 'if')[0];
+
+    if (ifAttribute && !component.evaluateReturnExpression(el, ifAttribute.expression)) {
+      return [];
+    }
+
+    return component.evaluateReturnExpression(el, iteratorNames.items, extraVars);
+  }
+
+  function addElementInLoopAfterCurrentEl(templateEl, currentEl) {
+    let clone = document.importNode(templateEl.content, true);
+    if (clone.childElementCount !== 1) console.warn('Alpine: <template> tag with [x-for] encountered with multiple element roots. Make sure <template> only has a single child node.');
+    currentEl.parentElement.insertBefore(clone, currentEl.nextElementSibling);
+    return currentEl.nextElementSibling;
+  }
+
+  function lookAheadForMatchingKeyedElementAndMoveItIfFound(nextEl, currentKey) {
+    if (!nextEl) return; // If the the key's DO match, no need to look ahead.
+
+    if (nextEl.__x_for_key === currentKey) return nextEl; // If they don't, we'll look ahead for a match.
+    // If we find it, we'll move it to the current position in the loop.
+
+    let tmpNextEl = nextEl;
+
+    while (tmpNextEl) {
+      if (tmpNextEl.__x_for_key === currentKey) {
+        return tmpNextEl.parentElement.insertBefore(tmpNextEl, nextEl);
+      }
+
+      tmpNextEl = tmpNextEl.nextElementSibling && tmpNextEl.nextElementSibling.__x_for_key !== undefined ? tmpNextEl.nextElementSibling : false;
+    }
+  }
+
+  function removeAnyLeftOverElementsFromPreviousUpdate(currentEl) {
+    var nextElementFromOldLoop = currentEl.nextElementSibling && currentEl.nextElementSibling.__x_for_key !== undefined ? currentEl.nextElementSibling : false;
+
+    while (nextElementFromOldLoop) {
+      let nextElementFromOldLoopImmutable = nextElementFromOldLoop;
+      let nextSibling = nextElementFromOldLoop.nextElementSibling;
+      transitionOut(nextElementFromOldLoop, () => {
+        nextElementFromOldLoopImmutable.remove();
+      });
+      nextElementFromOldLoop = nextSibling && nextSibling.__x_for_key !== undefined ? nextSibling : false;
+    }
+  }
+
+  function handleAttributeBindingDirective(component, el, attrName, expression, extraVars, attrType) {
+    var value = component.evaluateReturnExpression(el, expression, extraVars);
+
+    if (attrName === 'value') {
+      // If nested model key is undefined, set the default value to empty string.
+      if (value === undefined && expression.match(/\./).length) {
+        value = '';
+      }
+
+      if (el.type === 'radio') {
+        // Set radio value from x-bind:value, if no "value" attribute exists.
+        // If there are any initial state values, radio will have a correct
+        // "checked" value since x-bind:value is processed before x-model.
+        if (el.attributes.value === undefined && attrType === 'bind') {
+          el.value = value;
+        } else if (attrType !== 'bind') {
+          el.checked = el.value == value;
+        }
+      } else if (el.type === 'checkbox') {
+        if (Array.isArray(value)) {
+          // I'm purposely not using Array.includes here because it's
+          // strict, and because of Numeric/String mis-casting, I
+          // want the "includes" to be "fuzzy".
+          let valueFound = false;
+          value.forEach(val => {
+            if (val == el.value) {
+              valueFound = true;
+            }
+          });
+          el.checked = valueFound;
+        } else {
+          el.checked = !!value;
+        } // If we are explicitly binding a string to the :value, set the string,
+        // If the value is a boolean, leave it alone, it will be set to "on"
+        // automatically.
+
+
+        if (typeof value === 'string') {
+          el.value = value;
+        }
+      } else if (el.tagName === 'SELECT') {
+        updateSelect(el, value);
+      } else {
+        if (el.value === value) return;
+        el.value = value;
+      }
+    } else if (attrName === 'class') {
+      if (Array.isArray(value)) {
+        const originalClasses = el.__x_original_classes || [];
+        el.setAttribute('class', arrayUnique(originalClasses.concat(value)).join(' '));
+      } else if (typeof value === 'object') {
+        // Sorting the keys / class names by their boolean value will ensure that
+        // anything that evaluates to `false` and needs to remove classes is run first.
+        const keysSortedByBooleanValue = Object.keys(value).sort((a, b) => value[a] - value[b]);
+        keysSortedByBooleanValue.forEach(classNames => {
+          if (value[classNames]) {
+            classNames.split(' ').filter(Boolean).forEach(className => el.classList.add(className));
+          } else {
+            classNames.split(' ').filter(Boolean).forEach(className => el.classList.remove(className));
+          }
+        });
+      } else {
+        const originalClasses = el.__x_original_classes || [];
+        const newClasses = value.split(' ').filter(Boolean);
+        el.setAttribute('class', arrayUnique(originalClasses.concat(newClasses)).join(' '));
+      }
+    } else {
+      // If an attribute's bound value is null, undefined or false, remove the attribute
+      if ([null, undefined, false].includes(value)) {
+        el.removeAttribute(attrName);
+      } else {
+        isBooleanAttr(attrName) ? el.setAttribute(attrName, attrName) : el.setAttribute(attrName, value);
+      }
+    }
+  }
+
+  function updateSelect(el, value) {
+    const arrayWrappedValue = [].concat(value).map(value => {
+      return value + '';
+    });
+    Array.from(el.options).forEach(option => {
+      option.selected = arrayWrappedValue.includes(option.value || option.text);
+    });
+  }
+
+  function handleTextDirective(el, output, expression) {
+    // If nested model key is undefined, set the default value to empty string.
+    if (output === undefined && expression.match(/\./).length) {
+      output = '';
+    }
+
+    el.innerText = output;
+  }
+
+  function handleHtmlDirective(component, el, expression, extraVars) {
+    el.innerHTML = component.evaluateReturnExpression(el, expression, extraVars);
+  }
+
+  function handleShowDirective(component, el, value, modifiers, initialUpdate = false) {
+    const hide = () => {
+      el.style.display = 'none';
+    };
+
+    const show = () => {
+      if (el.style.length === 1 && el.style.display === 'none') {
+        el.removeAttribute('style');
+      } else {
+        el.style.removeProperty('display');
+      }
+    };
+
+    if (initialUpdate === true) {
+      if (value) {
+        show();
+      } else {
+        hide();
+      }
+
+      return;
+    }
+
+    const handle = resolve => {
+      if (!value) {
+        if (el.style.display !== 'none') {
+          transitionOut(el, () => {
+            resolve(() => {
+              hide();
+            });
+          });
+        } else {
+          resolve(() => {});
+        }
+      } else {
+        if (el.style.display !== '') {
+          transitionIn(el, () => {
+            show();
+          });
+        } // Resolve immediately, only hold up parent `x-show`s for hidin.
+
+
+        resolve(() => {});
+      }
+    }; // The working of x-show is a bit complex because we need to
+    // wait for any child transitions to finish before hiding
+    // some element. Also, this has to be done recursively.
+    // If x-show.immediate, foregoe the waiting.
+
+
+    if (modifiers.includes('immediate')) {
+      handle(finish => finish());
+      return;
+    } // x-show is encountered during a DOM tree walk. If an element
+    // we encounter is NOT a child of another x-show element we
+    // can execute the previous x-show stack (if one exists).
+
+
+    if (component.showDirectiveLastElement && !component.showDirectiveLastElement.contains(el)) {
+      component.executeAndClearRemainingShowDirectiveStack();
+    } // We'll push the handler onto a stack to be handled later.
+
+
+    component.showDirectiveStack.push(handle);
+    component.showDirectiveLastElement = el;
+  }
+
+  function handleIfDirective(component, el, expressionResult, initialUpdate, extraVars) {
+    if (el.nodeName.toLowerCase() !== 'template') console.warn(`Alpine: [x-if] directive should only be added to <template> tags. See https://github.com/alpinejs/alpine#x-if`);
+    const elementHasAlreadyBeenAdded = el.nextElementSibling && el.nextElementSibling.__x_inserted_me === true;
+
+    if (expressionResult && !elementHasAlreadyBeenAdded) {
+      const clone = document.importNode(el.content, true);
+      el.parentElement.insertBefore(clone, el.nextElementSibling);
+      transitionIn(el.nextElementSibling, () => {}, initialUpdate);
+      component.initializeElements(el.nextElementSibling, extraVars);
+      el.nextElementSibling.__x_inserted_me = true;
+    } else if (!expressionResult && elementHasAlreadyBeenAdded) {
+      transitionOut(el.nextElementSibling, () => {
+        el.nextElementSibling.remove();
+      }, initialUpdate);
+    }
+  }
+
+  function registerListener(component, el, event, modifiers, expression, extraVars = {}) {
+    if (modifiers.includes('away')) {
+      let handler = e => {
+        // Don't do anything if the click came form the element or within it.
+        if (el.contains(e.target)) return; // Don't do anything if this element isn't currently visible.
+
+        if (el.offsetWidth < 1 && el.offsetHeight < 1) return; // Now that we are sure the element is visible, AND the click
+        // is from outside it, let's run the expression.
+
+        runListenerHandler(component, expression, e, extraVars);
+
+        if (modifiers.includes('once')) {
+          document.removeEventListener(event, handler);
+        }
+      }; // Listen for this event at the root level.
+
+
+      document.addEventListener(event, handler);
+    } else {
+      let listenerTarget = modifiers.includes('window') ? window : modifiers.includes('document') ? document : el;
+
+      let handler = e => {
+        // Remove this global event handler if the element that declared it
+        // has been removed. It's now stale.
+        if (listenerTarget === window || listenerTarget === document) {
+          if (!document.body.contains(el)) {
+            listenerTarget.removeEventListener(event, handler);
+            return;
+          }
+        }
+
+        if (isKeyEvent(event)) {
+          if (isListeningForASpecificKeyThatHasntBeenPressed(e, modifiers)) {
+            return;
+          }
+        }
+
+        if (modifiers.includes('prevent')) e.preventDefault();
+        if (modifiers.includes('stop')) e.stopPropagation(); // If the .self modifier isn't present, or if it is present and
+        // the target element matches the element we are registering the
+        // event on, run the handler
+
+        if (!modifiers.includes('self') || e.target === el) {
+          const returnValue = runListenerHandler(component, expression, e, extraVars);
+
+          if (returnValue === false) {
+            e.preventDefault();
+          } else {
+            if (modifiers.includes('once')) {
+              listenerTarget.removeEventListener(event, handler);
+            }
+          }
+        }
+      };
+
+      if (modifiers.includes('debounce')) {
+        let nextModifier = modifiers[modifiers.indexOf('debounce') + 1] || 'invalid-wait';
+        let wait = isNumeric(nextModifier.split('ms')[0]) ? Number(nextModifier.split('ms')[0]) : 250;
+        handler = debounce(handler, wait);
+      }
+
+      listenerTarget.addEventListener(event, handler);
+    }
+  }
+
+  function runListenerHandler(component, expression, e, extraVars) {
+    return component.evaluateCommandExpression(e.target, expression, () => {
+      return _objectSpread2({}, extraVars(), {
+        '$event': e
+      });
+    });
+  }
+
+  function isKeyEvent(event) {
+    return ['keydown', 'keyup'].includes(event);
+  }
+
+  function isListeningForASpecificKeyThatHasntBeenPressed(e, modifiers) {
+    let keyModifiers = modifiers.filter(i => {
+      return !['window', 'document', 'prevent', 'stop'].includes(i);
+    });
+
+    if (keyModifiers.includes('debounce')) {
+      let debounceIndex = keyModifiers.indexOf('debounce');
+      keyModifiers.splice(debounceIndex, isNumeric((keyModifiers[debounceIndex + 1] || 'invalid-wait').split('ms')[0]) ? 2 : 1);
+    } // If no modifier is specified, we'll call it a press.
+
+
+    if (keyModifiers.length === 0) return false; // If one is passed, AND it matches the key pressed, we'll call it a press.
+
+    if (keyModifiers.length === 1 && keyModifiers[0] === keyToModifier(e.key)) return false; // The user is listening for key combinations.
+
+    const systemKeyModifiers = ['ctrl', 'shift', 'alt', 'meta', 'cmd', 'super'];
+    const selectedSystemKeyModifiers = systemKeyModifiers.filter(modifier => keyModifiers.includes(modifier));
+    keyModifiers = keyModifiers.filter(i => !selectedSystemKeyModifiers.includes(i));
+
+    if (selectedSystemKeyModifiers.length > 0) {
+      const activelyPressedKeyModifiers = selectedSystemKeyModifiers.filter(modifier => {
+        // Alias "cmd" and "super" to "meta"
+        if (modifier === 'cmd' || modifier === 'super') modifier = 'meta';
+        return e[`${modifier}Key`];
+      }); // If all the modifiers selected are pressed, ...
+
+      if (activelyPressedKeyModifiers.length === selectedSystemKeyModifiers.length) {
+        // AND the remaining key is pressed as well. It's a press.
+        if (keyModifiers[0] === keyToModifier(e.key)) return false;
+      }
+    } // We'll call it NOT a valid keypress.
+
+
+    return true;
+  }
+
+  function keyToModifier(key) {
+    switch (key) {
+      case '/':
+        return 'slash';
+
+      case ' ':
+      case 'Spacebar':
+        return 'space';
+
+      default:
+        return key && kebabCase(key);
+    }
+  }
+
+  function registerModelListener(component, el, modifiers, expression, extraVars) {
+    // If the element we are binding to is a select, a radio, or checkbox
+    // we'll listen for the change event instead of the "input" event.
+    var event = el.tagName.toLowerCase() === 'select' || ['checkbox', 'radio'].includes(el.type) || modifiers.includes('lazy') ? 'change' : 'input';
+    const listenerExpression = `${expression} = rightSideOfExpression($event, ${expression})`;
+    registerListener(component, el, event, modifiers, listenerExpression, () => {
+      return _objectSpread2({}, extraVars(), {
+        rightSideOfExpression: generateModelAssignmentFunction(el, modifiers, expression)
+      });
+    });
+  }
+
+  function generateModelAssignmentFunction(el, modifiers, expression) {
+    if (el.type === 'radio') {
+      // Radio buttons only work properly when they share a name attribute.
+      // People might assume we take care of that for them, because
+      // they already set a shared "x-model" attribute.
+      if (!el.hasAttribute('name')) el.setAttribute('name', expression);
+    }
+
+    return (event, currentValue) => {
+      // Check for event.detail due to an issue where IE11 handles other events as a CustomEvent.
+      if (event instanceof CustomEvent && event.detail) {
+        return event.detail;
+      } else if (el.type === 'checkbox') {
+        // If the data we are binding to is an array, toggle it's value inside the array.
+        if (Array.isArray(currentValue)) {
+          return event.target.checked ? currentValue.concat([event.target.value]) : currentValue.filter(i => i !== event.target.value);
+        } else {
+          return event.target.checked;
+        }
+      } else if (el.tagName.toLowerCase() === 'select' && el.multiple) {
+        return modifiers.includes('number') ? Array.from(event.target.selectedOptions).map(option => {
+          const rawValue = option.value || option.text;
+          const number = rawValue ? parseFloat(rawValue) : null;
+          return isNaN(number) ? rawValue : number;
+        }) : Array.from(event.target.selectedOptions).map(option => {
+          return option.value || option.text;
+        });
+      } else {
+        const rawValue = event.target.value;
+        const number = rawValue ? parseFloat(rawValue) : null;
+        return modifiers.includes('number') ? isNaN(number) ? rawValue : number : modifiers.includes('trim') ? rawValue.trim() : rawValue;
+      }
+    };
+  }
+
+  /**
+   * Copyright (C) 2017 salesforce.com, inc.
+   */
+  const { isArray } = Array;
+  const { getPrototypeOf, create: ObjectCreate, defineProperty: ObjectDefineProperty, defineProperties: ObjectDefineProperties, isExtensible, getOwnPropertyDescriptor, getOwnPropertyNames, getOwnPropertySymbols, preventExtensions, hasOwnProperty, } = Object;
+  const { push: ArrayPush, concat: ArrayConcat, map: ArrayMap, } = Array.prototype;
+  function isUndefined(obj) {
+      return obj === undefined;
+  }
+  function isFunction(obj) {
+      return typeof obj === 'function';
+  }
+  function isObject(obj) {
+      return typeof obj === 'object';
+  }
+  const proxyToValueMap = new WeakMap();
+  function registerProxy(proxy, value) {
+      proxyToValueMap.set(proxy, value);
+  }
+  const unwrap = (replicaOrAny) => proxyToValueMap.get(replicaOrAny) || replicaOrAny;
+
+  function wrapValue(membrane, value) {
+      return membrane.valueIsObservable(value) ? membrane.getProxy(value) : value;
+  }
+  /**
+   * Unwrap property descriptors will set value on original descriptor
+   * We only need to unwrap if value is specified
+   * @param descriptor external descrpitor provided to define new property on original value
+   */
+  function unwrapDescriptor(descriptor) {
+      if (hasOwnProperty.call(descriptor, 'value')) {
+          descriptor.value = unwrap(descriptor.value);
+      }
+      return descriptor;
+  }
+  function lockShadowTarget(membrane, shadowTarget, originalTarget) {
+      const targetKeys = ArrayConcat.call(getOwnPropertyNames(originalTarget), getOwnPropertySymbols(originalTarget));
+      targetKeys.forEach((key) => {
+          let descriptor = getOwnPropertyDescriptor(originalTarget, key);
+          // We do not need to wrap the descriptor if configurable
+          // Because we can deal with wrapping it when user goes through
+          // Get own property descriptor. There is also a chance that this descriptor
+          // could change sometime in the future, so we can defer wrapping
+          // until we need to
+          if (!descriptor.configurable) {
+              descriptor = wrapDescriptor(membrane, descriptor, wrapValue);
+          }
+          ObjectDefineProperty(shadowTarget, key, descriptor);
+      });
+      preventExtensions(shadowTarget);
+  }
+  class ReactiveProxyHandler {
+      constructor(membrane, value) {
+          this.originalTarget = value;
+          this.membrane = membrane;
+      }
+      get(shadowTarget, key) {
+          const { originalTarget, membrane } = this;
+          const value = originalTarget[key];
+          const { valueObserved } = membrane;
+          valueObserved(originalTarget, key);
+          return membrane.getProxy(value);
+      }
+      set(shadowTarget, key, value) {
+          const { originalTarget, membrane: { valueMutated } } = this;
+          const oldValue = originalTarget[key];
+          if (oldValue !== value) {
+              originalTarget[key] = value;
+              valueMutated(originalTarget, key);
+          }
+          else if (key === 'length' && isArray(originalTarget)) {
+              // fix for issue #236: push will add the new index, and by the time length
+              // is updated, the internal length is already equal to the new length value
+              // therefore, the oldValue is equal to the value. This is the forking logic
+              // to support this use case.
+              valueMutated(originalTarget, key);
+          }
+          return true;
+      }
+      deleteProperty(shadowTarget, key) {
+          const { originalTarget, membrane: { valueMutated } } = this;
+          delete originalTarget[key];
+          valueMutated(originalTarget, key);
+          return true;
+      }
+      apply(shadowTarget, thisArg, argArray) {
+          /* No op */
+      }
+      construct(target, argArray, newTarget) {
+          /* No op */
+      }
+      has(shadowTarget, key) {
+          const { originalTarget, membrane: { valueObserved } } = this;
+          valueObserved(originalTarget, key);
+          return key in originalTarget;
+      }
+      ownKeys(shadowTarget) {
+          const { originalTarget } = this;
+          return ArrayConcat.call(getOwnPropertyNames(originalTarget), getOwnPropertySymbols(originalTarget));
+      }
+      isExtensible(shadowTarget) {
+          const shadowIsExtensible = isExtensible(shadowTarget);
+          if (!shadowIsExtensible) {
+              return shadowIsExtensible;
+          }
+          const { originalTarget, membrane } = this;
+          const targetIsExtensible = isExtensible(originalTarget);
+          if (!targetIsExtensible) {
+              lockShadowTarget(membrane, shadowTarget, originalTarget);
+          }
+          return targetIsExtensible;
+      }
+      setPrototypeOf(shadowTarget, prototype) {
+      }
+      getPrototypeOf(shadowTarget) {
+          const { originalTarget } = this;
+          return getPrototypeOf(originalTarget);
+      }
+      getOwnPropertyDescriptor(shadowTarget, key) {
+          const { originalTarget, membrane } = this;
+          const { valueObserved } = this.membrane;
+          // keys looked up via hasOwnProperty need to be reactive
+          valueObserved(originalTarget, key);
+          let desc = getOwnPropertyDescriptor(originalTarget, key);
+          if (isUndefined(desc)) {
+              return desc;
+          }
+          const shadowDescriptor = getOwnPropertyDescriptor(shadowTarget, key);
+          if (!isUndefined(shadowDescriptor)) {
+              return shadowDescriptor;
+          }
+          // Note: by accessing the descriptor, the key is marked as observed
+          // but access to the value, setter or getter (if available) cannot observe
+          // mutations, just like regular methods, in which case we just do nothing.
+          desc = wrapDescriptor(membrane, desc, wrapValue);
+          if (!desc.configurable) {
+              // If descriptor from original target is not configurable,
+              // We must copy the wrapped descriptor over to the shadow target.
+              // Otherwise, proxy will throw an invariant error.
+              // This is our last chance to lock the value.
+              // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/getOwnPropertyDescriptor#Invariants
+              ObjectDefineProperty(shadowTarget, key, desc);
+          }
+          return desc;
+      }
+      preventExtensions(shadowTarget) {
+          const { originalTarget, membrane } = this;
+          lockShadowTarget(membrane, shadowTarget, originalTarget);
+          preventExtensions(originalTarget);
+          return true;
+      }
+      defineProperty(shadowTarget, key, descriptor) {
+          const { originalTarget, membrane } = this;
+          const { valueMutated } = membrane;
+          const { configurable } = descriptor;
+          // We have to check for value in descriptor
+          // because Object.freeze(proxy) calls this method
+          // with only { configurable: false, writeable: false }
+          // Additionally, method will only be called with writeable:false
+          // if the descriptor has a value, as opposed to getter/setter
+          // So we can just check if writable is present and then see if
+          // value is present. This eliminates getter and setter descriptors
+          if (hasOwnProperty.call(descriptor, 'writable') && !hasOwnProperty.call(descriptor, 'value')) {
+              const originalDescriptor = getOwnPropertyDescriptor(originalTarget, key);
+              descriptor.value = originalDescriptor.value;
+          }
+          ObjectDefineProperty(originalTarget, key, unwrapDescriptor(descriptor));
+          if (configurable === false) {
+              ObjectDefineProperty(shadowTarget, key, wrapDescriptor(membrane, descriptor, wrapValue));
+          }
+          valueMutated(originalTarget, key);
+          return true;
+      }
+  }
+
+  function wrapReadOnlyValue(membrane, value) {
+      return membrane.valueIsObservable(value) ? membrane.getReadOnlyProxy(value) : value;
+  }
+  class ReadOnlyHandler {
+      constructor(membrane, value) {
+          this.originalTarget = value;
+          this.membrane = membrane;
+      }
+      get(shadowTarget, key) {
+          const { membrane, originalTarget } = this;
+          const value = originalTarget[key];
+          const { valueObserved } = membrane;
+          valueObserved(originalTarget, key);
+          return membrane.getReadOnlyProxy(value);
+      }
+      set(shadowTarget, key, value) {
+          return false;
+      }
+      deleteProperty(shadowTarget, key) {
+          return false;
+      }
+      apply(shadowTarget, thisArg, argArray) {
+          /* No op */
+      }
+      construct(target, argArray, newTarget) {
+          /* No op */
+      }
+      has(shadowTarget, key) {
+          const { originalTarget, membrane: { valueObserved } } = this;
+          valueObserved(originalTarget, key);
+          return key in originalTarget;
+      }
+      ownKeys(shadowTarget) {
+          const { originalTarget } = this;
+          return ArrayConcat.call(getOwnPropertyNames(originalTarget), getOwnPropertySymbols(originalTarget));
+      }
+      setPrototypeOf(shadowTarget, prototype) {
+      }
+      getOwnPropertyDescriptor(shadowTarget, key) {
+          const { originalTarget, membrane } = this;
+          const { valueObserved } = membrane;
+          // keys looked up via hasOwnProperty need to be reactive
+          valueObserved(originalTarget, key);
+          let desc = getOwnPropertyDescriptor(originalTarget, key);
+          if (isUndefined(desc)) {
+              return desc;
+          }
+          const shadowDescriptor = getOwnPropertyDescriptor(shadowTarget, key);
+          if (!isUndefined(shadowDescriptor)) {
+              return shadowDescriptor;
+          }
+          // Note: by accessing the descriptor, the key is marked as observed
+          // but access to the value or getter (if available) cannot be observed,
+          // just like regular methods, in which case we just do nothing.
+          desc = wrapDescriptor(membrane, desc, wrapReadOnlyValue);
+          if (hasOwnProperty.call(desc, 'set')) {
+              desc.set = undefined; // readOnly membrane does not allow setters
+          }
+          if (!desc.configurable) {
+              // If descriptor from original target is not configurable,
+              // We must copy the wrapped descriptor over to the shadow target.
+              // Otherwise, proxy will throw an invariant error.
+              // This is our last chance to lock the value.
+              // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/getOwnPropertyDescriptor#Invariants
+              ObjectDefineProperty(shadowTarget, key, desc);
+          }
+          return desc;
+      }
+      preventExtensions(shadowTarget) {
+          return false;
+      }
+      defineProperty(shadowTarget, key, descriptor) {
+          return false;
+      }
+  }
+  function createShadowTarget(value) {
+      let shadowTarget = undefined;
+      if (isArray(value)) {
+          shadowTarget = [];
+      }
+      else if (isObject(value)) {
+          shadowTarget = {};
+      }
+      return shadowTarget;
+  }
+  const ObjectDotPrototype = Object.prototype;
+  function defaultValueIsObservable(value) {
+      // intentionally checking for null
+      if (value === null) {
+          return false;
+      }
+      // treat all non-object types, including undefined, as non-observable values
+      if (typeof value !== 'object') {
+          return false;
+      }
+      if (isArray(value)) {
+          return true;
+      }
+      const proto = getPrototypeOf(value);
+      return (proto === ObjectDotPrototype || proto === null || getPrototypeOf(proto) === null);
+  }
+  const defaultValueObserved = (obj, key) => {
+      /* do nothing */
+  };
+  const defaultValueMutated = (obj, key) => {
+      /* do nothing */
+  };
+  const defaultValueDistortion = (value) => value;
+  function wrapDescriptor(membrane, descriptor, getValue) {
+      const { set, get } = descriptor;
+      if (hasOwnProperty.call(descriptor, 'value')) {
+          descriptor.value = getValue(membrane, descriptor.value);
+      }
+      else {
+          if (!isUndefined(get)) {
+              descriptor.get = function () {
+                  // invoking the original getter with the original target
+                  return getValue(membrane, get.call(unwrap(this)));
+              };
+          }
+          if (!isUndefined(set)) {
+              descriptor.set = function (value) {
+                  // At this point we don't have a clear indication of whether
+                  // or not a valid mutation will occur, we don't have the key,
+                  // and we are not sure why and how they are invoking this setter.
+                  // Nevertheless we preserve the original semantics by invoking the
+                  // original setter with the original target and the unwrapped value
+                  set.call(unwrap(this), membrane.unwrapProxy(value));
+              };
+          }
+      }
+      return descriptor;
+  }
+  class ReactiveMembrane {
+      constructor(options) {
+          this.valueDistortion = defaultValueDistortion;
+          this.valueMutated = defaultValueMutated;
+          this.valueObserved = defaultValueObserved;
+          this.valueIsObservable = defaultValueIsObservable;
+          this.objectGraph = new WeakMap();
+          if (!isUndefined(options)) {
+              const { valueDistortion, valueMutated, valueObserved, valueIsObservable } = options;
+              this.valueDistortion = isFunction(valueDistortion) ? valueDistortion : defaultValueDistortion;
+              this.valueMutated = isFunction(valueMutated) ? valueMutated : defaultValueMutated;
+              this.valueObserved = isFunction(valueObserved) ? valueObserved : defaultValueObserved;
+              this.valueIsObservable = isFunction(valueIsObservable) ? valueIsObservable : defaultValueIsObservable;
+          }
+      }
+      getProxy(value) {
+          const unwrappedValue = unwrap(value);
+          const distorted = this.valueDistortion(unwrappedValue);
+          if (this.valueIsObservable(distorted)) {
+              const o = this.getReactiveState(unwrappedValue, distorted);
+              // when trying to extract the writable version of a readonly
+              // we return the readonly.
+              return o.readOnly === value ? value : o.reactive;
+          }
+          return distorted;
+      }
+      getReadOnlyProxy(value) {
+          value = unwrap(value);
+          const distorted = this.valueDistortion(value);
+          if (this.valueIsObservable(distorted)) {
+              return this.getReactiveState(value, distorted).readOnly;
+          }
+          return distorted;
+      }
+      unwrapProxy(p) {
+          return unwrap(p);
+      }
+      getReactiveState(value, distortedValue) {
+          const { objectGraph, } = this;
+          let reactiveState = objectGraph.get(distortedValue);
+          if (reactiveState) {
+              return reactiveState;
+          }
+          const membrane = this;
+          reactiveState = {
+              get reactive() {
+                  const reactiveHandler = new ReactiveProxyHandler(membrane, distortedValue);
+                  // caching the reactive proxy after the first time it is accessed
+                  const proxy = new Proxy(createShadowTarget(distortedValue), reactiveHandler);
+                  registerProxy(proxy, value);
+                  ObjectDefineProperty(this, 'reactive', { value: proxy });
+                  return proxy;
+              },
+              get readOnly() {
+                  const readOnlyHandler = new ReadOnlyHandler(membrane, distortedValue);
+                  // caching the readOnly proxy after the first time it is accessed
+                  const proxy = new Proxy(createShadowTarget(distortedValue), readOnlyHandler);
+                  registerProxy(proxy, value);
+                  ObjectDefineProperty(this, 'readOnly', { value: proxy });
+                  return proxy;
+              }
+          };
+          objectGraph.set(distortedValue, reactiveState);
+          return reactiveState;
+      }
+  }
+  /** version: 0.26.0 */
+
+  function wrap(data, mutationCallback) {
+
+    let membrane = new ReactiveMembrane({
+      valueMutated(target, key) {
+        mutationCallback(target, key);
+      }
+
+    });
+    return {
+      data: membrane.getProxy(data),
+      membrane: membrane
+    };
+  }
+  function unwrap$1(membrane, observable) {
+    let unwrappedData = membrane.unwrapProxy(observable);
+    let copy = {};
+    Object.keys(unwrappedData).forEach(key => {
+      if (['$el', '$refs', '$nextTick', '$watch'].includes(key)) return;
+      copy[key] = unwrappedData[key];
+    });
+    return copy;
+  }
+
+  class Component {
+    constructor(el, seedDataForCloning = null) {
+      this.$el = el;
+      const dataAttr = this.$el.getAttribute('x-data');
+      const dataExpression = dataAttr === '' ? '{}' : dataAttr;
+      const initExpression = this.$el.getAttribute('x-init');
+      this.unobservedData = seedDataForCloning ? seedDataForCloning : saferEval(dataExpression, {});
+      // Construct a Proxy-based observable. This will be used to handle reactivity.
+
+      let {
+        membrane,
+        data
+      } = this.wrapDataInObservable(this.unobservedData);
+      this.$data = data;
+      this.membrane = membrane; // After making user-supplied data methods reactive, we can now add
+      // our magic properties to the original data for access.
+
+      this.unobservedData.$el = this.$el;
+      this.unobservedData.$refs = this.getRefsProxy();
+      this.nextTickStack = [];
+
+      this.unobservedData.$nextTick = callback => {
+        this.nextTickStack.push(callback);
+      };
+
+      this.watchers = {};
+
+      this.unobservedData.$watch = (property, callback) => {
+        if (!this.watchers[property]) this.watchers[property] = [];
+        this.watchers[property].push(callback);
+      };
+
+      this.showDirectiveStack = [];
+      this.showDirectiveLastElement;
+      var initReturnedCallback; // If x-init is present AND we aren't cloning (skip x-init on clone)
+
+      if (initExpression && !seedDataForCloning) {
+        // We want to allow data manipulation, but not trigger DOM updates just yet.
+        // We haven't even initialized the elements with their Alpine bindings. I mean c'mon.
+        this.pauseReactivity = true;
+        initReturnedCallback = this.evaluateReturnExpression(this.$el, initExpression);
+        this.pauseReactivity = false;
+      } // Register all our listeners and set all our attribute bindings.
+
+
+      this.initializeElements(this.$el); // Use mutation observer to detect new elements being added within this component at run-time.
+      // Alpine's just so darn flexible amirite?
+
+      this.listenForNewElementsToInitialize();
+
+      if (typeof initReturnedCallback === 'function') {
+        // Run the callback returned from the "x-init" hook to allow the user to do stuff after
+        // Alpine's got it's grubby little paws all over everything.
+        initReturnedCallback.call(this.$data);
+      }
+    }
+
+    getUnobservedData() {
+      return unwrap$1(this.membrane, this.$data);
+    }
+
+    wrapDataInObservable(data) {
+      var self = this;
+      let updateDom = debounce(function () {
+        self.updateElements(self.$el);
+      }, 0);
+      return wrap(data, (target, key) => {
+        if (self.watchers[key]) {
+          // If there's a watcher for this specific key, run it.
+          self.watchers[key].forEach(callback => callback(target[key]));
+        } else {
+          // Let's walk through the watchers with "dot-notation" (foo.bar) and see
+          // if this mutation fits any of them.
+          Object.keys(self.watchers).filter(i => i.includes('.')).forEach(fullDotNotationKey => {
+            let dotNotationParts = fullDotNotationKey.split('.'); // If this dot-notation watcher's last "part" doesn't match the current
+            // key, then skip it early for performance reasons.
+
+            if (key !== dotNotationParts[dotNotationParts.length - 1]) return; // Now, walk through the dot-notation "parts" recursively to find
+            // a match, and call the watcher if one's found.
+
+            dotNotationParts.reduce((comparisonData, part) => {
+              if (Object.is(target, comparisonData)) {
+                // Run the watchers.
+                self.watchers[fullDotNotationKey].forEach(callback => callback(target[key]));
+              }
+
+              return comparisonData[part];
+            }, self.getUnobservedData());
+          });
+        } // Don't react to data changes for cases like the `x-created` hook.
+
+
+        if (self.pauseReactivity) return;
+        updateDom();
+      });
+    }
+
+    walkAndSkipNestedComponents(el, callback, initializeComponentCallback = () => {}) {
+      walk(el, el => {
+        // We've hit a component.
+        if (el.hasAttribute('x-data')) {
+          // If it's not the current one.
+          if (!el.isSameNode(this.$el)) {
+            // Initialize it if it's not.
+            if (!el.__x) initializeComponentCallback(el); // Now we'll let that sub-component deal with itself.
+
+            return false;
+          }
+        }
+
+        return callback(el);
+      });
+    }
+
+    initializeElements(rootEl, extraVars = () => {}) {
+      this.walkAndSkipNestedComponents(rootEl, el => {
+        // Don't touch spawns from for loop
+        if (el.__x_for_key !== undefined) return false; // Don't touch spawns from if directives
+
+        if (el.__x_inserted_me !== undefined) return false;
+        this.initializeElement(el, extraVars);
+      }, el => {
+        el.__x = new Component(el);
+      });
+      this.executeAndClearRemainingShowDirectiveStack();
+      this.executeAndClearNextTickStack(rootEl);
+    }
+
+    initializeElement(el, extraVars) {
+      // To support class attribute merging, we have to know what the element's
+      // original class attribute looked like for reference.
+      if (el.hasAttribute('class') && getXAttrs(el).length > 0) {
+        el.__x_original_classes = el.getAttribute('class').split(' ');
+      }
+
+      this.registerListeners(el, extraVars);
+      this.resolveBoundAttributes(el, true, extraVars);
+    }
+
+    updateElements(rootEl, extraVars = () => {}) {
+      this.walkAndSkipNestedComponents(rootEl, el => {
+        // Don't touch spawns from for loop (and check if the root is actually a for loop in a parent, don't skip it.)
+        if (el.__x_for_key !== undefined && !el.isSameNode(this.$el)) return false;
+        this.updateElement(el, extraVars);
+      }, el => {
+        el.__x = new Component(el);
+      });
+      this.executeAndClearRemainingShowDirectiveStack();
+      this.executeAndClearNextTickStack(rootEl);
+    }
+
+    executeAndClearNextTickStack(el) {
+      // Skip spawns from alpine directives
+      if (el === this.$el) {
+        // Walk through the $nextTick stack and clear it as we go.
+        while (this.nextTickStack.length > 0) {
+          this.nextTickStack.shift()();
+        }
+      }
+    }
+
+    executeAndClearRemainingShowDirectiveStack() {
+      // The goal here is to start all the x-show transitions
+      // and build a nested promise chain so that elements
+      // only hide when the children are finished hiding.
+      this.showDirectiveStack.reverse().map(thing => {
+        return new Promise(resolve => {
+          thing(finish => {
+            resolve(finish);
+          });
+        });
+      }).reduce((nestedPromise, promise) => {
+        return nestedPromise.then(() => {
+          return promise.then(finish => finish());
+        });
+      }, Promise.resolve(() => {})); // We've processed the handler stack. let's clear it.
+
+      this.showDirectiveStack = [];
+      this.showDirectiveLastElement = undefined;
+    }
+
+    updateElement(el, extraVars) {
+      this.resolveBoundAttributes(el, false, extraVars);
+    }
+
+    registerListeners(el, extraVars) {
+      getXAttrs(el).forEach(({
+        type,
+        value,
+        modifiers,
+        expression
+      }) => {
+        switch (type) {
+          case 'on':
+            registerListener(this, el, value, modifiers, expression, extraVars);
+            break;
+
+          case 'model':
+            registerModelListener(this, el, modifiers, expression, extraVars);
+            break;
+        }
+      });
+    }
+
+    resolveBoundAttributes(el, initialUpdate = false, extraVars) {
+      let attrs = getXAttrs(el);
+
+      if (el.type !== undefined && el.type === 'radio') {
+        // If there's an x-model on a radio input, move it to end of attribute list
+        // to ensure that x-bind:value (if present) is processed first.
+        const modelIdx = attrs.findIndex(attr => attr.type === 'model');
+
+        if (modelIdx > -1) {
+          attrs.push(attrs.splice(modelIdx, 1)[0]);
+        }
+      }
+
+      attrs.forEach(({
+        type,
+        value,
+        modifiers,
+        expression
+      }) => {
+        switch (type) {
+          case 'model':
+            handleAttributeBindingDirective(this, el, 'value', expression, extraVars, type);
+            break;
+
+          case 'bind':
+            // The :key binding on an x-for is special, ignore it.
+            if (el.tagName.toLowerCase() === 'template' && value === 'key') return;
+            handleAttributeBindingDirective(this, el, value, expression, extraVars, type);
+            break;
+
+          case 'text':
+            var output = this.evaluateReturnExpression(el, expression, extraVars);
+            handleTextDirective(el, output, expression);
+            break;
+
+          case 'html':
+            handleHtmlDirective(this, el, expression, extraVars);
+            break;
+
+          case 'show':
+            var output = this.evaluateReturnExpression(el, expression, extraVars);
+            handleShowDirective(this, el, output, modifiers, initialUpdate);
+            break;
+
+          case 'if':
+            // If this element also has x-for on it, don't process x-if.
+            // We will let the "x-for" directive handle the "if"ing.
+            if (attrs.filter(i => i.type === 'for').length > 0) return;
+            var output = this.evaluateReturnExpression(el, expression, extraVars);
+            handleIfDirective(this, el, output, initialUpdate, extraVars);
+            break;
+
+          case 'for':
+            handleForDirective(this, el, expression, initialUpdate, extraVars);
+            break;
+
+          case 'cloak':
+            el.removeAttribute('x-cloak');
+            break;
+        }
+      });
+    }
+
+    evaluateReturnExpression(el, expression, extraVars = () => {}) {
+      return saferEval(expression, this.$data, _objectSpread2({}, extraVars(), {
+        $dispatch: this.getDispatchFunction(el)
+      }));
+    }
+
+    evaluateCommandExpression(el, expression, extraVars = () => {}) {
+      return saferEvalNoReturn(expression, this.$data, _objectSpread2({}, extraVars(), {
+        $dispatch: this.getDispatchFunction(el)
+      }));
+    }
+
+    getDispatchFunction(el) {
+      return (event, detail = {}) => {
+        el.dispatchEvent(new CustomEvent(event, {
+          detail,
+          bubbles: true
+        }));
+      };
+    }
+
+    listenForNewElementsToInitialize() {
+      const targetNode = this.$el;
+      const observerOptions = {
+        childList: true,
+        attributes: true,
+        subtree: true
+      };
+      const observer = new MutationObserver(mutations => {
+        for (let i = 0; i < mutations.length; i++) {
+          // Filter out mutations triggered from child components.
+          const closestParentComponent = mutations[i].target.closest('[x-data]');
+          if (!(closestParentComponent && closestParentComponent.isSameNode(this.$el))) continue;
+
+          if (mutations[i].type === 'attributes' && mutations[i].attributeName === 'x-data') {
+            const rawData = saferEval(mutations[i].target.getAttribute('x-data'), {});
+            Object.keys(rawData).forEach(key => {
+              if (this.$data[key] !== rawData[key]) {
+                this.$data[key] = rawData[key];
+              }
+            });
+          }
+
+          if (mutations[i].addedNodes.length > 0) {
+            mutations[i].addedNodes.forEach(node => {
+              if (node.nodeType !== 1 || node.__x_inserted_me) return;
+
+              if (node.matches('[x-data]')) {
+                node.__x = new Component(node);
+                return;
+              }
+
+              this.initializeElements(node);
+            });
+          }
+        }
+      });
+      observer.observe(targetNode, observerOptions);
+    }
+
+    getRefsProxy() {
+      var self = this;
+      var refObj = {};
+      // One of the goals of this is to not hold elements in memory, but rather re-evaluate
+      // the DOM when the system needs something from it. This way, the framework is flexible and
+      // friendly to outside DOM changes from libraries like Vue/Livewire.
+      // For this reason, I'm using an "on-demand" proxy to fake a "$refs" object.
+
+      return new Proxy(refObj, {
+        get(object, property) {
+          if (property === '$isAlpineProxy') return true;
+          var ref; // We can't just query the DOM because it's hard to filter out refs in
+          // nested components.
+
+          self.walkAndSkipNestedComponents(self.$el, el => {
+            if (el.hasAttribute('x-ref') && el.getAttribute('x-ref') === property) {
+              ref = el;
+            }
+          });
+          return ref;
+        }
+
+      });
+    }
+
+  }
+
+  const Alpine = {
+    version: "2.3.5",
+    start: async function start() {
+      if (!isTesting()) {
+        await domReady();
+      }
+
+      this.discoverComponents(el => {
+        this.initializeComponent(el);
+      }); // It's easier and more performant to just support Turbolinks than listen
+      // to MutationObserver mutations at the document level.
+
+      document.addEventListener("turbolinks:load", () => {
+        this.discoverUninitializedComponents(el => {
+          this.initializeComponent(el);
+        });
+      });
+      this.listenForNewUninitializedComponentsAtRunTime(el => {
+        this.initializeComponent(el);
+      });
+    },
+    discoverComponents: function discoverComponents(callback) {
+      const rootEls = document.querySelectorAll('[x-data]');
+      rootEls.forEach(rootEl => {
+        callback(rootEl);
+      });
+    },
+    discoverUninitializedComponents: function discoverUninitializedComponents(callback, el = null) {
+      const rootEls = (el || document).querySelectorAll('[x-data]');
+      Array.from(rootEls).filter(el => el.__x === undefined).forEach(rootEl => {
+        callback(rootEl);
+      });
+    },
+    listenForNewUninitializedComponentsAtRunTime: function listenForNewUninitializedComponentsAtRunTime(callback) {
+      const targetNode = document.querySelector('body');
+      const observerOptions = {
+        childList: true,
+        attributes: true,
+        subtree: true
+      };
+      const observer = new MutationObserver(mutations => {
+        for (let i = 0; i < mutations.length; i++) {
+          if (mutations[i].addedNodes.length > 0) {
+            mutations[i].addedNodes.forEach(node => {
+              // Discard non-element nodes (like line-breaks)
+              if (node.nodeType !== 1) return; // Discard any changes happening within an existing component.
+              // They will take care of themselves.
+
+              if (node.parentElement && node.parentElement.closest('[x-data]')) return;
+              this.discoverUninitializedComponents(el => {
+                this.initializeComponent(el);
+              }, node.parentElement);
+            });
+          }
+        }
+      });
+      observer.observe(targetNode, observerOptions);
+    },
+    initializeComponent: function initializeComponent(el) {
+      if (!el.__x) {
+        el.__x = new Component(el);
+      }
+    },
+    clone: function clone(component, newEl) {
+      if (!newEl.__x) {
+        newEl.__x = new Component(newEl, component.getUnobservedData());
+      }
+    }
+  };
+
+  if (!isTesting()) {
+    window.Alpine = Alpine;
+
+    if (window.deferLoadingAlpine) {
+      window.deferLoadingAlpine(function () {
+        window.Alpine.start();
+      });
+    } else {
+      window.Alpine.start();
+    }
+  }
+
+  return Alpine;
+
+})));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Canvas.js":
+/*!******************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Canvas.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Canvas = void 0;
+const Utils_1 = __webpack_require__(/*! ../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+class Canvas {
+    constructor(container) {
+        this.container = container;
+        this.size = {
+            height: 0,
+            width: 0,
+        };
+        this.context = null;
+        this.generatedCanvas = false;
+    }
+    init() {
+        this.resize();
+        const options = this.container.options;
+        const cover = options.backgroundMask.cover;
+        const color = cover.color;
+        const trail = options.particles.move.trail;
+        this.coverColor = Utils_1.ColorUtils.colorToRgb(color);
+        this.trailFillColor = Utils_1.ColorUtils.colorToRgb(trail.fillColor);
+        this.paint();
+    }
+    loadCanvas(canvas, generatedCanvas) {
+        var _a;
+        if (!canvas.className) {
+            canvas.className = Utils_1.Constants.canvasClass;
+        }
+        if (this.generatedCanvas) {
+            (_a = this.element) === null || _a === void 0 ? void 0 : _a.remove();
+        }
+        this.generatedCanvas = generatedCanvas !== null && generatedCanvas !== void 0 ? generatedCanvas : false;
+        this.element = canvas;
+        this.size.height = canvas.offsetHeight;
+        this.size.width = canvas.offsetWidth;
+        this.context = this.element.getContext("2d");
+        this.container.retina.init();
+        this.initBackground();
+    }
+    destroy() {
+        var _a;
+        if (this.generatedCanvas) {
+            (_a = this.element) === null || _a === void 0 ? void 0 : _a.remove();
+        }
+        if (this.context) {
+            Utils_1.CanvasUtils.clear(this.context, this.size);
+        }
+    }
+    resize() {
+        if (!this.element) {
+            return;
+        }
+        this.element.width = this.size.width;
+        this.element.height = this.size.height;
+    }
+    paint() {
+        const options = this.container.options;
+        if (this.context) {
+            if (options.backgroundMask.enable && options.backgroundMask.cover && this.coverColor) {
+                this.paintBase(Utils_1.ColorUtils.getStyleFromRgb(this.coverColor));
+            }
+            else {
+                this.paintBase();
+            }
+        }
+    }
+    clear() {
+        const options = this.container.options;
+        const trail = options.particles.move.trail;
+        if (options.backgroundMask.enable) {
+            this.paint();
+        }
+        else if (trail.enable && trail.length > 0 && this.trailFillColor) {
+            this.paintBase(Utils_1.ColorUtils.getStyleFromRgb(this.trailFillColor, 1 / trail.length));
+        }
+        else if (this.context) {
+            Utils_1.CanvasUtils.clear(this.context, this.size);
+        }
+    }
+    drawLinkTriangle(p1, link1, link2) {
+        var _a, _b;
+        const container = this.container;
+        const options = container.options;
+        const p2 = link1.destination;
+        const p3 = link2.destination;
+        const triangleOptions = p1.particlesOptions.links.triangles;
+        const opacityTriangle = (_a = triangleOptions.opacity) !== null && _a !== void 0 ? _a : (link1.opacity + link2.opacity) / 2;
+        const pos1 = p1.getPosition();
+        const pos2 = p2.getPosition();
+        const pos3 = p3.getPosition();
+        const ctx = this.context;
+        if (!ctx) {
+            return;
+        }
+        let colorTriangle = Utils_1.ColorUtils.colorToRgb(triangleOptions.color);
+        if (!colorTriangle) {
+            const linksOptions = p1.particlesOptions.links;
+            const linkColor = linksOptions.id !== undefined
+                ? container.particles.linksColors[linksOptions.id]
+                : container.particles.linksColor;
+            if (linkColor === Utils_1.Constants.randomColorValue) {
+                colorTriangle = Utils_1.ColorUtils.getRandomRgbColor();
+            }
+            else if (linkColor === "mid") {
+                const sourceColor = p1.getColor();
+                const destColor = p2.getColor();
+                if (sourceColor && destColor) {
+                    colorTriangle = Utils_1.ColorUtils.mix(sourceColor, destColor, p1.size.value, p2.size.value);
+                }
+                else {
+                    const hslColor = sourceColor !== null && sourceColor !== void 0 ? sourceColor : destColor;
+                    if (!hslColor) {
+                        return;
+                    }
+                    colorTriangle = Utils_1.ColorUtils.hslToRgb(hslColor);
+                }
+            }
+            else {
+                colorTriangle = linkColor;
+            }
+        }
+        const width = (_b = p1.linksWidth) !== null && _b !== void 0 ? _b : container.retina.linksWidth;
+        Utils_1.CanvasUtils.drawLinkTriangle(ctx, width, pos1, pos2, pos3, options.backgroundMask.enable, colorTriangle, opacityTriangle);
+    }
+    drawLinkLine(p1, link) {
+        var _a;
+        const container = this.container;
+        const options = container.options;
+        const p2 = link.destination;
+        let opacity = link.opacity;
+        const pos1 = p1.getPosition();
+        const pos2 = p2.getPosition();
+        const ctx = this.context;
+        if (!ctx) {
+            return;
+        }
+        let colorLine;
+        const twinkle = p1.particlesOptions.twinkle.lines;
+        if (twinkle.enable) {
+            const twinkleFreq = twinkle.frequency;
+            const twinkleRgb = Utils_1.ColorUtils.colorToRgb(twinkle.color);
+            const twinkling = Math.random() < twinkleFreq;
+            if (twinkling && twinkleRgb !== undefined) {
+                colorLine = twinkleRgb;
+                opacity = twinkle.opacity;
+            }
+        }
+        if (!colorLine) {
+            const linksOptions = p1.particlesOptions.links;
+            const linkColor = linksOptions.id !== undefined
+                ? container.particles.linksColors[linksOptions.id]
+                : container.particles.linksColor;
+            if (linkColor === Utils_1.Constants.randomColorValue) {
+                colorLine = Utils_1.ColorUtils.getRandomRgbColor();
+            }
+            else if (linkColor === "mid") {
+                const sourceColor = p1.getColor();
+                const destColor = p2.getColor();
+                if (sourceColor && destColor) {
+                    colorLine = Utils_1.ColorUtils.mix(sourceColor, destColor, p1.size.value, p2.size.value);
+                }
+                else {
+                    const hslColor = sourceColor !== null && sourceColor !== void 0 ? sourceColor : destColor;
+                    if (!hslColor) {
+                        return;
+                    }
+                    colorLine = Utils_1.ColorUtils.hslToRgb(hslColor);
+                }
+            }
+            else {
+                colorLine = linkColor;
+            }
+        }
+        const width = (_a = p1.linksWidth) !== null && _a !== void 0 ? _a : container.retina.linksWidth;
+        Utils_1.CanvasUtils.drawLinkLine(ctx, width, pos1, pos2, p1.particlesOptions.links.distance, container.canvas.size, p1.particlesOptions.links.warp, options.backgroundMask.enable, colorLine, opacity, p1.particlesOptions.links.shadow);
+    }
+    drawConnectLine(p1, p2) {
+        var _a;
+        const lineStyle = this.lineStyle(p1, p2);
+        if (!lineStyle) {
+            return;
+        }
+        const ctx = this.context;
+        if (!ctx) {
+            return;
+        }
+        const pos1 = p1.getPosition();
+        const pos2 = p2.getPosition();
+        Utils_1.CanvasUtils.drawConnectLine(ctx, (_a = p1.linksWidth) !== null && _a !== void 0 ? _a : this.container.retina.linksWidth, lineStyle, pos1, pos2);
+    }
+    drawGrabLine(particle, lineColor, opacity, mousePos) {
+        var _a;
+        const container = this.container;
+        const ctx = container.canvas.context;
+        if (!ctx) {
+            return;
+        }
+        const beginPos = particle.getPosition();
+        Utils_1.CanvasUtils.drawGrabLine(ctx, (_a = particle.linksWidth) !== null && _a !== void 0 ? _a : container.retina.linksWidth, beginPos, mousePos, lineColor, opacity);
+    }
+    drawParticle(particle, delta) {
+        var _a, _b;
+        const pColor = particle.getColor();
+        if (pColor === undefined) {
+            return;
+        }
+        const options = this.container.options;
+        const twinkle = particle.particlesOptions.twinkle.particles;
+        const twinkleFreq = twinkle.frequency;
+        const twinkleRgb = Utils_1.ColorUtils.colorToRgb(twinkle.color);
+        const twinkling = twinkle.enable && Math.random() < twinkleFreq;
+        const radius = (_a = particle.bubble.radius) !== null && _a !== void 0 ? _a : particle.size.value;
+        const opacity = twinkling ? twinkle.opacity : (_b = particle.bubble.opacity) !== null && _b !== void 0 ? _b : particle.opacity.value;
+        const infectionStage = particle.infectionStage;
+        const infection = options.infection;
+        const infectionStages = infection.stages;
+        const infectionColor = infectionStage !== undefined ? infectionStages[infectionStage].color : undefined;
+        const infectionRgb = Utils_1.ColorUtils.colorToRgb(infectionColor);
+        const color = twinkling && twinkleRgb !== undefined ? twinkleRgb : infectionRgb !== null && infectionRgb !== void 0 ? infectionRgb : Utils_1.ColorUtils.hslToRgb(pColor);
+        const colorValue = color !== undefined ? Utils_1.ColorUtils.getStyleFromRgb(color, opacity) : undefined;
+        if (!this.context || !colorValue) {
+            return;
+        }
+        if (particle.links.length > 0) {
+            this.context.save();
+            for (const link of particle.links) {
+                if (particle.particlesOptions.links.triangles.enable) {
+                    const links = particle.links.map((l) => l.destination);
+                    const vertices = link.destination.links.filter((t) => links.indexOf(t.destination) >= 0);
+                    if (vertices.length) {
+                        for (const vertice of vertices) {
+                            this.drawLinkTriangle(particle, link, vertice);
+                        }
+                    }
+                }
+                this.drawLinkLine(particle, link);
+            }
+            this.context.restore();
+        }
+        Utils_1.CanvasUtils.drawParticle(this.container, this.context, particle, delta, colorValue, options.backgroundMask.enable, radius, opacity, particle.particlesOptions.shadow);
+    }
+    drawPlugin(plugin, delta) {
+        if (!this.context) {
+            return;
+        }
+        Utils_1.CanvasUtils.drawPlugin(this.context, plugin, delta);
+    }
+    paintBase(baseColor) {
+        if (this.context) {
+            Utils_1.CanvasUtils.paintBase(this.context, this.size, baseColor);
+        }
+    }
+    lineStyle(p1, p2) {
+        const options = this.container.options;
+        const connectOptions = options.interactivity.modes.connect;
+        if (this.context) {
+            return Utils_1.CanvasUtils.gradient(this.context, p1, p2, connectOptions.links.opacity);
+        }
+    }
+    initBackground() {
+        const options = this.container.options;
+        const background = options.background;
+        const element = this.element;
+        if (!element) {
+            return;
+        }
+        const elementStyle = element.style;
+        if (background.color) {
+            const color = Utils_1.ColorUtils.colorToRgb(background.color);
+            if (color) {
+                elementStyle.backgroundColor = Utils_1.ColorUtils.getStyleFromRgb(color, background.opacity);
+            }
+        }
+        if (background.image) {
+            elementStyle.backgroundImage = background.image;
+        }
+        if (background.position) {
+            elementStyle.backgroundPosition = background.position;
+        }
+        if (background.repeat) {
+            elementStyle.backgroundRepeat = background.repeat;
+        }
+        if (background.size) {
+            elementStyle.backgroundSize = background.size;
+        }
+    }
+}
+exports.Canvas = Canvas;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Container.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Container.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Container = void 0;
+const Canvas_1 = __webpack_require__(/*! ./Canvas */ "./node_modules/tsparticles/dist/Core/Canvas.js");
+const Particles_1 = __webpack_require__(/*! ./Particles */ "./node_modules/tsparticles/dist/Core/Particles.js");
+const Retina_1 = __webpack_require__(/*! ./Retina */ "./node_modules/tsparticles/dist/Core/Retina.js");
+const FrameManager_1 = __webpack_require__(/*! ./FrameManager */ "./node_modules/tsparticles/dist/Core/FrameManager.js");
+const Options_1 = __webpack_require__(/*! ../Options/Classes/Options */ "./node_modules/tsparticles/dist/Options/Classes/Options.js");
+const Utils_1 = __webpack_require__(/*! ../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+class Container {
+    constructor(id, sourceOptions, ...presets) {
+        this.id = id;
+        this.sourceOptions = sourceOptions;
+        this.started = false;
+        this.destroyed = false;
+        this.paused = true;
+        this.lastFrameTime = 0;
+        this.pageHidden = false;
+        this.retina = new Retina_1.Retina(this);
+        this.canvas = new Canvas_1.Canvas(this);
+        this.particles = new Particles_1.Particles(this);
+        this.drawer = new FrameManager_1.FrameManager(this);
+        this.noise = {
+            generate: () => {
+                return {
+                    angle: Math.random() * Math.PI * 2,
+                    length: Math.random(),
+                };
+            },
+            init: () => {
+            },
+            update: () => {
+            },
+        };
+        this.interactivity = {
+            mouse: {},
+        };
+        this.bubble = {};
+        this.repulse = { particles: [] };
+        this.plugins = new Map();
+        this.drawers = new Map();
+        this.density = 1;
+        this.options = new Options_1.Options();
+        for (const preset of presets) {
+            this.options.load(Utils_1.Plugins.getPreset(preset));
+        }
+        const shapes = Utils_1.Plugins.getSupportedShapes();
+        for (const type of shapes) {
+            const drawer = Utils_1.Plugins.getShapeDrawer(type);
+            if (drawer) {
+                this.drawers.set(type, drawer);
+            }
+        }
+        if (this.sourceOptions) {
+            this.options.load(this.sourceOptions);
+        }
+        this.eventListeners = new Utils_1.EventListeners(this);
+    }
+    play(force) {
+        const needsUpdate = this.paused || force;
+        if (this.paused) {
+            this.paused = false;
+        }
+        if (needsUpdate) {
+            for (const [, plugin] of this.plugins) {
+                if (plugin.play) {
+                    plugin.play();
+                }
+            }
+            this.lastFrameTime = performance.now();
+        }
+        this.draw();
+    }
+    pause() {
+        if (this.drawAnimationFrame !== undefined) {
+            Utils_1.Utils.cancelAnimation(this.drawAnimationFrame);
+            delete this.drawAnimationFrame;
+        }
+        if (this.paused) {
+            return;
+        }
+        for (const [, plugin] of this.plugins) {
+            if (plugin.pause) {
+                plugin.pause();
+            }
+        }
+        if (!this.pageHidden) {
+            this.paused = true;
+        }
+    }
+    draw() {
+        this.drawAnimationFrame = Utils_1.Utils.animate((t) => { var _a; return (_a = this.drawer) === null || _a === void 0 ? void 0 : _a.nextFrame(t); });
+    }
+    getAnimationStatus() {
+        return !this.paused;
+    }
+    setNoise(noiseOrGenerator, init, update) {
+        if (!noiseOrGenerator) {
+            return;
+        }
+        if (typeof noiseOrGenerator === "function") {
+            this.noise.generate = noiseOrGenerator;
+            if (init) {
+                this.noise.init = init;
+            }
+            if (update) {
+                this.noise.update = update;
+            }
+        }
+        else {
+            if (noiseOrGenerator.generate) {
+                this.noise.generate = noiseOrGenerator.generate;
+            }
+            if (noiseOrGenerator.init) {
+                this.noise.init = noiseOrGenerator.init;
+            }
+            if (noiseOrGenerator.update) {
+                this.noise.update = noiseOrGenerator.update;
+            }
+        }
+    }
+    densityAutoParticles() {
+        this.initDensityFactor();
+        const numberOptions = this.options.particles.number;
+        const optParticlesNumber = numberOptions.value;
+        const optParticlesLimit = numberOptions.limit > 0 ? numberOptions.limit : optParticlesNumber;
+        const particlesNumber = Math.min(optParticlesNumber, optParticlesLimit) * this.density;
+        const particlesCount = this.particles.count;
+        if (particlesCount < particlesNumber) {
+            this.particles.push(Math.abs(particlesNumber - particlesCount));
+        }
+        else if (particlesCount > particlesNumber) {
+            this.particles.removeQuantity(particlesCount - particlesNumber);
+        }
+    }
+    destroy() {
+        this.stop();
+        this.canvas.destroy();
+        delete this.interactivity;
+        delete this.options;
+        delete this.retina;
+        delete this.canvas;
+        delete this.particles;
+        delete this.bubble;
+        delete this.repulse;
+        delete this.drawer;
+        delete this.eventListeners;
+        for (const [, drawer] of this.drawers) {
+            if (drawer.destroy) {
+                drawer.destroy(this);
+            }
+        }
+        this.drawers = new Map();
+        this.destroyed = true;
+    }
+    exportImg(callback) {
+        this.exportImage(callback);
+    }
+    exportImage(callback, type, quality) {
+        var _a;
+        return (_a = this.canvas.element) === null || _a === void 0 ? void 0 : _a.toBlob(callback, type !== null && type !== void 0 ? type : "image/png", quality);
+    }
+    exportConfiguration() {
+        return JSON.stringify(this.options, undefined, 2);
+    }
+    refresh() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.stop();
+            yield this.start();
+        });
+    }
+    stop() {
+        if (!this.started) {
+            return;
+        }
+        this.started = false;
+        this.eventListeners.removeListeners();
+        this.pause();
+        this.particles.clear();
+        this.canvas.clear();
+        for (const [, plugin] of this.plugins) {
+            if (plugin.stop) {
+                plugin.stop();
+            }
+        }
+        this.plugins = new Map();
+        this.particles.linksColors = {};
+        delete this.particles.linksColor;
+    }
+    start() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.started) {
+                return;
+            }
+            yield this.init();
+            this.started = true;
+            this.eventListeners.addListeners();
+            for (const [, plugin] of this.plugins) {
+                if (plugin.startAsync !== undefined) {
+                    yield plugin.startAsync();
+                }
+                else if (plugin.start !== undefined) {
+                    plugin.start();
+                }
+            }
+            this.play();
+        });
+    }
+    init() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.retina.init();
+            this.canvas.init();
+            const availablePlugins = Utils_1.Plugins.getAvailablePlugins(this);
+            for (const [id, plugin] of availablePlugins) {
+                this.plugins.set(id, plugin);
+            }
+            for (const [, drawer] of this.drawers) {
+                if (drawer.init) {
+                    yield drawer.init(this);
+                }
+            }
+            for (const [, plugin] of this.plugins) {
+                if (plugin.init) {
+                    plugin.init(this.options);
+                }
+                else if (plugin.initAsync !== undefined) {
+                    yield plugin.initAsync(this.options);
+                }
+            }
+            this.particles.init();
+            this.densityAutoParticles();
+        });
+    }
+    initDensityFactor() {
+        const densityOptions = this.options.particles.number.density;
+        if (!this.canvas.element || !densityOptions.enable) {
+            return;
+        }
+        const canvas = this.canvas.element;
+        const pxRatio = this.retina.pixelRatio;
+        this.density = (canvas.width * canvas.height) / (densityOptions.factor * pxRatio * densityOptions.area);
+    }
+}
+exports.Container = Container;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/FrameManager.js":
+/*!************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/FrameManager.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FrameManager = void 0;
+class FrameManager {
+    constructor(container) {
+        this.container = container;
+    }
+    nextFrame(timestamp) {
+        const container = this.container;
+        const options = container.options;
+        const fpsLimit = options.fpsLimit > 0 ? options.fpsLimit : 60;
+        if (container.lastFrameTime !== undefined && timestamp < container.lastFrameTime + 1000 / fpsLimit) {
+            container.draw();
+            return;
+        }
+        const delta = timestamp - container.lastFrameTime;
+        container.lastFrameTime = timestamp;
+        container.particles.draw(delta);
+        if (options.particles.move.enable && container.getAnimationStatus()) {
+            container.draw();
+        }
+    }
+}
+exports.FrameManager = FrameManager;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Loader.js":
+/*!******************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Loader.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Loader = void 0;
+const Container_1 = __webpack_require__(/*! ./Container */ "./node_modules/tsparticles/dist/Core/Container.js");
+const Utils_1 = __webpack_require__(/*! ../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const tsParticlesDom = [];
+class Loader {
+    static dom() {
+        return tsParticlesDom;
+    }
+    static domItem(index) {
+        const dom = Loader.dom();
+        const item = dom[index];
+        if (item && !item.destroyed) {
+            return item;
+        }
+        dom.splice(index, 1);
+    }
+    static loadFromArray(tagId, params, index) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return Loader.load(tagId, Utils_1.Utils.itemFromArray(params, index));
+        });
+    }
+    static setFromArray(id, domContainer, params, index) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return Loader.set(id, domContainer, Utils_1.Utils.itemFromArray(params, index));
+        });
+    }
+    static load(tagId, params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const domContainer = document.getElementById(tagId);
+            if (!domContainer) {
+                return;
+            }
+            return this.set(tagId, domContainer, params);
+        });
+    }
+    static set(id, domContainer, params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const dom = Loader.dom();
+            const oldIndex = dom.findIndex((v) => v.id === id);
+            if (oldIndex >= 0) {
+                const old = this.domItem(oldIndex);
+                if (old && !old.destroyed) {
+                    old.destroy();
+                    dom.splice(oldIndex, 1);
+                }
+            }
+            let canvasEl;
+            let generatedCanvas;
+            if (domContainer.tagName === "canvas") {
+                canvasEl = domContainer;
+                generatedCanvas = false;
+            }
+            else {
+                const existingCanvases = domContainer.getElementsByTagName("canvas");
+                if (existingCanvases.length) {
+                    canvasEl = existingCanvases[0];
+                    if (!canvasEl.className) {
+                        canvasEl.className = Utils_1.Constants.canvasClass;
+                    }
+                    generatedCanvas = false;
+                }
+                else {
+                    generatedCanvas = true;
+                    canvasEl = document.createElement("canvas");
+                    canvasEl.className = Utils_1.Constants.canvasClass;
+                    canvasEl.style.width = "100%";
+                    canvasEl.style.height = "100%";
+                    domContainer.appendChild(canvasEl);
+                }
+            }
+            const newItem = new Container_1.Container(id, params);
+            if (oldIndex >= 0) {
+                dom.splice(oldIndex, 0, newItem);
+            }
+            else {
+                dom.push(newItem);
+            }
+            newItem.canvas.loadCanvas(canvasEl, generatedCanvas);
+            yield newItem.start();
+            return newItem;
+        });
+    }
+    static loadJSON(tagId, jsonUrl) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield fetch(jsonUrl);
+            if (response.ok) {
+                const params = yield response.json();
+                if (params instanceof Array) {
+                    return Loader.loadFromArray(tagId, params);
+                }
+                else {
+                    return Loader.load(tagId, params);
+                }
+            }
+            else {
+                this.fetchError(response.status);
+            }
+        });
+    }
+    static setJSON(id, domContainer, jsonUrl) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield fetch(jsonUrl);
+            if (response.ok) {
+                const params = yield response.json();
+                if (params instanceof Array) {
+                    return Loader.setFromArray(id, domContainer, params);
+                }
+                else {
+                    return Loader.set(id, domContainer, params);
+                }
+            }
+            else {
+                this.fetchError(response.status);
+            }
+        });
+    }
+    static setOnClickHandler(callback) {
+        const dom = Loader.dom();
+        if (dom.length === 0) {
+            throw new Error("Can only set click handlers after calling tsParticles.load() or tsParticles.loadJSON()");
+        }
+        for (const domItem of dom) {
+            const el = domItem.interactivity.element;
+            if (el) {
+                el.addEventListener("click", callback);
+            }
+        }
+    }
+    static fetchError(statusCode) {
+        console.error(`Error tsParticles - fetch status: ${statusCode}`);
+        console.error("Error tsParticles - File config not found");
+    }
+}
+exports.Loader = Loader;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Particle.js":
+/*!********************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Particle.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Particle = void 0;
+const Updater_1 = __webpack_require__(/*! ./Particle/Updater */ "./node_modules/tsparticles/dist/Core/Particle/Updater.js");
+const Particles_1 = __webpack_require__(/*! ../Options/Classes/Particles/Particles */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Particles.js");
+const Shape_1 = __webpack_require__(/*! ../Options/Classes/Particles/Shape/Shape */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Shape/Shape.js");
+const Enums_1 = __webpack_require__(/*! ../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+const Utils_1 = __webpack_require__(/*! ../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+class Particle {
+    constructor(container, position, overrideOptions) {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s;
+        this.container = container;
+        this.fill = true;
+        this.close = true;
+        this.links = [];
+        this.lastNoiseTime = 0;
+        this.destroyed = false;
+        const options = container.options;
+        const particlesOptions = new Particles_1.Particles();
+        particlesOptions.load(options.particles);
+        if ((overrideOptions === null || overrideOptions === void 0 ? void 0 : overrideOptions.shape) !== undefined) {
+            const shapeType = (_a = overrideOptions.shape.type) !== null && _a !== void 0 ? _a : particlesOptions.shape.type;
+            this.shape = shapeType instanceof Array ? Utils_1.Utils.itemFromArray(shapeType) : shapeType;
+            const shapeOptions = new Shape_1.Shape();
+            shapeOptions.load(overrideOptions.shape);
+            if (this.shape !== undefined) {
+                const shapeData = shapeOptions.options[this.shape];
+                if (shapeData !== undefined) {
+                    this.shapeData = Utils_1.Utils.deepExtend({}, shapeData instanceof Array ? Utils_1.Utils.itemFromArray(shapeData) : shapeData);
+                    this.fill = (_c = (_b = this.shapeData) === null || _b === void 0 ? void 0 : _b.fill) !== null && _c !== void 0 ? _c : this.fill;
+                    this.close = (_e = (_d = this.shapeData) === null || _d === void 0 ? void 0 : _d.close) !== null && _e !== void 0 ? _e : this.close;
+                }
+            }
+        }
+        else {
+            const shapeType = particlesOptions.shape.type;
+            this.shape = shapeType instanceof Array ? Utils_1.Utils.itemFromArray(shapeType) : shapeType;
+            const shapeData = particlesOptions.shape.options[this.shape];
+            if (shapeData) {
+                this.shapeData = Utils_1.Utils.deepExtend({}, shapeData instanceof Array ? Utils_1.Utils.itemFromArray(shapeData) : shapeData);
+                this.fill = (_g = (_f = this.shapeData) === null || _f === void 0 ? void 0 : _f.fill) !== null && _g !== void 0 ? _g : this.fill;
+                this.close = (_j = (_h = this.shapeData) === null || _h === void 0 ? void 0 : _h.close) !== null && _j !== void 0 ? _j : this.close;
+            }
+        }
+        if (overrideOptions !== undefined) {
+            particlesOptions.load(overrideOptions);
+        }
+        if (((_k = this.shapeData) === null || _k === void 0 ? void 0 : _k.particles) !== undefined) {
+            particlesOptions.load((_l = this.shapeData) === null || _l === void 0 ? void 0 : _l.particles);
+        }
+        this.particlesOptions = particlesOptions;
+        const noiseDelay = this.particlesOptions.move.noise.delay;
+        this.noiseDelay =
+            (noiseDelay.random.enable
+                ? Utils_1.Utils.randomInRange(noiseDelay.random.minimumValue, noiseDelay.value)
+                : noiseDelay.value) * 1000;
+        container.retina.initParticle(this);
+        const color = this.particlesOptions.color;
+        const sizeValue = (_m = this.sizeValue) !== null && _m !== void 0 ? _m : container.retina.sizeValue;
+        const randomSize = typeof this.particlesOptions.size.random === "boolean"
+            ? this.particlesOptions.size.random
+            : this.particlesOptions.size.random.enable;
+        this.size = {
+            value: randomSize && this.randomMinimumSize !== undefined
+                ? Utils_1.Utils.randomInRange(this.randomMinimumSize, sizeValue)
+                : sizeValue,
+        };
+        this.direction = this.particlesOptions.move.direction;
+        this.bubble = {
+            inRange: false,
+        };
+        this.angle = this.particlesOptions.rotate.random ? Math.random() * 360 : this.particlesOptions.rotate.value;
+        if (this.particlesOptions.rotate.direction === Enums_1.RotateDirection.random) {
+            const index = Math.floor(Math.random() * 2);
+            if (index > 0) {
+                this.rotateDirection = Enums_1.RotateDirection.counterClockwise;
+            }
+            else {
+                this.rotateDirection = Enums_1.RotateDirection.clockwise;
+            }
+        }
+        else {
+            this.rotateDirection = this.particlesOptions.rotate.direction;
+        }
+        if (this.particlesOptions.size.animation.enable) {
+            switch (this.particlesOptions.size.animation.startValue) {
+                case Enums_1.StartValueType.min:
+                    if (!randomSize) {
+                        const pxRatio = container.retina.pixelRatio;
+                        this.size.value = this.particlesOptions.size.animation.minimumValue * pxRatio;
+                    }
+                    break;
+            }
+            this.size.status = Enums_1.SizeAnimationStatus.increasing;
+            this.size.velocity = ((_o = this.sizeAnimationSpeed) !== null && _o !== void 0 ? _o : container.retina.sizeAnimationSpeed) / 100;
+            if (!this.particlesOptions.size.animation.sync) {
+                this.size.velocity = this.size.velocity * Math.random();
+            }
+        }
+        if (this.particlesOptions.color.animation.enable) {
+            this.colorVelocity = this.particlesOptions.color.animation.speed / 100;
+            if (!this.particlesOptions.color.animation.sync) {
+                this.colorVelocity = this.colorVelocity * Math.random();
+            }
+        }
+        else {
+            this.colorVelocity = 0;
+        }
+        if (this.particlesOptions.rotate.animation.enable) {
+            if (!this.particlesOptions.rotate.animation.sync) {
+                this.angle = Math.random() * 360;
+            }
+        }
+        this.position = this.calcPosition(this.container, position);
+        this.offset = {
+            x: 0,
+            y: 0,
+        };
+        if (this.particlesOptions.collisions.enable) {
+            this.checkOverlap(position);
+        }
+        this.color = Utils_1.ColorUtils.colorToHsl(color);
+        const randomOpacity = this.particlesOptions.opacity.random;
+        const opacityValue = this.particlesOptions.opacity.value;
+        this.opacity = {
+            value: randomOpacity.enable ? Utils_1.Utils.randomInRange(randomOpacity.minimumValue, opacityValue) : opacityValue,
+        };
+        if (this.particlesOptions.opacity.animation.enable) {
+            this.opacity.status = Enums_1.OpacityAnimationStatus.increasing;
+            this.opacity.velocity = this.particlesOptions.opacity.animation.speed / 100;
+            if (!this.particlesOptions.opacity.animation.sync) {
+                this.opacity.velocity *= Math.random();
+            }
+        }
+        this.initialVelocity = this.calculateVelocity();
+        this.velocity = {
+            horizontal: this.initialVelocity.horizontal,
+            vertical: this.initialVelocity.vertical,
+        };
+        let drawer = container.drawers.get(this.shape);
+        if (!drawer) {
+            drawer = Utils_1.Plugins.getShapeDrawer(this.shape);
+            if (drawer) {
+                container.drawers.set(this.shape, drawer);
+            }
+        }
+        if (this.shape === Enums_1.ShapeType.image || this.shape === Enums_1.ShapeType.images) {
+            const shape = this.particlesOptions.shape;
+            const imageDrawer = drawer;
+            const imagesOptions = shape.options[this.shape];
+            const images = imageDrawer.getImages(container).images;
+            const index = Utils_1.Utils.arrayRandomIndex(images);
+            const image = images[index];
+            const optionsImage = (imagesOptions instanceof Array
+                ? imagesOptions.filter((t) => t.src === image.source)[0]
+                : imagesOptions);
+            const color = this.getColor();
+            if ((image === null || image === void 0 ? void 0 : image.svgData) !== undefined && optionsImage.replaceColor && color) {
+                const svgColoredData = Utils_1.Utils.replaceColorSvg(image, color, this.opacity.value);
+                const svg = new Blob([svgColoredData], { type: "image/svg+xml" });
+                const domUrl = window.URL || window.webkitURL || window;
+                const url = domUrl.createObjectURL(svg);
+                const img = new Image();
+                this.image = {
+                    data: image,
+                    loaded: false,
+                    ratio: optionsImage.width / optionsImage.height,
+                    replaceColor: (_p = optionsImage.replaceColor) !== null && _p !== void 0 ? _p : optionsImage.replace_color,
+                    source: optionsImage.src,
+                };
+                img.addEventListener("load", () => {
+                    if (this.image) {
+                        this.image.loaded = true;
+                        image.element = img;
+                    }
+                    domUrl.revokeObjectURL(url);
+                });
+                img.addEventListener("error", () => {
+                    domUrl.revokeObjectURL(url);
+                    Utils_1.Utils.loadImage(optionsImage.src).then((img2) => {
+                        if (this.image) {
+                            image.element = img2.element;
+                            this.image.loaded = true;
+                        }
+                    });
+                });
+                img.src = url;
+            }
+            else {
+                this.image = {
+                    data: image,
+                    loaded: true,
+                    ratio: optionsImage.width / optionsImage.height,
+                    replaceColor: (_q = optionsImage.replaceColor) !== null && _q !== void 0 ? _q : optionsImage.replace_color,
+                    source: optionsImage.src,
+                };
+            }
+            if (!this.image.ratio) {
+                this.image.ratio = 1;
+            }
+            this.fill = (_r = optionsImage.fill) !== null && _r !== void 0 ? _r : this.fill;
+            this.close = (_s = optionsImage.close) !== null && _s !== void 0 ? _s : this.close;
+        }
+        this.stroke =
+            this.particlesOptions.stroke instanceof Array
+                ? Utils_1.Utils.itemFromArray(this.particlesOptions.stroke)
+                : this.particlesOptions.stroke;
+        this.strokeColor = Utils_1.ColorUtils.colorToRgb(this.stroke.color);
+        this.shadowColor = Utils_1.ColorUtils.colorToRgb(this.particlesOptions.shadow.color);
+        this.updater = new Updater_1.Updater(this.container, this);
+    }
+    update(delta) {
+        this.links = [];
+        this.updater.update(delta);
+    }
+    draw(delta) {
+        var _a;
+        if (((_a = this.image) === null || _a === void 0 ? void 0 : _a.loaded) === false) {
+            return;
+        }
+        this.container.canvas.drawParticle(this, delta);
+    }
+    isOverlapping() {
+        const container = this.container;
+        let collisionFound = false;
+        let iterations = 0;
+        const pos1 = this.getPosition();
+        for (const p2 of container.particles.array.filter((t) => t != this)) {
+            iterations++;
+            const pos2 = p2.getPosition();
+            const dist = Utils_1.Utils.getDistance(pos1, pos2);
+            if (dist <= this.size.value + p2.size.value) {
+                collisionFound = true;
+                break;
+            }
+        }
+        return {
+            collisionFound: collisionFound,
+            iterations: iterations,
+        };
+    }
+    checkOverlap(position) {
+        const container = this.container;
+        const overlapResult = this.isOverlapping();
+        if (overlapResult.iterations >= container.particles.count) {
+            container.particles.remove(this);
+        }
+        else if (overlapResult.collisionFound) {
+            this.position.x = position ? position.x : Math.random() * container.canvas.size.width;
+            this.position.y = position ? position.y : Math.random() * container.canvas.size.height;
+            this.checkOverlap();
+        }
+    }
+    startInfection(stage) {
+        const container = this.container;
+        const options = container.options;
+        const stages = options.infection.stages;
+        const stagesCount = stages.length;
+        if (stage > stagesCount || stage < 0) {
+            return;
+        }
+        this.infectionDelay = 0;
+        this.infectionDelayStage = stage;
+    }
+    updateInfectionStage(stage) {
+        const container = this.container;
+        const options = container.options;
+        const stagesCount = options.infection.stages.length;
+        if (stage > stagesCount || stage < 0 || (this.infectionStage !== undefined && this.infectionStage > stage)) {
+            return;
+        }
+        if (this.infectionTimeout !== undefined) {
+            window.clearTimeout(this.infectionTimeout);
+        }
+        this.infectionStage = stage;
+        this.infectionTime = 0;
+    }
+    updateInfection(delta) {
+        const container = this.container;
+        const options = container.options;
+        const infection = options.infection;
+        const stages = options.infection.stages;
+        const stagesCount = stages.length;
+        if (this.infectionDelay !== undefined && this.infectionDelayStage !== undefined) {
+            const stage = this.infectionDelayStage;
+            if (stage > stagesCount || stage < 0) {
+                return;
+            }
+            if (this.infectionDelay > infection.delay * 1000) {
+                this.infectionStage = stage;
+                this.infectionTime = 0;
+                delete this.infectionDelay;
+                delete this.infectionDelayStage;
+            }
+            else {
+                this.infectionDelay += delta;
+            }
+        }
+        else {
+            delete this.infectionDelay;
+            delete this.infectionDelayStage;
+        }
+        if (this.infectionStage !== undefined && this.infectionTime !== undefined) {
+            const infectionStage = stages[this.infectionStage];
+            if (infectionStage.duration !== undefined && infectionStage.duration >= 0) {
+                if (this.infectionTime > infectionStage.duration * 1000) {
+                    this.nextInfectionStage();
+                }
+                else {
+                    this.infectionTime += delta;
+                }
+            }
+            else {
+                this.infectionTime += delta;
+            }
+        }
+        else {
+            delete this.infectionStage;
+            delete this.infectionTime;
+        }
+    }
+    getPosition() {
+        return {
+            x: this.position.x + this.offset.x,
+            y: this.position.y + this.offset.y,
+        };
+    }
+    getColor() {
+        var _a;
+        return (_a = this.bubble.color) !== null && _a !== void 0 ? _a : this.color;
+    }
+    destroy() {
+        this.destroyed = true;
+    }
+    nextInfectionStage() {
+        const container = this.container;
+        const options = container.options;
+        const stagesCount = options.infection.stages.length;
+        if (stagesCount <= 0 || this.infectionStage === undefined) {
+            return;
+        }
+        this.infectionTime = 0;
+        if (stagesCount <= ++this.infectionStage) {
+            if (options.infection.cure) {
+                delete this.infectionStage;
+                delete this.infectionTime;
+                return;
+            }
+            else {
+                this.infectionStage = 0;
+                this.infectionTime = 0;
+            }
+        }
+    }
+    calcPosition(container, position) {
+        var _a, _b;
+        for (const [, plugin] of container.plugins) {
+            const pluginPos = plugin.particlePosition !== undefined ? plugin.particlePosition(position, this) : undefined;
+            if (pluginPos !== undefined) {
+                return Utils_1.Utils.deepExtend({}, pluginPos);
+            }
+        }
+        const pos = {
+            x: (_a = position === null || position === void 0 ? void 0 : position.x) !== null && _a !== void 0 ? _a : Math.random() * container.canvas.size.width,
+            y: (_b = position === null || position === void 0 ? void 0 : position.y) !== null && _b !== void 0 ? _b : Math.random() * container.canvas.size.height,
+        };
+        const outMode = this.particlesOptions.move.outMode;
+        if (Utils_1.Utils.isInArray(outMode, Enums_1.OutMode.bounce) || Utils_1.Utils.isInArray(outMode, Enums_1.OutMode.bounceHorizontal)) {
+            if (pos.x > container.canvas.size.width - this.size.value * 2) {
+                pos.x -= this.size.value;
+            }
+            else if (pos.x < this.size.value * 2) {
+                pos.x += this.size.value;
+            }
+        }
+        if (Utils_1.Utils.isInArray(outMode, Enums_1.OutMode.bounce) || Utils_1.Utils.isInArray(outMode, Enums_1.OutMode.bounceVertical)) {
+            if (pos.y > container.canvas.size.height - this.size.value * 2) {
+                pos.y -= this.size.value;
+            }
+            else if (pos.y < this.size.value * 2) {
+                pos.y += this.size.value;
+            }
+        }
+        return pos;
+    }
+    calculateVelocity() {
+        const baseVelocity = Utils_1.Utils.getParticleBaseVelocity(this);
+        const res = {
+            horizontal: 0,
+            vertical: 0,
+        };
+        const moveOptions = this.particlesOptions.move;
+        const rad = (Math.PI / 180) * moveOptions.angle;
+        const rad45 = Math.PI / 4;
+        const range = {
+            left: Math.sin(rad45 + rad / 2) - Math.sin(rad45 - rad / 2),
+            right: Math.cos(rad45 + rad / 2) - Math.cos(rad45 - rad / 2),
+        };
+        if (moveOptions.straight) {
+            res.horizontal = baseVelocity.x;
+            res.vertical = baseVelocity.y;
+            if (moveOptions.random) {
+                res.horizontal += Utils_1.Utils.randomInRange(range.left, range.right) / 2;
+                res.vertical += Utils_1.Utils.randomInRange(range.left, range.right) / 2;
+            }
+        }
+        else {
+            res.horizontal = baseVelocity.x + Utils_1.Utils.randomInRange(range.left, range.right) / 2;
+            res.vertical = baseVelocity.y + Utils_1.Utils.randomInRange(range.left, range.right) / 2;
+        }
+        return res;
+    }
+}
+exports.Particle = Particle;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Particle/InteractionManager.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Particle/InteractionManager.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.InteractionManager = void 0;
+const Grabber_1 = __webpack_require__(/*! ./Interactions/Mouse/Grabber */ "./node_modules/tsparticles/dist/Core/Particle/Interactions/Mouse/Grabber.js");
+const Repulser_1 = __webpack_require__(/*! ./Interactions/Mouse/Repulser */ "./node_modules/tsparticles/dist/Core/Particle/Interactions/Mouse/Repulser.js");
+const Bubbler_1 = __webpack_require__(/*! ./Interactions/Mouse/Bubbler */ "./node_modules/tsparticles/dist/Core/Particle/Interactions/Mouse/Bubbler.js");
+const Connector_1 = __webpack_require__(/*! ./Interactions/Mouse/Connector */ "./node_modules/tsparticles/dist/Core/Particle/Interactions/Mouse/Connector.js");
+const Linker_1 = __webpack_require__(/*! ./Interactions/Particles/Linker */ "./node_modules/tsparticles/dist/Core/Particle/Interactions/Particles/Linker.js");
+const Attractor_1 = __webpack_require__(/*! ./Interactions/Particles/Attractor */ "./node_modules/tsparticles/dist/Core/Particle/Interactions/Particles/Attractor.js");
+const Collider_1 = __webpack_require__(/*! ./Interactions/Particles/Collider */ "./node_modules/tsparticles/dist/Core/Particle/Interactions/Particles/Collider.js");
+const Infecter_1 = __webpack_require__(/*! ./Interactions/Particles/Infecter */ "./node_modules/tsparticles/dist/Core/Particle/Interactions/Particles/Infecter.js");
+class InteractionManager {
+    constructor(container) {
+        this.container = container;
+        this.externalInteractors = [
+            new Bubbler_1.Bubbler(container),
+            new Connector_1.Connector(container),
+            new Grabber_1.Grabber(container),
+            new Repulser_1.Repulser(container),
+        ];
+        this.particleInteractors = [
+            new Attractor_1.Attractor(container),
+            new Collider_1.Collider(container),
+            new Infecter_1.Infecter(container),
+            new Linker_1.Linker(container),
+        ];
+    }
+    init() {
+    }
+    interact(delta) {
+        this.externalInteract(delta);
+        this.particlesInteract(delta);
+    }
+    externalInteract(delta) {
+        for (const interactor of this.externalInteractors) {
+            if (interactor.isEnabled()) {
+                interactor.interact(delta);
+            }
+        }
+    }
+    particlesInteract(delta) {
+        for (const particle of this.container.particles.array) {
+            for (const interactor of this.externalInteractors) {
+                interactor.reset(particle);
+            }
+            for (const interactor of this.particleInteractors) {
+                if (interactor.isEnabled(particle)) {
+                    interactor.interact(particle, delta);
+                }
+            }
+        }
+    }
+}
+exports.InteractionManager = InteractionManager;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Particle/Interactions/Mouse/Bubbler.js":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Particle/Interactions/Mouse/Bubbler.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Bubbler = void 0;
+const Utils_1 = __webpack_require__(/*! ../../../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const Enums_1 = __webpack_require__(/*! ../../../../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+class Bubbler {
+    constructor(container) {
+        this.container = container;
+    }
+    static calculateBubbleValue(particleValue, modeValue, optionsValue, ratio) {
+        if (modeValue > optionsValue) {
+            const size = particleValue + (modeValue - optionsValue) * ratio;
+            return Utils_1.Utils.clamp(size, particleValue, modeValue);
+        }
+        else if (modeValue < optionsValue) {
+            const size = particleValue - (optionsValue - modeValue) * ratio;
+            return Utils_1.Utils.clamp(size, modeValue, particleValue);
+        }
+    }
+    isEnabled() {
+        const container = this.container;
+        const options = container.options;
+        const mouse = container.interactivity.mouse;
+        const events = options.interactivity.events;
+        const divs = events.onDiv;
+        const divBubble = Utils_1.Utils.isDivModeEnabled(Enums_1.DivMode.bubble, divs);
+        if (!(divBubble || (events.onHover.enable && mouse.position) || (events.onClick.enable && mouse.clickPosition))) {
+            return false;
+        }
+        const hoverMode = events.onHover.mode;
+        const clickMode = events.onClick.mode;
+        return (Utils_1.Utils.isInArray(Enums_1.HoverMode.bubble, hoverMode) || Utils_1.Utils.isInArray(Enums_1.ClickMode.bubble, clickMode) || divBubble);
+    }
+    reset(particle, force) {
+        if (!particle.bubble.inRange || force) {
+            delete particle.bubble.divId;
+            delete particle.bubble.opacity;
+            delete particle.bubble.radius;
+            delete particle.bubble.color;
+        }
+    }
+    interact() {
+        const options = this.container.options;
+        const events = options.interactivity.events;
+        const onHover = events.onHover;
+        const onClick = events.onClick;
+        const hoverEnabled = onHover.enable;
+        const hoverMode = onHover.mode;
+        const clickEnabled = onClick.enable;
+        const clickMode = onClick.mode;
+        const divs = events.onDiv;
+        if (hoverEnabled && Utils_1.Utils.isInArray(Enums_1.HoverMode.bubble, hoverMode)) {
+            this.hoverBubble();
+        }
+        else if (clickEnabled && Utils_1.Utils.isInArray(Enums_1.ClickMode.bubble, clickMode)) {
+            this.clickBubble();
+        }
+        else {
+            Utils_1.Utils.divModeExecute(Enums_1.DivMode.bubble, divs, (id, div) => this.singleDivHover(id, div));
+        }
+    }
+    singleDivHover(id, div) {
+        const container = this.container;
+        const elem = document.getElementById(id);
+        if (!elem) {
+            return;
+        }
+        const pxRatio = container.retina.pixelRatio;
+        const pos = {
+            x: (elem.offsetLeft + elem.offsetWidth / 2) * pxRatio,
+            y: (elem.offsetTop + elem.offsetHeight / 2) * pxRatio,
+        };
+        const repulseRadius = (elem.offsetWidth / 2) * pxRatio;
+        const area = div.type === Enums_1.DivType.circle
+            ? new Utils_1.Circle(pos.x, pos.y, repulseRadius)
+            : new Utils_1.Rectangle(elem.offsetLeft * pxRatio, elem.offsetTop * pxRatio, elem.offsetWidth * pxRatio, elem.offsetHeight * pxRatio);
+        const query = container.particles.quadTree.query(area);
+        for (const particle of query.filter((t) => area.contains(t.getPosition()))) {
+            particle.bubble.inRange = true;
+            const divs = container.options.interactivity.modes.bubble.divs;
+            const divBubble = Utils_1.Utils.divMode(divs, id);
+            if (!particle.bubble.divId || particle.bubble.divId !== id) {
+                this.reset(particle, true);
+                particle.bubble.divId = id;
+            }
+            this.hoverBubbleSize(particle, 1, divBubble);
+            this.hoverBubbleOpacity(particle, 1, divBubble);
+            this.hoverBubbleColor(particle, divBubble);
+        }
+    }
+    process(particle, distMouse, timeSpent, data) {
+        const container = this.container;
+        const bubbleParam = data.bubbleObj.optValue;
+        if (bubbleParam === undefined) {
+            return;
+        }
+        const options = container.options;
+        const bubbleDuration = options.interactivity.modes.bubble.duration;
+        const bubbleDistance = container.retina.bubbleModeDistance;
+        const particlesParam = data.particlesObj.optValue;
+        const pObjBubble = data.bubbleObj.value;
+        const pObj = data.particlesObj.value || 0;
+        const type = data.type;
+        if (bubbleParam !== particlesParam) {
+            if (!container.bubble.durationEnd) {
+                if (distMouse <= bubbleDistance) {
+                    const obj = pObjBubble !== null && pObjBubble !== void 0 ? pObjBubble : pObj;
+                    if (obj !== bubbleParam) {
+                        const value = pObj - (timeSpent * (pObj - bubbleParam)) / bubbleDuration;
+                        if (type === Enums_1.ProcessBubbleType.size) {
+                            particle.bubble.radius = value;
+                        }
+                        if (type === Enums_1.ProcessBubbleType.opacity) {
+                            particle.bubble.opacity = value;
+                        }
+                    }
+                }
+                else {
+                    if (type === Enums_1.ProcessBubbleType.size) {
+                        delete particle.bubble.radius;
+                    }
+                    if (type === Enums_1.ProcessBubbleType.opacity) {
+                        delete particle.bubble.opacity;
+                    }
+                }
+            }
+            else if (pObjBubble) {
+                if (type === Enums_1.ProcessBubbleType.size) {
+                    delete particle.bubble.radius;
+                }
+                if (type === Enums_1.ProcessBubbleType.opacity) {
+                    delete particle.bubble.opacity;
+                }
+            }
+        }
+    }
+    clickBubble() {
+        var _a;
+        const container = this.container;
+        const options = container.options;
+        const mouseClickPos = container.interactivity.mouse.clickPosition;
+        if (mouseClickPos === undefined) {
+            return;
+        }
+        const distance = container.retina.bubbleModeDistance;
+        const query = container.particles.quadTree.query(new Utils_1.Circle(mouseClickPos.x, mouseClickPos.y, distance));
+        for (const particle of query) {
+            particle.bubble.inRange = true;
+            const pos = particle.getPosition();
+            const distMouse = Utils_1.Utils.getDistance(pos, mouseClickPos);
+            const timeSpent = (new Date().getTime() - (container.interactivity.mouse.clickTime || 0)) / 1000;
+            if (container.bubble.clicking) {
+                if (timeSpent > options.interactivity.modes.bubble.duration) {
+                    container.bubble.durationEnd = true;
+                }
+                if (timeSpent > options.interactivity.modes.bubble.duration * 2) {
+                    container.bubble.clicking = false;
+                    container.bubble.durationEnd = false;
+                }
+                const sizeData = {
+                    bubbleObj: {
+                        optValue: container.retina.bubbleModeSize,
+                        value: particle.bubble.radius,
+                    },
+                    particlesObj: {
+                        optValue: (_a = particle.sizeValue) !== null && _a !== void 0 ? _a : container.retina.sizeValue,
+                        value: particle.size.value,
+                    },
+                    type: Enums_1.ProcessBubbleType.size,
+                };
+                this.process(particle, distMouse, timeSpent, sizeData);
+                const opacityData = {
+                    bubbleObj: {
+                        optValue: options.interactivity.modes.bubble.opacity,
+                        value: particle.bubble.opacity,
+                    },
+                    particlesObj: {
+                        optValue: particle.particlesOptions.opacity.value,
+                        value: particle.opacity.value,
+                    },
+                    type: Enums_1.ProcessBubbleType.opacity,
+                };
+                this.process(particle, distMouse, timeSpent, opacityData);
+                if (!container.bubble.durationEnd) {
+                    if (distMouse <= container.retina.bubbleModeDistance) {
+                        this.hoverBubbleColor(particle);
+                    }
+                    else {
+                        delete particle.bubble.color;
+                    }
+                }
+                else {
+                    delete particle.bubble.color;
+                }
+            }
+        }
+    }
+    hoverBubble() {
+        const container = this.container;
+        const mousePos = container.interactivity.mouse.position;
+        if (mousePos === undefined) {
+            return;
+        }
+        const distance = container.retina.bubbleModeDistance;
+        const query = container.particles.quadTree.query(new Utils_1.Circle(mousePos.x, mousePos.y, distance));
+        for (const particle of query) {
+            particle.bubble.inRange = true;
+            const pos = particle.getPosition();
+            const distance = Utils_1.Utils.getDistance(pos, mousePos);
+            const ratio = 1 - distance / container.retina.bubbleModeDistance;
+            if (distance <= container.retina.bubbleModeDistance) {
+                if (ratio >= 0 && container.interactivity.status === Utils_1.Constants.mouseMoveEvent) {
+                    this.hoverBubbleSize(particle, ratio);
+                    this.hoverBubbleOpacity(particle, ratio);
+                    this.hoverBubbleColor(particle);
+                }
+            }
+            else {
+                this.reset(particle);
+            }
+            if (container.interactivity.status === Utils_1.Constants.mouseLeaveEvent) {
+                this.reset(particle);
+            }
+        }
+    }
+    hoverBubbleSize(particle, ratio, divBubble) {
+        var _a;
+        const container = this.container;
+        const modeSize = (divBubble === null || divBubble === void 0 ? void 0 : divBubble.size) ? divBubble.size * container.retina.pixelRatio
+            : container.retina.bubbleModeSize;
+        if (modeSize === undefined) {
+            return;
+        }
+        const optSize = (_a = particle.sizeValue) !== null && _a !== void 0 ? _a : container.retina.sizeValue;
+        const pSize = particle.size.value;
+        const size = Bubbler.calculateBubbleValue(pSize, modeSize, optSize, ratio);
+        if (size !== undefined) {
+            particle.bubble.radius = size;
+        }
+    }
+    hoverBubbleOpacity(particle, ratio, divBubble) {
+        var _a;
+        const options = this.container.options;
+        const modeOpacity = (_a = divBubble === null || divBubble === void 0 ? void 0 : divBubble.opacity) !== null && _a !== void 0 ? _a : options.interactivity.modes.bubble.opacity;
+        if (modeOpacity === undefined) {
+            return;
+        }
+        const optOpacity = particle.particlesOptions.opacity.value;
+        const pOpacity = particle.opacity.value;
+        const opacity = Bubbler.calculateBubbleValue(pOpacity, modeOpacity, optOpacity, ratio);
+        if (opacity !== undefined) {
+            particle.bubble.opacity = opacity;
+        }
+    }
+    hoverBubbleColor(particle, divBubble) {
+        var _a;
+        const options = this.container.options;
+        if (particle.bubble.color === undefined) {
+            const modeColor = (_a = divBubble === null || divBubble === void 0 ? void 0 : divBubble.color) !== null && _a !== void 0 ? _a : options.interactivity.modes.bubble.color;
+            if (modeColor === undefined) {
+                return;
+            }
+            const bubbleColor = modeColor instanceof Array ? Utils_1.Utils.itemFromArray(modeColor) : modeColor;
+            particle.bubble.color = Utils_1.ColorUtils.colorToHsl(bubbleColor);
+        }
+    }
+}
+exports.Bubbler = Bubbler;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Particle/Interactions/Mouse/Connector.js":
+/*!*************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Particle/Interactions/Mouse/Connector.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Connector = void 0;
+const Utils_1 = __webpack_require__(/*! ../../../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const Modes_1 = __webpack_require__(/*! ../../../../Enums/Modes */ "./node_modules/tsparticles/dist/Enums/Modes/index.js");
+class Connector {
+    constructor(container) {
+        this.container = container;
+    }
+    isEnabled() {
+        const container = this.container;
+        const mouse = container.interactivity.mouse;
+        const events = container.options.interactivity.events;
+        if (!(events.onHover.enable && mouse.position)) {
+            return false;
+        }
+        const hoverMode = events.onHover.mode;
+        return Utils_1.Utils.isInArray(Modes_1.HoverMode.connect, hoverMode);
+    }
+    reset() {
+    }
+    interact() {
+        const container = this.container;
+        const options = container.options;
+        if (options.interactivity.events.onHover.enable && container.interactivity.status === "mousemove") {
+            const mousePos = container.interactivity.mouse.position;
+            if (!mousePos) {
+                return;
+            }
+            const distance = Math.abs(container.retina.connectModeRadius);
+            const query = container.particles.quadTree.query(new Utils_1.Circle(mousePos.x, mousePos.y, distance));
+            let i = 0;
+            for (const p1 of query) {
+                const pos1 = p1.getPosition();
+                for (const p2 of query.slice(i + 1)) {
+                    const pos2 = p2.getPosition();
+                    const distMax = Math.abs(container.retina.connectModeDistance);
+                    const xDiff = Math.abs(pos1.x - pos2.x);
+                    const yDiff = Math.abs(pos1.y - pos2.y);
+                    if (xDiff < distMax && yDiff < distMax) {
+                        container.canvas.drawConnectLine(p1, p2);
+                    }
+                }
+                ++i;
+            }
+        }
+    }
+}
+exports.Connector = Connector;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Particle/Interactions/Mouse/Grabber.js":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Particle/Interactions/Mouse/Grabber.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Grabber = void 0;
+const Utils_1 = __webpack_require__(/*! ../../../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const Modes_1 = __webpack_require__(/*! ../../../../Enums/Modes */ "./node_modules/tsparticles/dist/Enums/Modes/index.js");
+class Grabber {
+    constructor(container) {
+        this.container = container;
+    }
+    isEnabled() {
+        const container = this.container;
+        const mouse = container.interactivity.mouse;
+        const events = container.options.interactivity.events;
+        if (!(events.onHover.enable && mouse.position)) {
+            return false;
+        }
+        const hoverMode = events.onHover.mode;
+        return Utils_1.Utils.isInArray(Modes_1.HoverMode.grab, hoverMode);
+    }
+    reset() {
+    }
+    interact() {
+        var _a, _b;
+        const container = this.container;
+        const options = container.options;
+        const interactivity = options.interactivity;
+        if (interactivity.events.onHover.enable && container.interactivity.status === Utils_1.Constants.mouseMoveEvent) {
+            const mousePos = container.interactivity.mouse.position;
+            if (mousePos === undefined) {
+                return;
+            }
+            const distance = container.retina.grabModeDistance;
+            const query = container.particles.quadTree.query(new Utils_1.Circle(mousePos.x, mousePos.y, distance));
+            for (const particle of query) {
+                const pos = particle.getPosition();
+                const distance = Utils_1.Utils.getDistance(pos, mousePos);
+                if (distance <= container.retina.grabModeDistance) {
+                    const grabLineOptions = interactivity.modes.grab.links;
+                    const lineOpacity = grabLineOptions.opacity;
+                    const grabDistance = container.retina.grabModeDistance;
+                    const opacityLine = lineOpacity - (distance * lineOpacity) / grabDistance;
+                    if (opacityLine > 0) {
+                        const optColor = (_a = grabLineOptions.color) !== null && _a !== void 0 ? _a : particle.particlesOptions.links.color;
+                        if (!container.particles.grabLineColor) {
+                            container.particles.grabLineColor =
+                                optColor === Utils_1.Constants.randomColorValue ||
+                                    ((_b = optColor) === null || _b === void 0 ? void 0 : _b.value) === Utils_1.Constants.randomColorValue
+                                    ? Utils_1.Constants.randomColorValue
+                                    : Utils_1.ColorUtils.colorToRgb(optColor);
+                        }
+                        let colorLine;
+                        if (container.particles.grabLineColor === Utils_1.Constants.randomColorValue) {
+                            colorLine = Utils_1.ColorUtils.getRandomRgbColor();
+                        }
+                        else {
+                            colorLine = container.particles.grabLineColor;
+                        }
+                        if (colorLine === undefined) {
+                            return;
+                        }
+                        container.canvas.drawGrabLine(particle, colorLine, opacityLine, mousePos);
+                    }
+                }
+            }
+        }
+    }
+}
+exports.Grabber = Grabber;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Particle/Interactions/Mouse/Repulser.js":
+/*!************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Particle/Interactions/Mouse/Repulser.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Repulser = void 0;
+const Enums_1 = __webpack_require__(/*! ../../../../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+const Utils_1 = __webpack_require__(/*! ../../../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+class Repulser {
+    constructor(container) {
+        this.container = container;
+    }
+    isEnabled() {
+        const container = this.container;
+        const options = container.options;
+        const mouse = container.interactivity.mouse;
+        const events = options.interactivity.events;
+        const divs = events.onDiv;
+        const divBubble = Utils_1.Utils.isDivModeEnabled(Enums_1.DivMode.repulse, divs);
+        if (!(divBubble || (events.onHover.enable && mouse.position) || (events.onClick.enable && mouse.clickPosition))) {
+            return false;
+        }
+        const hoverMode = events.onHover.mode;
+        const clickMode = events.onClick.mode;
+        return (Utils_1.Utils.isInArray(Enums_1.HoverMode.repulse, hoverMode) || Utils_1.Utils.isInArray(Enums_1.ClickMode.repulse, clickMode) || divBubble);
+    }
+    reset() {
+    }
+    interact() {
+        const container = this.container;
+        const options = container.options;
+        const mouseMoveStatus = container.interactivity.status === Utils_1.Constants.mouseMoveEvent;
+        const events = options.interactivity.events;
+        const hoverEnabled = events.onHover.enable;
+        const hoverMode = events.onHover.mode;
+        const clickEnabled = events.onClick.enable;
+        const clickMode = events.onClick.mode;
+        const divs = events.onDiv;
+        if (mouseMoveStatus && hoverEnabled && Utils_1.Utils.isInArray(Enums_1.HoverMode.repulse, hoverMode)) {
+            this.hoverRepulse();
+        }
+        else if (clickEnabled && Utils_1.Utils.isInArray(Enums_1.ClickMode.repulse, clickMode)) {
+            this.clickRepulse();
+        }
+        else {
+            Utils_1.Utils.divModeExecute(Enums_1.DivMode.repulse, divs, (id, div) => this.singleDivRepulse(id, div));
+        }
+    }
+    singleDivRepulse(id, div) {
+        const container = this.container;
+        const elem = document.getElementById(id);
+        if (!elem) {
+            return;
+        }
+        const pxRatio = container.retina.pixelRatio;
+        const pos = {
+            x: (elem.offsetLeft + elem.offsetWidth / 2) * pxRatio,
+            y: (elem.offsetTop + elem.offsetHeight / 2) * pxRatio,
+        };
+        const repulseRadius = (elem.offsetWidth / 2) * pxRatio;
+        const area = div.type === Enums_1.DivType.circle
+            ? new Utils_1.Circle(pos.x, pos.y, repulseRadius)
+            : new Utils_1.Rectangle(elem.offsetLeft * pxRatio, elem.offsetTop * pxRatio, elem.offsetWidth * pxRatio, elem.offsetHeight * pxRatio);
+        const divs = container.options.interactivity.modes.repulse.divs;
+        const divRepulse = Utils_1.Utils.divMode(divs, id);
+        this.processRepulse(pos, repulseRadius, area, divRepulse);
+    }
+    hoverRepulse() {
+        const container = this.container;
+        const mousePos = container.interactivity.mouse.position;
+        if (!mousePos) {
+            return;
+        }
+        const repulseRadius = container.retina.repulseModeDistance;
+        this.processRepulse(mousePos, repulseRadius, new Utils_1.Circle(mousePos.x, mousePos.y, repulseRadius));
+    }
+    processRepulse(position, repulseRadius, area, divRepulse) {
+        var _a;
+        const container = this.container;
+        const query = container.particles.quadTree.query(area);
+        for (const particle of query) {
+            const { dx, dy, distance } = Utils_1.Utils.getDistances(particle.position, position);
+            const normVec = {
+                x: dx / distance,
+                y: dy / distance,
+            };
+            const velocity = ((_a = divRepulse === null || divRepulse === void 0 ? void 0 : divRepulse.speed) !== null && _a !== void 0 ? _a : container.options.interactivity.modes.repulse.speed) * 100;
+            const repulseFactor = Utils_1.Utils.clamp((1 - Math.pow(distance / repulseRadius, 2)) * velocity, 0, 50);
+            const outMode = particle.particlesOptions.move.outMode;
+            const sizeValue = particle.size.value;
+            const pos = {
+                x: particle.position.x + normVec.x * repulseFactor,
+                y: particle.position.y + normVec.y * repulseFactor,
+            };
+            if (outMode === Enums_1.OutMode.bounce ||
+                outMode === Enums_1.OutMode.bounceVertical ||
+                outMode === Enums_1.OutMode.bounceHorizontal) {
+                const isInside = {
+                    horizontal: pos.x - sizeValue > 0 && pos.x + sizeValue < container.canvas.size.width,
+                    vertical: pos.y - sizeValue > 0 && pos.y + sizeValue < container.canvas.size.height,
+                };
+                if (outMode === Enums_1.OutMode.bounceVertical || isInside.horizontal) {
+                    particle.position.x = pos.x;
+                }
+                if (outMode === Enums_1.OutMode.bounceHorizontal || isInside.vertical) {
+                    particle.position.y = pos.y;
+                }
+            }
+            else {
+                particle.position.x = pos.x;
+                particle.position.y = pos.y;
+            }
+        }
+    }
+    clickRepulse() {
+        const container = this.container;
+        if (!container.repulse.finish) {
+            if (!container.repulse.count) {
+                container.repulse.count = 0;
+            }
+            container.repulse.count++;
+            if (container.repulse.count === container.particles.count) {
+                container.repulse.finish = true;
+            }
+        }
+        if (container.repulse.clicking) {
+            const repulseDistance = container.retina.repulseModeDistance;
+            const repulseRadius = Math.pow(repulseDistance / 6, 3);
+            const mouseClickPos = container.interactivity.mouse.clickPosition;
+            if (mouseClickPos === undefined) {
+                return;
+            }
+            const range = new Utils_1.Circle(mouseClickPos.x, mouseClickPos.y, repulseRadius);
+            const query = container.particles.quadTree.query(range);
+            for (const particle of query) {
+                const { dx, dy, distance } = Utils_1.Utils.getDistances(mouseClickPos, particle.position);
+                const d = distance * distance;
+                const velocity = container.options.interactivity.modes.repulse.speed;
+                const force = (-repulseRadius * velocity) / d;
+                if (d <= repulseRadius) {
+                    container.repulse.particles.push(particle);
+                    this.processClickRepulse(particle, dx, dy, force);
+                }
+            }
+        }
+        else if (container.repulse.clicking === false) {
+            for (const particle of container.repulse.particles) {
+                particle.velocity.horizontal = particle.initialVelocity.horizontal;
+                particle.velocity.vertical = particle.initialVelocity.vertical;
+            }
+            container.repulse.particles = [];
+        }
+    }
+    processClickRepulse(particle, dx, dy, force) {
+        const container = this.container;
+        const options = container.options;
+        const f = Math.atan2(dy, dx);
+        particle.velocity.horizontal = force * Math.cos(f);
+        particle.velocity.vertical = force * Math.sin(f);
+        const outMode = options.particles.move.outMode;
+        if (outMode === Enums_1.OutMode.bounce || outMode === Enums_1.OutMode.bounceHorizontal || outMode === Enums_1.OutMode.bounceVertical) {
+            const pos = {
+                x: particle.position.x + particle.velocity.horizontal,
+                y: particle.position.y + particle.velocity.vertical,
+            };
+            if (outMode !== Enums_1.OutMode.bounceVertical) {
+                if (pos.x + particle.size.value > container.canvas.size.width || pos.x - particle.size.value < 0) {
+                    particle.velocity.horizontal *= -1;
+                }
+            }
+            if (outMode !== Enums_1.OutMode.bounceHorizontal) {
+                if (pos.y + particle.size.value > container.canvas.size.height || pos.y - particle.size.value < 0) {
+                    particle.velocity.vertical *= -1;
+                }
+            }
+        }
+    }
+}
+exports.Repulser = Repulser;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Particle/Interactions/Particles/Attractor.js":
+/*!*****************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Particle/Interactions/Particles/Attractor.js ***!
+  \*****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Attractor = void 0;
+const Utils_1 = __webpack_require__(/*! ../../../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+class Attractor {
+    constructor(container) {
+        this.container = container;
+    }
+    interact(p1) {
+        var _a;
+        const container = this.container;
+        const options = container.options;
+        const distance = (_a = p1.linksDistance) !== null && _a !== void 0 ? _a : container.retina.linksDistance;
+        const pos1 = p1.getPosition();
+        const query = container.particles.quadTree.query(new Utils_1.Circle(pos1.x, pos1.y, distance));
+        for (const p2 of query) {
+            if (p1 === p2 || p2.particlesOptions.move.attract.enable) {
+                continue;
+            }
+            const pos2 = p2.getPosition();
+            const { dx, dy } = Utils_1.Utils.getDistances(pos1, pos2);
+            const rotate = options.particles.move.attract.rotate;
+            const ax = dx / (rotate.x * 1000);
+            const ay = dy / (rotate.y * 1000);
+            p1.velocity.horizontal -= ax;
+            p1.velocity.vertical -= ay;
+            p2.velocity.horizontal += ax;
+            p2.velocity.vertical += ay;
+        }
+    }
+    isEnabled(particle) {
+        return particle.particlesOptions.move.attract.enable;
+    }
+    reset() {
+    }
+}
+exports.Attractor = Attractor;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Particle/Interactions/Particles/Collider.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Particle/Interactions/Particles/Collider.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Collider = void 0;
+const Utils_1 = __webpack_require__(/*! ../../../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const Enums_1 = __webpack_require__(/*! ../../../../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+class Collider {
+    constructor(container) {
+        this.container = container;
+    }
+    static rotate(velocity, angle) {
+        return {
+            horizontal: velocity.horizontal * Math.cos(angle) - velocity.vertical * Math.sin(angle),
+            vertical: velocity.horizontal * Math.sin(angle) + velocity.vertical * Math.cos(angle),
+        };
+    }
+    static collisionVelocity(v1, v2, m1, m2) {
+        return {
+            horizontal: (v1.horizontal * (m1 - m2)) / (m1 + m2) + (v2.horizontal * 2 * m2) / (m1 + m2),
+            vertical: v1.vertical,
+        };
+    }
+    static bounce(p1, p2) {
+        const pos1 = p1.getPosition();
+        const pos2 = p2.getPosition();
+        const xVelocityDiff = p1.velocity.horizontal - p2.velocity.horizontal;
+        const yVelocityDiff = p1.velocity.vertical - p2.velocity.vertical;
+        const xDist = pos2.x - pos1.x;
+        const yDist = pos2.y - pos1.y;
+        if (xVelocityDiff * xDist + yVelocityDiff * yDist >= 0) {
+            const angle = -Math.atan2(pos2.y - pos1.y, pos2.x - pos1.x);
+            const m1 = p1.size.value;
+            const m2 = p2.size.value;
+            const u1 = Collider.rotate(p1.velocity, angle);
+            const u2 = Collider.rotate(p2.velocity, angle);
+            const v1 = Collider.collisionVelocity(u1, u2, m1, m2);
+            const v2 = Collider.collisionVelocity(u2, u1, m1, m2);
+            const vFinal1 = Collider.rotate(v1, -angle);
+            const vFinal2 = Collider.rotate(v2, -angle);
+            p1.velocity.horizontal = vFinal1.horizontal;
+            p1.velocity.vertical = vFinal1.vertical;
+            p2.velocity.horizontal = vFinal2.horizontal;
+            p2.velocity.vertical = vFinal2.vertical;
+        }
+    }
+    static destroy(p1, p2) {
+        if (p1.size.value === undefined && p2.size.value !== undefined) {
+            p1.destroy();
+        }
+        else if (p1.size.value !== undefined && p2.size.value === undefined) {
+            p2.destroy();
+        }
+        else if (p1.size.value !== undefined && p2.size.value !== undefined) {
+            if (p1.size.value >= p2.size.value) {
+                p2.destroy();
+            }
+            else {
+                p1.destroy();
+            }
+        }
+    }
+    static getRadius(particle, fallback) {
+        return particle.bubble.radius || particle.size.value || fallback;
+    }
+    isEnabled(particle) {
+        return particle.particlesOptions.collisions.enable;
+    }
+    reset() {
+    }
+    interact(p1) {
+        const container = this.container;
+        const pos1 = p1.getPosition();
+        const query = container.particles.quadTree.query(new Utils_1.Circle(pos1.x, pos1.y, p1.size.value * 2));
+        for (const p2 of query) {
+            if (p1 === p2 ||
+                !p2.particlesOptions.collisions.enable ||
+                p1.particlesOptions.collisions.mode !== p2.particlesOptions.collisions.mode) {
+                continue;
+            }
+            const pos2 = p2.getPosition();
+            const dist = Utils_1.Utils.getDistance(pos1, pos2);
+            const defaultSize = container.retina.sizeValue;
+            const radius1 = Collider.getRadius(p1, defaultSize);
+            const radius2 = Collider.getRadius(p2, defaultSize);
+            const distP = radius1 + radius2;
+            if (dist <= distP) {
+                this.resolveCollision(p1, p2);
+            }
+        }
+    }
+    resolveCollision(p1, p2) {
+        switch (p1.particlesOptions.collisions.mode) {
+            case Enums_1.CollisionMode.absorb: {
+                this.absorb(p1, p2);
+                break;
+            }
+            case Enums_1.CollisionMode.bounce: {
+                Collider.bounce(p1, p2);
+                break;
+            }
+            case Enums_1.CollisionMode.destroy: {
+                Collider.destroy(p1, p2);
+                break;
+            }
+        }
+    }
+    absorb(p1, p2) {
+        const container = this.container;
+        const fps = container.options.fpsLimit / 1000;
+        if (p1.size.value === undefined && p2.size.value !== undefined) {
+            p1.destroy();
+        }
+        else if (p1.size.value !== undefined && p2.size.value === undefined) {
+            p2.destroy();
+        }
+        else if (p1.size.value !== undefined && p2.size.value !== undefined) {
+            if (p1.size.value >= p2.size.value) {
+                const factor = Utils_1.Utils.clamp(p1.size.value / p2.size.value, 0, p2.size.value) * fps;
+                p1.size.value += factor;
+                p2.size.value -= factor;
+                if (p2.size.value <= container.retina.pixelRatio) {
+                    p2.size.value = 0;
+                    p2.destroy();
+                }
+            }
+            else {
+                const factor = Utils_1.Utils.clamp(p2.size.value / p1.size.value, 0, p1.size.value) * fps;
+                p1.size.value -= factor;
+                p2.size.value += factor;
+                if (p1.size.value <= container.retina.pixelRatio) {
+                    p1.size.value = 0;
+                    p1.destroy();
+                }
+            }
+        }
+    }
+}
+exports.Collider = Collider;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Particle/Interactions/Particles/Infecter.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Particle/Interactions/Particles/Infecter.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Infecter = void 0;
+const Utils_1 = __webpack_require__(/*! ../../../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+class Infecter {
+    constructor(container) {
+        this.container = container;
+    }
+    isEnabled() {
+        return this.container.options.infection.enable;
+    }
+    reset() {
+    }
+    interact(p1, delta) {
+        var _a, _b;
+        p1.updateInfection(delta);
+        if (p1.infectionStage === undefined) {
+            return;
+        }
+        const container = this.container;
+        const options = container.options;
+        const infectionOptions = options.infection;
+        if (!infectionOptions.enable || infectionOptions.stages.length < 1) {
+            return;
+        }
+        const infectionStage1 = infectionOptions.stages[p1.infectionStage];
+        const pxRatio = container.retina.pixelRatio;
+        const radius = p1.size.value * 2 + infectionStage1.radius * pxRatio;
+        const pos = p1.getPosition();
+        const infectedStage1 = (_a = infectionStage1.infectedStage) !== null && _a !== void 0 ? _a : p1.infectionStage;
+        const query = container.particles.quadTree
+            .query(new Utils_1.Circle(pos.x, pos.y, radius))
+            .filter((t) => t.infectionStage === undefined || t.infectionStage !== p1.infectionStage);
+        const infections = infectionStage1.rate;
+        const neighbors = query.length;
+        for (const p2 of query) {
+            if (Math.random() < infections / neighbors) {
+                if (p2.infectionStage === undefined) {
+                    p2.startInfection(infectedStage1);
+                }
+                else if (p2.infectionStage < p1.infectionStage) {
+                    p2.updateInfectionStage(infectedStage1);
+                }
+                else if (p2.infectionStage > p1.infectionStage) {
+                    const infectionStage2 = infectionOptions.stages[p2.infectionStage];
+                    const infectedStage2 = (_b = infectionStage2 === null || infectionStage2 === void 0 ? void 0 : infectionStage2.infectedStage) !== null && _b !== void 0 ? _b : p2.infectionStage;
+                    p1.updateInfectionStage(infectedStage2);
+                }
+            }
+        }
+    }
+}
+exports.Infecter = Infecter;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Particle/Interactions/Particles/Linker.js":
+/*!**************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Particle/Interactions/Particles/Linker.js ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Linker = void 0;
+const Utils_1 = __webpack_require__(/*! ../../../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+class Linker {
+    constructor(container) {
+        this.container = container;
+    }
+    isEnabled(particle) {
+        return particle.particlesOptions.links.enable;
+    }
+    reset() {
+    }
+    interact(p1) {
+        var _a;
+        const container = this.container;
+        const linkOpt1 = p1.particlesOptions.links;
+        const optOpacity = linkOpt1.opacity;
+        const optDistance = (_a = p1.linksDistance) !== null && _a !== void 0 ? _a : container.retina.linksDistance;
+        const canvasSize = container.canvas.size;
+        const warp = linkOpt1.warp;
+        const pos1 = p1.getPosition();
+        const range = warp
+            ? new Utils_1.CircleWarp(pos1.x, pos1.y, optDistance, canvasSize)
+            : new Utils_1.Circle(pos1.x, pos1.y, optDistance);
+        const query = container.particles.quadTree.query(range);
+        for (const p2 of query) {
+            const linkOpt2 = p2.particlesOptions.links;
+            if (p1 === p2 || !linkOpt2.enable || linkOpt1.id !== linkOpt2.id) {
+                continue;
+            }
+            const pos2 = p2.getPosition();
+            let distance = Utils_1.Utils.getDistance(pos1, pos2);
+            if (warp) {
+                if (distance > optDistance) {
+                    const pos2NE = {
+                        x: pos2.x - canvasSize.width,
+                        y: pos2.y,
+                    };
+                    distance = Utils_1.Utils.getDistance(pos1, pos2NE);
+                    if (distance > optDistance) {
+                        const pos2SE = {
+                            x: pos2.x - canvasSize.width,
+                            y: pos2.y - canvasSize.height,
+                        };
+                        distance = Utils_1.Utils.getDistance(pos1, pos2SE);
+                        if (distance > optDistance) {
+                            const pos2SW = {
+                                x: pos2.x,
+                                y: pos2.y - canvasSize.height,
+                            };
+                            distance = Utils_1.Utils.getDistance(pos1, pos2SW);
+                        }
+                    }
+                }
+            }
+            if (distance > optDistance) {
+                return;
+            }
+            const opacityLine = optOpacity - (distance * optOpacity) / optDistance;
+            if (opacityLine > 0) {
+                const linksOptions = p1.particlesOptions.links;
+                let linkColor = linksOptions.id !== undefined
+                    ? container.particles.linksColors[linksOptions.id]
+                    : container.particles.linksColor;
+                if (!linkColor) {
+                    const optColor = linksOptions.color;
+                    const color = typeof optColor === "string" ? optColor : optColor.value;
+                    if (color === Utils_1.Constants.randomColorValue) {
+                        if (linksOptions.consent) {
+                            linkColor = Utils_1.ColorUtils.colorToRgb({
+                                value: color,
+                            });
+                        }
+                        else if (linksOptions.blink) {
+                            linkColor = Utils_1.Constants.randomColorValue;
+                        }
+                        else {
+                            linkColor = Utils_1.Constants.midColorValue;
+                        }
+                    }
+                    else {
+                        linkColor = Utils_1.ColorUtils.colorToRgb({
+                            value: color,
+                        });
+                    }
+                    if (linksOptions.id !== undefined) {
+                        container.particles.linksColors[linksOptions.id] = linkColor;
+                    }
+                    else {
+                        container.particles.linksColor = linkColor;
+                    }
+                }
+                if (p2.links.map((t) => t.destination).indexOf(p1) === -1 &&
+                    p1.links.map((t) => t.destination).indexOf(p2) === -1) {
+                    p1.links.push({
+                        destination: p2,
+                        opacity: opacityLine,
+                    });
+                }
+            }
+        }
+    }
+}
+exports.Linker = Linker;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Particle/Mover.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Particle/Mover.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Mover = void 0;
+const Utils_1 = __webpack_require__(/*! ../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const Enums_1 = __webpack_require__(/*! ../../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+class Mover {
+    constructor(container, particle) {
+        this.container = container;
+        this.particle = particle;
+    }
+    move(delta) {
+        this.moveParticle(delta);
+        this.moveParallax();
+    }
+    moveParticle(delta) {
+        var _a;
+        const particle = this.particle;
+        const particlesOptions = particle.particlesOptions;
+        if (!particlesOptions.move.enable) {
+            return;
+        }
+        const container = this.container;
+        const options = container.options;
+        const slowFactor = this.getProximitySpeedFactor();
+        const deltaFactor = options.fpsLimit > 0 ? (60 * delta) / 1000 : 3.6;
+        const baseSpeed = (_a = particle.moveSpeed) !== null && _a !== void 0 ? _a : container.retina.moveSpeed;
+        const moveSpeed = (baseSpeed / 2) * slowFactor * deltaFactor;
+        this.applyNoise(delta);
+        particle.position.x += particle.velocity.horizontal * moveSpeed;
+        particle.position.y += particle.velocity.vertical * moveSpeed;
+        if (particlesOptions.move.vibrate) {
+            particle.position.x += Math.sin(particle.position.x * Math.cos(particle.position.y));
+            particle.position.y += Math.cos(particle.position.y * Math.sin(particle.position.x));
+        }
+    }
+    applyNoise(delta) {
+        const particle = this.particle;
+        const particlesOptions = particle.particlesOptions;
+        const noiseOptions = particlesOptions.move.noise;
+        const noiseEnabled = noiseOptions.enable;
+        if (!noiseEnabled) {
+            return;
+        }
+        const container = this.container;
+        if (particle.lastNoiseTime <= particle.noiseDelay) {
+            particle.lastNoiseTime += delta;
+            return;
+        }
+        const noise = container.noise.generate(particle);
+        particle.velocity.horizontal += Math.cos(noise.angle) * noise.length;
+        particle.velocity.horizontal = Utils_1.Utils.clamp(particle.velocity.horizontal, -1, 1);
+        particle.velocity.vertical += Math.sin(noise.angle) * noise.length;
+        particle.velocity.vertical = Utils_1.Utils.clamp(particle.velocity.vertical, -1, 1);
+        particle.lastNoiseTime -= particle.noiseDelay;
+    }
+    moveParallax() {
+        const container = this.container;
+        const options = container.options;
+        if (!options.interactivity.events.onHover.parallax.enable) {
+            return;
+        }
+        const particle = this.particle;
+        const parallaxForce = options.interactivity.events.onHover.parallax.force;
+        const mousePos = container.interactivity.mouse.position;
+        if (!mousePos) {
+            return;
+        }
+        const windowDimension = {
+            height: window.innerHeight / 2,
+            width: window.innerWidth / 2,
+        };
+        const parallaxSmooth = options.interactivity.events.onHover.parallax.smooth;
+        const tmp = {
+            x: (mousePos.x - windowDimension.width) * (particle.size.value / parallaxForce),
+            y: (mousePos.y - windowDimension.height) * (particle.size.value / parallaxForce),
+        };
+        particle.offset.x += (tmp.x - particle.offset.x) / parallaxSmooth;
+        particle.offset.y += (tmp.y - particle.offset.y) / parallaxSmooth;
+    }
+    getProximitySpeedFactor() {
+        const container = this.container;
+        const options = container.options;
+        const active = Utils_1.Utils.isInArray(Enums_1.HoverMode.slow, options.interactivity.events.onHover.mode);
+        if (!active) {
+            return 1;
+        }
+        const mousePos = this.container.interactivity.mouse.position;
+        if (!mousePos) {
+            return 1;
+        }
+        const particlePos = this.particle.getPosition();
+        const dist = Utils_1.Utils.getDistance(mousePos, particlePos);
+        const radius = container.retina.slowModeRadius;
+        if (dist > radius) {
+            return 1;
+        }
+        const proximityFactor = dist / radius || 0;
+        const slowFactor = options.interactivity.modes.slow.factor;
+        return proximityFactor / slowFactor;
+    }
+}
+exports.Mover = Mover;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Particle/Updater.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Particle/Updater.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Updater = void 0;
+const Utils_1 = __webpack_require__(/*! ../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const Mover_1 = __webpack_require__(/*! ./Mover */ "./node_modules/tsparticles/dist/Core/Particle/Mover.js");
+const Enums_1 = __webpack_require__(/*! ../../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+class Updater {
+    constructor(container, particle) {
+        this.container = container;
+        this.particle = particle;
+        this.mover = new Mover_1.Mover(container, particle);
+    }
+    static checkBounds(coordinate, radius, size, velocity, outside) {
+        if ((coordinate + radius > size && velocity > 0) || (coordinate - radius < 0 && velocity < 0)) {
+            outside();
+        }
+    }
+    update(delta) {
+        this.mover.move(delta);
+        this.updateOpacity(delta);
+        this.updateSize(delta);
+        this.updateAngle(delta);
+        this.updateColor(delta);
+        this.fixOutOfCanvasPosition();
+        this.updateOutMode(delta);
+    }
+    updateOpacity(delta) {
+        const options = this.container.options;
+        const particle = this.particle;
+        const deltaFactor = options.fpsLimit > 0 ? (60 * delta) / 1000 : 3.6;
+        if (particle.particlesOptions.opacity.animation.enable) {
+            switch (particle.opacity.status) {
+                case Enums_1.OpacityAnimationStatus.increasing:
+                    if (particle.opacity.value >= particle.particlesOptions.opacity.value) {
+                        particle.opacity.status = Enums_1.OpacityAnimationStatus.decreasing;
+                    }
+                    else {
+                        particle.opacity.value += (particle.opacity.velocity || 0) * deltaFactor;
+                    }
+                    break;
+                case Enums_1.OpacityAnimationStatus.decreasing:
+                    if (particle.opacity.value <= particle.particlesOptions.opacity.animation.minimumValue) {
+                        particle.opacity.status = Enums_1.OpacityAnimationStatus.increasing;
+                    }
+                    else {
+                        particle.opacity.value -= (particle.opacity.velocity || 0) * deltaFactor;
+                    }
+                    break;
+            }
+            if (particle.opacity.value < 0) {
+                particle.opacity.value = 0;
+            }
+        }
+    }
+    updateSize(delta) {
+        var _a;
+        const container = this.container;
+        const options = container.options;
+        const particle = this.particle;
+        const deltaFactor = options.fpsLimit > 0 ? (60 * delta) / 1000 : 3.6;
+        const sizeOpt = particle.particlesOptions.size;
+        const sizeAnim = sizeOpt.animation;
+        if (sizeAnim.enable) {
+            switch (particle.size.status) {
+                case Enums_1.SizeAnimationStatus.increasing:
+                    if (particle.size.value >= ((_a = particle.sizeValue) !== null && _a !== void 0 ? _a : container.retina.sizeValue)) {
+                        particle.size.status = Enums_1.SizeAnimationStatus.decreasing;
+                    }
+                    else {
+                        particle.size.value += (particle.size.velocity || 0) * deltaFactor;
+                    }
+                    break;
+                case Enums_1.SizeAnimationStatus.decreasing:
+                    if (particle.size.value <= sizeAnim.minimumValue) {
+                        particle.size.status = Enums_1.SizeAnimationStatus.increasing;
+                    }
+                    else {
+                        particle.size.value -= (particle.size.velocity || 0) * deltaFactor;
+                    }
+            }
+            switch (sizeAnim.destroy) {
+                case Enums_1.DestroyType.max:
+                    if (particle.size.value >= sizeOpt.value * container.retina.pixelRatio) {
+                        particle.destroy();
+                    }
+                    break;
+                case Enums_1.DestroyType.min:
+                    if (particle.size.value <= sizeAnim.minimumValue * container.retina.pixelRatio) {
+                        particle.destroy();
+                    }
+                    break;
+            }
+            if (particle.size.value < 0 && !particle.destroyed) {
+                particle.size.value = 0;
+            }
+        }
+    }
+    updateAngle(delta) {
+        const options = this.container.options;
+        const particle = this.particle;
+        const deltaFactor = options.fpsLimit > 0 ? (60 * delta) / 1000 : 3.6;
+        if (particle.particlesOptions.rotate.animation.enable) {
+            switch (particle.rotateDirection) {
+                case Enums_1.RotateDirection.clockwise:
+                    particle.angle += ((particle.particlesOptions.rotate.animation.speed * Math.PI) / 18) * deltaFactor;
+                    if (particle.angle > 360) {
+                        particle.angle -= 360;
+                    }
+                    break;
+                case Enums_1.RotateDirection.counterClockwise:
+                default:
+                    particle.angle -= ((particle.particlesOptions.rotate.animation.speed * Math.PI) / 18) * deltaFactor;
+                    if (particle.angle < 0) {
+                        particle.angle += 360;
+                    }
+                    break;
+            }
+        }
+    }
+    updateColor(delta) {
+        const options = this.container.options;
+        const particle = this.particle;
+        if (particle.color === undefined) {
+            return;
+        }
+        const deltaFactor = options.fpsLimit > 0 ? (60 * delta) / 1000 : 3.6;
+        if (particle.particlesOptions.color.animation.enable) {
+            particle.color.h += (particle.colorVelocity || 0) * deltaFactor;
+            if (particle.color.h > 360) {
+                particle.color.h -= 360;
+            }
+        }
+    }
+    fixOutOfCanvasPosition() {
+        const container = this.container;
+        const particle = this.particle;
+        const outMode = particle.particlesOptions.move.outMode;
+        const wrap = particle.particlesOptions.move.warp;
+        const canvasSize = container.canvas.size;
+        let newPos;
+        if (outMode === Enums_1.OutMode.bounce) {
+            newPos = {
+                bottom: canvasSize.height,
+                left: particle.size.value,
+                right: canvasSize.width,
+                top: particle.size.value,
+            };
+        }
+        else if (outMode === Enums_1.OutMode.bounceHorizontal) {
+            newPos = {
+                bottom: canvasSize.height + particle.size.value - particle.offset.y,
+                left: particle.size.value,
+                right: canvasSize.width,
+                top: -particle.size.value - particle.offset.y,
+            };
+        }
+        else if (outMode === Enums_1.OutMode.bounceVertical) {
+            newPos = {
+                bottom: canvasSize.height,
+                left: -particle.size.value - particle.offset.x,
+                right: canvasSize.width + particle.size.value + particle.offset.x,
+                top: particle.size.value,
+            };
+        }
+        else {
+            newPos = {
+                bottom: canvasSize.height + particle.size.value - particle.offset.y,
+                left: -particle.size.value - particle.offset.x,
+                right: canvasSize.width + particle.size.value + particle.offset.x,
+                top: -particle.size.value - particle.offset.y,
+            };
+        }
+        if (outMode === Enums_1.OutMode.destroy) {
+            const sizeValue = particle.size.value;
+            if (!Utils_1.Utils.isPointInside(particle.position, container.canvas.size, sizeValue)) {
+                container.particles.remove(particle);
+            }
+        }
+        else {
+            const sizeValue = particle.size.value;
+            const nextBounds = Utils_1.Utils.calculateBounds(particle.position, sizeValue);
+            if (nextBounds.left > canvasSize.width - particle.offset.x) {
+                particle.position.x = newPos.left;
+                if (!wrap) {
+                    particle.position.y = Math.random() * canvasSize.height;
+                }
+            }
+            else if (nextBounds.right < -particle.offset.x) {
+                particle.position.x = newPos.right;
+                if (!wrap) {
+                    particle.position.y = Math.random() * canvasSize.height;
+                }
+            }
+            if (nextBounds.top > canvasSize.height - particle.offset.y) {
+                if (!wrap) {
+                    particle.position.x = Math.random() * canvasSize.width;
+                }
+                particle.position.y = newPos.top;
+            }
+            else if (nextBounds.bottom < -particle.offset.y) {
+                if (!wrap) {
+                    particle.position.x = Math.random() * canvasSize.width;
+                }
+                particle.position.y = newPos.bottom;
+            }
+        }
+    }
+    updateOutMode(delta) {
+        switch (this.particle.particlesOptions.move.outMode) {
+            case Enums_1.OutMode.bounce:
+            case Enums_1.OutMode.bounceVertical:
+            case Enums_1.OutMode.bounceHorizontal:
+                this.updateBounce(delta);
+                break;
+        }
+    }
+    updateBounce(delta) {
+        const container = this.container;
+        const particle = this.particle;
+        let handled = false;
+        for (const [, plugin] of container.plugins) {
+            if (plugin.particleBounce !== undefined) {
+                handled = plugin.particleBounce(particle, delta);
+            }
+            if (handled) {
+                break;
+            }
+        }
+        if (!handled) {
+            const outMode = particle.particlesOptions.move.outMode;
+            const pos = particle.getPosition();
+            if (outMode === Enums_1.OutMode.bounce || outMode === Enums_1.OutMode.bounceHorizontal) {
+                const size = particle.size.value;
+                const velocity = particle.velocity.horizontal;
+                Updater.checkBounds(pos.x, size, container.canvas.size.width, velocity, () => {
+                    particle.velocity.horizontal *= -1;
+                });
+            }
+            if (outMode === Enums_1.OutMode.bounce || outMode === Enums_1.OutMode.bounceVertical) {
+                const size = particle.size.value;
+                const velocity = particle.velocity.vertical;
+                Updater.checkBounds(pos.y, size, container.canvas.size.height, velocity, () => {
+                    particle.velocity.vertical *= -1;
+                });
+            }
+        }
+    }
+}
+exports.Updater = Updater;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Particles.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Particles.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Particles = void 0;
+const Particle_1 = __webpack_require__(/*! ./Particle */ "./node_modules/tsparticles/dist/Core/Particle.js");
+const Utils_1 = __webpack_require__(/*! ../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const InteractionManager_1 = __webpack_require__(/*! ./Particle/InteractionManager */ "./node_modules/tsparticles/dist/Core/Particle/InteractionManager.js");
+class Particles {
+    constructor(container) {
+        this.container = container;
+        this.array = [];
+        this.interactionManager = new InteractionManager_1.InteractionManager(container);
+        const canvasSize = this.container.canvas.size;
+        this.linksColors = {};
+        this.quadTree = new Utils_1.QuadTree(new Utils_1.Rectangle(0, 0, canvasSize.width, canvasSize.height), 4);
+    }
+    get count() {
+        return this.array.length;
+    }
+    init() {
+        const container = this.container;
+        const options = container.options;
+        let handled = false;
+        for (const [, plugin] of container.plugins) {
+            if (plugin.particlesInitialization !== undefined) {
+                handled = plugin.particlesInitialization();
+            }
+            if (handled) {
+                break;
+            }
+        }
+        if (!handled) {
+            for (let i = this.count; i < options.particles.number.value; i++) {
+                this.addParticle();
+            }
+        }
+        if (options.infection.enable) {
+            for (let i = 0; i < options.infection.infections; i++) {
+                const notInfected = this.array.filter((p) => p.infectionStage === undefined);
+                const infected = Utils_1.Utils.itemFromArray(notInfected);
+                infected.startInfection(0);
+            }
+        }
+        this.interactionManager.init();
+        container.noise.init();
+    }
+    redraw() {
+        this.clear();
+        this.init();
+        this.draw(0);
+    }
+    removeAt(index, quantity) {
+        if (index >= 0 && index <= this.count) {
+            for (const particle of this.array.splice(index, quantity !== null && quantity !== void 0 ? quantity : 1)) {
+                particle.destroy();
+            }
+        }
+    }
+    remove(particle) {
+        this.removeAt(this.array.indexOf(particle));
+    }
+    update(delta) {
+        const container = this.container;
+        const particlesToDelete = [];
+        container.noise.update();
+        for (const particle of this.array) {
+            particle.bubble.inRange = false;
+            for (const [, plugin] of container.plugins) {
+                if (particle.destroyed) {
+                    break;
+                }
+                if (plugin.particleUpdate) {
+                    plugin.particleUpdate(particle, delta);
+                }
+            }
+            if (!particle.destroyed) {
+                particle.update(delta);
+            }
+            if (particle.destroyed) {
+                particlesToDelete.push(particle);
+                continue;
+            }
+            this.quadTree.insert(new Utils_1.Point(particle.getPosition(), particle));
+        }
+        for (const particle of particlesToDelete) {
+            this.remove(particle);
+        }
+        this.interactionManager.interact(delta);
+    }
+    draw(delta) {
+        const container = this.container;
+        container.canvas.clear();
+        const canvasSize = this.container.canvas.size;
+        this.quadTree = new Utils_1.QuadTree(new Utils_1.Rectangle(0, 0, canvasSize.width, canvasSize.height), 4);
+        this.update(delta);
+        for (const [, plugin] of container.plugins) {
+            container.canvas.drawPlugin(plugin, delta);
+        }
+        for (const p of this.array) {
+            p.draw(delta);
+        }
+    }
+    clear() {
+        this.array = [];
+    }
+    push(nb, mousePosition) {
+        var _a;
+        const container = this.container;
+        const options = container.options;
+        const limit = options.particles.number.limit * container.density;
+        this.pushing = true;
+        if (limit > 0) {
+            const countToRemove = this.count + nb - limit;
+            if (countToRemove > 0) {
+                this.removeQuantity(countToRemove);
+            }
+        }
+        let pos;
+        if (mousePosition) {
+            pos = (_a = mousePosition.position) !== null && _a !== void 0 ? _a : { x: 0, y: 0 };
+        }
+        for (let i = 0; i < nb; i++) {
+            this.addParticle(pos);
+        }
+        if (!options.particles.move.enable) {
+            this.container.play();
+        }
+        this.pushing = false;
+    }
+    addParticle(position, overrideOptions) {
+        const particle = new Particle_1.Particle(this.container, position, overrideOptions);
+        this.array.push(particle);
+        return particle;
+    }
+    removeQuantity(quantity) {
+        const options = this.container.options;
+        this.removeAt(0, quantity);
+        if (!options.particles.move.enable) {
+            this.container.play();
+        }
+    }
+}
+exports.Particles = Particles;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Core/Retina.js":
+/*!******************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Core/Retina.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Retina = void 0;
+const Utils_1 = __webpack_require__(/*! ../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+class Retina {
+    constructor(container) {
+        this.container = container;
+    }
+    init() {
+        const container = this.container;
+        const options = container.options;
+        if (options.detectRetina) {
+            this.pixelRatio = Utils_1.Utils.isSsr() ? 1 : window.devicePixelRatio;
+        }
+        else {
+            this.pixelRatio = 1;
+        }
+        const ratio = this.pixelRatio;
+        if (container.canvas.element) {
+            const element = container.canvas.element;
+            container.canvas.size.width = element.offsetWidth * ratio;
+            container.canvas.size.height = element.offsetHeight * ratio;
+        }
+        const particles = options.particles;
+        this.linksDistance = particles.links.distance * ratio;
+        this.linksWidth = particles.links.width * ratio;
+        this.moveSpeed = particles.move.speed * ratio;
+        this.sizeValue = particles.size.value * ratio;
+        this.sizeAnimationSpeed = particles.size.animation.speed * ratio;
+        const modes = options.interactivity.modes;
+        this.connectModeDistance = modes.connect.distance * ratio;
+        this.connectModeRadius = modes.connect.radius * ratio;
+        this.grabModeDistance = modes.grab.distance * ratio;
+        this.repulseModeDistance = modes.repulse.distance * ratio;
+        this.slowModeRadius = modes.slow.radius * ratio;
+        this.bubbleModeDistance = modes.bubble.distance * ratio;
+        if (modes.bubble.size) {
+            this.bubbleModeSize = modes.bubble.size * ratio;
+        }
+    }
+    initParticle(particle) {
+        const particlesOptions = particle.particlesOptions;
+        const ratio = this.pixelRatio;
+        particle.linksDistance = particlesOptions.links.distance * ratio;
+        particle.linksWidth = particlesOptions.links.width * ratio;
+        particle.moveSpeed = particlesOptions.move.speed * ratio;
+        particle.sizeValue = particlesOptions.size.value * ratio;
+        if (typeof particlesOptions.size.random !== "boolean") {
+            particle.randomMinimumSize = particlesOptions.size.random.minimumValue * ratio;
+        }
+        particle.sizeAnimationSpeed = particlesOptions.size.animation.speed * ratio;
+    }
+}
+exports.Retina = Retina;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Directions/MoveDirection.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Directions/MoveDirection.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MoveDirection = void 0;
+var MoveDirection;
+(function (MoveDirection) {
+    MoveDirection["bottom"] = "bottom";
+    MoveDirection["bottomLeft"] = "bottom-left";
+    MoveDirection["bottomRight"] = "bottom-right";
+    MoveDirection["left"] = "left";
+    MoveDirection["none"] = "none";
+    MoveDirection["right"] = "right";
+    MoveDirection["top"] = "top";
+    MoveDirection["topLeft"] = "top-left";
+    MoveDirection["topRight"] = "top-right";
+})(MoveDirection = exports.MoveDirection || (exports.MoveDirection = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Directions/RotateDirection.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Directions/RotateDirection.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RotateDirection = void 0;
+var RotateDirection;
+(function (RotateDirection) {
+    RotateDirection["clockwise"] = "clockwise";
+    RotateDirection["counterClockwise"] = "counter-clockwise";
+    RotateDirection["random"] = "random";
+})(RotateDirection = exports.RotateDirection || (exports.RotateDirection = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Directions/index.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Directions/index.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(__webpack_require__(/*! ./MoveDirection */ "./node_modules/tsparticles/dist/Enums/Directions/MoveDirection.js"), exports);
+__exportStar(__webpack_require__(/*! ./RotateDirection */ "./node_modules/tsparticles/dist/Enums/Directions/RotateDirection.js"), exports);
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/InteractivityDetect.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/InteractivityDetect.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.InteractivityDetect = void 0;
+var InteractivityDetect;
+(function (InteractivityDetect) {
+    InteractivityDetect["canvas"] = "canvas";
+    InteractivityDetect["parent"] = "parent";
+    InteractivityDetect["window"] = "window";
+})(InteractivityDetect = exports.InteractivityDetect || (exports.InteractivityDetect = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Modes/ClickMode.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Modes/ClickMode.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ClickMode = void 0;
+var ClickMode;
+(function (ClickMode) {
+    ClickMode["bubble"] = "bubble";
+    ClickMode["push"] = "push";
+    ClickMode["remove"] = "remove";
+    ClickMode["repulse"] = "repulse";
+    ClickMode["pause"] = "pause";
+})(ClickMode = exports.ClickMode || (exports.ClickMode = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Modes/CollisionMode.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Modes/CollisionMode.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CollisionMode = void 0;
+var CollisionMode;
+(function (CollisionMode) {
+    CollisionMode["absorb"] = "absorb";
+    CollisionMode["bounce"] = "bounce";
+    CollisionMode["destroy"] = "destroy";
+})(CollisionMode = exports.CollisionMode || (exports.CollisionMode = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Modes/DivMode.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Modes/DivMode.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DivMode = void 0;
+var DivMode;
+(function (DivMode) {
+    DivMode["bubble"] = "bubble";
+    DivMode["repulse"] = "repulse";
+})(DivMode = exports.DivMode || (exports.DivMode = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Modes/HoverMode.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Modes/HoverMode.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.HoverMode = void 0;
+var HoverMode;
+(function (HoverMode) {
+    HoverMode["bubble"] = "bubble";
+    HoverMode["connect"] = "connect";
+    HoverMode["grab"] = "grab";
+    HoverMode["repulse"] = "repulse";
+    HoverMode["slow"] = "slow";
+})(HoverMode = exports.HoverMode || (exports.HoverMode = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Modes/OutMode.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Modes/OutMode.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OutMode = void 0;
+var OutMode;
+(function (OutMode) {
+    OutMode["bounce"] = "bounce";
+    OutMode["bounceHorizontal"] = "bounce-horizontal";
+    OutMode["bounceVertical"] = "bounce-vertical";
+    OutMode["out"] = "out";
+    OutMode["destroy"] = "destroy";
+})(OutMode = exports.OutMode || (exports.OutMode = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Modes/SizeMode.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Modes/SizeMode.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SizeMode = void 0;
+var SizeMode;
+(function (SizeMode) {
+    SizeMode["precise"] = "precise";
+    SizeMode["percent"] = "percent";
+})(SizeMode = exports.SizeMode || (exports.SizeMode = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Modes/index.js":
+/*!************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Modes/index.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(__webpack_require__(/*! ./ClickMode */ "./node_modules/tsparticles/dist/Enums/Modes/ClickMode.js"), exports);
+__exportStar(__webpack_require__(/*! ./DivMode */ "./node_modules/tsparticles/dist/Enums/Modes/DivMode.js"), exports);
+__exportStar(__webpack_require__(/*! ./HoverMode */ "./node_modules/tsparticles/dist/Enums/Modes/HoverMode.js"), exports);
+__exportStar(__webpack_require__(/*! ./CollisionMode */ "./node_modules/tsparticles/dist/Enums/Modes/CollisionMode.js"), exports);
+__exportStar(__webpack_require__(/*! ./OutMode */ "./node_modules/tsparticles/dist/Enums/Modes/OutMode.js"), exports);
+__exportStar(__webpack_require__(/*! ./SizeMode */ "./node_modules/tsparticles/dist/Enums/Modes/SizeMode.js"), exports);
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Statuses/OpacityAnimationStatus.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Statuses/OpacityAnimationStatus.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OpacityAnimationStatus = void 0;
+var OpacityAnimationStatus;
+(function (OpacityAnimationStatus) {
+    OpacityAnimationStatus[OpacityAnimationStatus["increasing"] = 0] = "increasing";
+    OpacityAnimationStatus[OpacityAnimationStatus["decreasing"] = 1] = "decreasing";
+})(OpacityAnimationStatus = exports.OpacityAnimationStatus || (exports.OpacityAnimationStatus = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Statuses/SizeAnimationStatus.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Statuses/SizeAnimationStatus.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SizeAnimationStatus = void 0;
+var SizeAnimationStatus;
+(function (SizeAnimationStatus) {
+    SizeAnimationStatus[SizeAnimationStatus["increasing"] = 0] = "increasing";
+    SizeAnimationStatus[SizeAnimationStatus["decreasing"] = 1] = "decreasing";
+})(SizeAnimationStatus = exports.SizeAnimationStatus || (exports.SizeAnimationStatus = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Statuses/index.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Statuses/index.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(__webpack_require__(/*! ./SizeAnimationStatus */ "./node_modules/tsparticles/dist/Enums/Statuses/SizeAnimationStatus.js"), exports);
+__exportStar(__webpack_require__(/*! ./OpacityAnimationStatus */ "./node_modules/tsparticles/dist/Enums/Statuses/OpacityAnimationStatus.js"), exports);
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Types/DestroyType.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Types/DestroyType.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DestroyType = void 0;
+var DestroyType;
+(function (DestroyType) {
+    DestroyType["none"] = "none";
+    DestroyType["max"] = "max";
+    DestroyType["min"] = "min";
+})(DestroyType = exports.DestroyType || (exports.DestroyType = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Types/DivType.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Types/DivType.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DivType = void 0;
+var DivType;
+(function (DivType) {
+    DivType["circle"] = "circle";
+    DivType["rectangle"] = "rectangle";
+})(DivType = exports.DivType || (exports.DivType = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Types/ProcessBubbleType.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Types/ProcessBubbleType.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProcessBubbleType = void 0;
+var ProcessBubbleType;
+(function (ProcessBubbleType) {
+    ProcessBubbleType["color"] = "color";
+    ProcessBubbleType["opacity"] = "opacity";
+    ProcessBubbleType["size"] = "size";
+})(ProcessBubbleType = exports.ProcessBubbleType || (exports.ProcessBubbleType = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Types/ShapeType.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Types/ShapeType.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ShapeType = void 0;
+var ShapeType;
+(function (ShapeType) {
+    ShapeType["char"] = "char";
+    ShapeType["character"] = "character";
+    ShapeType["circle"] = "circle";
+    ShapeType["edge"] = "edge";
+    ShapeType["image"] = "image";
+    ShapeType["images"] = "images";
+    ShapeType["line"] = "line";
+    ShapeType["polygon"] = "polygon";
+    ShapeType["square"] = "square";
+    ShapeType["star"] = "star";
+    ShapeType["triangle"] = "triangle";
+})(ShapeType = exports.ShapeType || (exports.ShapeType = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Types/StartValueType.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Types/StartValueType.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.StartValueType = void 0;
+var StartValueType;
+(function (StartValueType) {
+    StartValueType["max"] = "max";
+    StartValueType["min"] = "min";
+})(StartValueType = exports.StartValueType || (exports.StartValueType = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/Types/index.js":
+/*!************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/Types/index.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(__webpack_require__(/*! ./DestroyType */ "./node_modules/tsparticles/dist/Enums/Types/DestroyType.js"), exports);
+__exportStar(__webpack_require__(/*! ./ProcessBubbleType */ "./node_modules/tsparticles/dist/Enums/Types/ProcessBubbleType.js"), exports);
+__exportStar(__webpack_require__(/*! ./ShapeType */ "./node_modules/tsparticles/dist/Enums/Types/ShapeType.js"), exports);
+__exportStar(__webpack_require__(/*! ./StartValueType */ "./node_modules/tsparticles/dist/Enums/Types/StartValueType.js"), exports);
+__exportStar(__webpack_require__(/*! ./DivType */ "./node_modules/tsparticles/dist/Enums/Types/DivType.js"), exports);
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Enums/index.js":
+/*!******************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Enums/index.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(__webpack_require__(/*! ./Directions */ "./node_modules/tsparticles/dist/Enums/Directions/index.js"), exports);
+__exportStar(__webpack_require__(/*! ./Modes */ "./node_modules/tsparticles/dist/Enums/Modes/index.js"), exports);
+__exportStar(__webpack_require__(/*! ./Statuses */ "./node_modules/tsparticles/dist/Enums/Statuses/index.js"), exports);
+__exportStar(__webpack_require__(/*! ./Types */ "./node_modules/tsparticles/dist/Enums/Types/index.js"), exports);
+__exportStar(__webpack_require__(/*! ./InteractivityDetect */ "./node_modules/tsparticles/dist/Enums/InteractivityDetect.js"), exports);
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Background/Background.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Background/Background.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Background = void 0;
+const OptionsColor_1 = __webpack_require__(/*! ../OptionsColor */ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js");
+class Background {
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.color !== undefined) {
+            this.color = OptionsColor_1.OptionsColor.create(this.color, data.color);
+        }
+        if (data.image !== undefined) {
+            this.image = data.image;
+        }
+        if (data.position !== undefined) {
+            this.position = data.position;
+        }
+        if (data.repeat !== undefined) {
+            this.repeat = data.repeat;
+        }
+        if (data.size !== undefined) {
+            this.size = data.size;
+        }
+        if (data.opacity !== undefined) {
+            this.opacity = data.opacity;
+        }
+    }
+}
+exports.Background = Background;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/BackgroundMask/BackgroundMask.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/BackgroundMask/BackgroundMask.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BackgroundMask = void 0;
+const BackgroundMaskCover_1 = __webpack_require__(/*! ./BackgroundMaskCover */ "./node_modules/tsparticles/dist/Options/Classes/BackgroundMask/BackgroundMaskCover.js");
+class BackgroundMask {
+    constructor() {
+        this.cover = new BackgroundMaskCover_1.BackgroundMaskCover();
+        this.enable = false;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.cover !== undefined) {
+            const cover = data.cover;
+            const color = (typeof data.cover === "string" ? { color: data.cover } : data.cover);
+            this.cover.load(cover.color !== undefined ? cover : { color: color });
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+    }
+}
+exports.BackgroundMask = BackgroundMask;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/BackgroundMask/BackgroundMaskCover.js":
+/*!*********************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/BackgroundMask/BackgroundMaskCover.js ***!
+  \*********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BackgroundMaskCover = void 0;
+const OptionsColor_1 = __webpack_require__(/*! ../OptionsColor */ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js");
+class BackgroundMaskCover {
+    constructor() {
+        this.color = new OptionsColor_1.OptionsColor();
+        this.opacity = 1;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.color !== undefined) {
+            this.color = OptionsColor_1.OptionsColor.create(this.color, data.color);
+        }
+        if (data.opacity !== undefined) {
+            this.opacity = data.opacity;
+        }
+    }
+}
+exports.BackgroundMaskCover = BackgroundMaskCover;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Infection/Infection.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Infection/Infection.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Infection = void 0;
+const InfectionStage_1 = __webpack_require__(/*! ./InfectionStage */ "./node_modules/tsparticles/dist/Options/Classes/Infection/InfectionStage.js");
+class Infection {
+    constructor() {
+        this.cure = false;
+        this.delay = 0;
+        this.enable = false;
+        this.infections = 0;
+        this.stages = [];
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.cure !== undefined) {
+            this.cure = data.cure;
+        }
+        if (data.delay !== undefined) {
+            this.delay = data.delay;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        if (data.infections !== undefined) {
+            this.infections = data.infections;
+        }
+        if (data.stages === undefined) {
+            return;
+        }
+        this.stages = data.stages.map((t) => {
+            const s = new InfectionStage_1.InfectionStage();
+            s.load(t);
+            return s;
+        });
+    }
+}
+exports.Infection = Infection;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Infection/InfectionStage.js":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Infection/InfectionStage.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.InfectionStage = void 0;
+const OptionsColor_1 = __webpack_require__(/*! ../OptionsColor */ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js");
+class InfectionStage {
+    constructor() {
+        this.color = new OptionsColor_1.OptionsColor();
+        this.color.value = "#ff0000";
+        this.radius = 0;
+        this.rate = 1;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.color !== undefined) {
+            this.color = OptionsColor_1.OptionsColor.create(this.color, data.color);
+        }
+        this.duration = data.duration;
+        this.infectedStage = data.infectedStage;
+        if (data.radius !== undefined) {
+            this.radius = data.radius;
+        }
+        if (data.rate !== undefined) {
+            this.rate = data.rate;
+        }
+    }
+}
+exports.InfectionStage = InfectionStage;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Events/ClickEvent.js":
+/*!******************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Events/ClickEvent.js ***!
+  \******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ClickEvent = void 0;
+class ClickEvent {
+    constructor() {
+        this.enable = false;
+        this.mode = [];
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        if (data.mode !== undefined) {
+            this.mode = data.mode;
+        }
+    }
+}
+exports.ClickEvent = ClickEvent;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Events/DivEvent.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Events/DivEvent.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DivEvent = void 0;
+const Enums_1 = __webpack_require__(/*! ../../../../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+class DivEvent {
+    constructor() {
+        this.ids = [];
+        this.enable = false;
+        this.mode = [];
+        this.type = Enums_1.DivType.circle;
+    }
+    get elementId() {
+        return this.ids;
+    }
+    set elementId(value) {
+        this.ids = value;
+    }
+    get el() {
+        return this.elementId;
+    }
+    set el(value) {
+        this.elementId = value;
+    }
+    load(data) {
+        var _a, _b;
+        if (data === undefined) {
+            return;
+        }
+        const ids = (_b = (_a = data.ids) !== null && _a !== void 0 ? _a : data.elementId) !== null && _b !== void 0 ? _b : data.el;
+        if (ids !== undefined) {
+            this.ids = ids;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        if (data.mode !== undefined) {
+            this.mode = data.mode;
+        }
+        if (data.type !== undefined) {
+            this.type = data.type;
+        }
+    }
+}
+exports.DivEvent = DivEvent;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Events/Events.js":
+/*!**************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Events/Events.js ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Events = void 0;
+const ClickEvent_1 = __webpack_require__(/*! ./ClickEvent */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Events/ClickEvent.js");
+const DivEvent_1 = __webpack_require__(/*! ./DivEvent */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Events/DivEvent.js");
+const HoverEvent_1 = __webpack_require__(/*! ./HoverEvent */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Events/HoverEvent.js");
+class Events {
+    constructor() {
+        this.onClick = new ClickEvent_1.ClickEvent();
+        this.onDiv = new DivEvent_1.DivEvent();
+        this.onHover = new HoverEvent_1.HoverEvent();
+        this.resize = true;
+    }
+    get onclick() {
+        return this.onClick;
+    }
+    set onclick(value) {
+        this.onClick = value;
+    }
+    get ondiv() {
+        return this.onDiv;
+    }
+    set ondiv(value) {
+        this.onDiv = value;
+    }
+    get onhover() {
+        return this.onHover;
+    }
+    set onhover(value) {
+        this.onHover = value;
+    }
+    load(data) {
+        var _a, _b, _c;
+        if (data === undefined) {
+            return;
+        }
+        this.onClick.load((_a = data.onClick) !== null && _a !== void 0 ? _a : data.onclick);
+        const onDiv = (_b = data.onDiv) !== null && _b !== void 0 ? _b : data.ondiv;
+        if (onDiv !== undefined) {
+            if (onDiv instanceof Array) {
+                this.onDiv = onDiv.map((div) => {
+                    const tmp = new DivEvent_1.DivEvent();
+                    tmp.load(div);
+                    return tmp;
+                });
+            }
+            else {
+                this.onDiv = new DivEvent_1.DivEvent();
+                this.onDiv.load(onDiv);
+            }
+        }
+        this.onHover.load((_c = data.onHover) !== null && _c !== void 0 ? _c : data.onhover);
+        if (data.resize !== undefined) {
+            this.resize = data.resize;
+        }
+    }
+}
+exports.Events = Events;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Events/HoverEvent.js":
+/*!******************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Events/HoverEvent.js ***!
+  \******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.HoverEvent = void 0;
+const Parallax_1 = __webpack_require__(/*! ./Parallax */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Events/Parallax.js");
+class HoverEvent {
+    constructor() {
+        this.enable = false;
+        this.mode = [];
+        this.parallax = new Parallax_1.Parallax();
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        if (data.mode !== undefined) {
+            this.mode = data.mode;
+        }
+        this.parallax.load(data.parallax);
+    }
+}
+exports.HoverEvent = HoverEvent;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Events/Parallax.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Events/Parallax.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Parallax = void 0;
+class Parallax {
+    constructor() {
+        this.enable = false;
+        this.force = 2;
+        this.smooth = 10;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        if (data.force !== undefined) {
+            this.force = data.force;
+        }
+        if (data.smooth !== undefined) {
+            this.smooth = data.smooth;
+        }
+    }
+}
+exports.Parallax = Parallax;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Interactivity.js":
+/*!**************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Interactivity.js ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Interactivity = void 0;
+const Enums_1 = __webpack_require__(/*! ../../../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+const Events_1 = __webpack_require__(/*! ./Events/Events */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Events/Events.js");
+const Modes_1 = __webpack_require__(/*! ./Modes/Modes */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Modes.js");
+class Interactivity {
+    constructor() {
+        this.detectsOn = Enums_1.InteractivityDetect.canvas;
+        this.events = new Events_1.Events();
+        this.modes = new Modes_1.Modes();
+    }
+    get detect_on() {
+        return this.detectsOn;
+    }
+    set detect_on(value) {
+        this.detectsOn = value;
+    }
+    load(data) {
+        var _a, _b, _c;
+        if (data === undefined) {
+            return;
+        }
+        const detectsOn = (_a = data.detectsOn) !== null && _a !== void 0 ? _a : data.detect_on;
+        if (detectsOn !== undefined) {
+            this.detectsOn = detectsOn;
+        }
+        this.events.load(data.events);
+        this.modes.load(data.modes);
+        if (((_c = (_b = data.modes) === null || _b === void 0 ? void 0 : _b.slow) === null || _c === void 0 ? void 0 : _c.active) === true) {
+            if (this.events.onHover.mode instanceof Array) {
+                if (this.events.onHover.mode.indexOf(Enums_1.HoverMode.slow) < 0) {
+                    this.events.onHover.mode.push(Enums_1.HoverMode.slow);
+                }
+            }
+            else if (this.events.onHover.mode !== Enums_1.HoverMode.slow) {
+                this.events.onHover.mode = [this.events.onHover.mode, Enums_1.HoverMode.slow];
+            }
+        }
+    }
+}
+exports.Interactivity = Interactivity;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Bubble.js":
+/*!*************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Bubble.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Bubble = void 0;
+const BubbleDiv_1 = __webpack_require__(/*! ./BubbleDiv */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/BubbleDiv.js");
+const BubbleBase_1 = __webpack_require__(/*! ./BubbleBase */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/BubbleBase.js");
+class Bubble extends BubbleBase_1.BubbleBase {
+    load(data) {
+        super.load(data);
+        if (!(data !== undefined && data.divs !== undefined)) {
+            return;
+        }
+        if (data.divs instanceof Array) {
+            this.divs = data.divs.map((s) => {
+                const tmp = new BubbleDiv_1.BubbleDiv();
+                tmp.load(s);
+                return tmp;
+            });
+        }
+        else {
+            if (this.divs instanceof Array || !this.divs) {
+                this.divs = new BubbleDiv_1.BubbleDiv();
+            }
+            this.divs.load(data.divs);
+        }
+    }
+}
+exports.Bubble = Bubble;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/BubbleBase.js":
+/*!*****************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/BubbleBase.js ***!
+  \*****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BubbleBase = void 0;
+const OptionsColor_1 = __webpack_require__(/*! ../../OptionsColor */ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js");
+class BubbleBase {
+    constructor() {
+        this.distance = 200;
+        this.duration = 0.4;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.distance !== undefined) {
+            this.distance = data.distance;
+        }
+        if (data.duration !== undefined) {
+            this.duration = data.duration;
+        }
+        if (data.opacity !== undefined) {
+            this.opacity = data.opacity;
+        }
+        if (data.color !== undefined) {
+            if (data.color instanceof Array) {
+                this.color = data.color.map((s) => OptionsColor_1.OptionsColor.create(undefined, s));
+            }
+            else {
+                if (this.color instanceof Array) {
+                    this.color = new OptionsColor_1.OptionsColor();
+                }
+                this.color = OptionsColor_1.OptionsColor.create(this.color, data.color);
+            }
+        }
+        if (data.size !== undefined) {
+            this.size = data.size;
+        }
+    }
+}
+exports.BubbleBase = BubbleBase;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/BubbleDiv.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/BubbleDiv.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BubbleDiv = void 0;
+const BubbleBase_1 = __webpack_require__(/*! ./BubbleBase */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/BubbleBase.js");
+class BubbleDiv extends BubbleBase_1.BubbleBase {
+    constructor() {
+        super();
+        this.ids = [];
+    }
+    load(data) {
+        super.load(data);
+        if (!(data !== undefined && data.ids !== undefined)) {
+            return;
+        }
+        this.ids = data.ids;
+    }
+}
+exports.BubbleDiv = BubbleDiv;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Connect.js":
+/*!**************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Connect.js ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Connect = void 0;
+const ConnectLinks_1 = __webpack_require__(/*! ./ConnectLinks */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/ConnectLinks.js");
+class Connect {
+    constructor() {
+        this.distance = 80;
+        this.links = new ConnectLinks_1.ConnectLinks();
+        this.radius = 60;
+    }
+    get line_linked() {
+        return this.links;
+    }
+    set line_linked(value) {
+        this.links = value;
+    }
+    get lineLinked() {
+        return this.links;
+    }
+    set lineLinked(value) {
+        this.links = value;
+    }
+    load(data) {
+        var _a, _b;
+        if (data === undefined) {
+            return;
+        }
+        if (data.distance !== undefined) {
+            this.distance = data.distance;
+        }
+        this.links.load((_b = (_a = data.links) !== null && _a !== void 0 ? _a : data.lineLinked) !== null && _b !== void 0 ? _b : data.line_linked);
+        if (data.radius !== undefined) {
+            this.radius = data.radius;
+        }
+    }
+}
+exports.Connect = Connect;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/ConnectLinks.js":
+/*!*******************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/ConnectLinks.js ***!
+  \*******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ConnectLinks = void 0;
+class ConnectLinks {
+    constructor() {
+        this.opacity = 0.5;
+    }
+    load(data) {
+        if (!(data !== undefined && data.opacity !== undefined)) {
+            return;
+        }
+        this.opacity = data.opacity;
+    }
+}
+exports.ConnectLinks = ConnectLinks;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Grab.js":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Grab.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Grab = void 0;
+const GrabLinks_1 = __webpack_require__(/*! ./GrabLinks */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/GrabLinks.js");
+class Grab {
+    constructor() {
+        this.distance = 100;
+        this.links = new GrabLinks_1.GrabLinks();
+    }
+    get line_linked() {
+        return this.links;
+    }
+    set line_linked(value) {
+        this.links = value;
+    }
+    get lineLinked() {
+        return this.links;
+    }
+    set lineLinked(value) {
+        this.links = value;
+    }
+    load(data) {
+        var _a, _b;
+        if (data === undefined) {
+            return;
+        }
+        if (data.distance !== undefined) {
+            this.distance = data.distance;
+        }
+        this.links.load((_b = (_a = data.links) !== null && _a !== void 0 ? _a : data.lineLinked) !== null && _b !== void 0 ? _b : data.line_linked);
+    }
+}
+exports.Grab = Grab;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/GrabLinks.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/GrabLinks.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.GrabLinks = void 0;
+const OptionsColor_1 = __webpack_require__(/*! ../../OptionsColor */ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js");
+class GrabLinks {
+    constructor() {
+        this.opacity = 1;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.opacity !== undefined) {
+            this.opacity = data.opacity;
+        }
+        if (data.color !== undefined) {
+            this.color = OptionsColor_1.OptionsColor.create(this.color, data.color);
+        }
+    }
+}
+exports.GrabLinks = GrabLinks;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Modes.js":
+/*!************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Modes.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Modes = void 0;
+const Bubble_1 = __webpack_require__(/*! ./Bubble */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Bubble.js");
+const Connect_1 = __webpack_require__(/*! ./Connect */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Connect.js");
+const Grab_1 = __webpack_require__(/*! ./Grab */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Grab.js");
+const Remove_1 = __webpack_require__(/*! ./Remove */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Remove.js");
+const Push_1 = __webpack_require__(/*! ./Push */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Push.js");
+const Repulse_1 = __webpack_require__(/*! ./Repulse */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Repulse.js");
+const Slow_1 = __webpack_require__(/*! ./Slow */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Slow.js");
+class Modes {
+    constructor() {
+        this.bubble = new Bubble_1.Bubble();
+        this.connect = new Connect_1.Connect();
+        this.grab = new Grab_1.Grab();
+        this.push = new Push_1.Push();
+        this.remove = new Remove_1.Remove();
+        this.repulse = new Repulse_1.Repulse();
+        this.slow = new Slow_1.Slow();
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        this.bubble.load(data.bubble);
+        this.connect.load(data.connect);
+        this.grab.load(data.grab);
+        this.push.load(data.push);
+        this.remove.load(data.remove);
+        this.repulse.load(data.repulse);
+        this.slow.load(data.slow);
+    }
+}
+exports.Modes = Modes;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Push.js":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Push.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Push = void 0;
+class Push {
+    constructor() {
+        this.quantity = 4;
+    }
+    get particles_nb() {
+        return this.quantity;
+    }
+    set particles_nb(value) {
+        this.quantity = value;
+    }
+    load(data) {
+        var _a;
+        if (data === undefined) {
+            return;
+        }
+        const quantity = (_a = data.quantity) !== null && _a !== void 0 ? _a : data.particles_nb;
+        if (quantity !== undefined) {
+            this.quantity = quantity;
+        }
+    }
+}
+exports.Push = Push;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Remove.js":
+/*!*************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Remove.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Remove = void 0;
+class Remove {
+    constructor() {
+        this.quantity = 2;
+    }
+    get particles_nb() {
+        return this.quantity;
+    }
+    set particles_nb(value) {
+        this.quantity = value;
+    }
+    load(data) {
+        var _a;
+        if (data === undefined) {
+            return;
+        }
+        const quantity = (_a = data.quantity) !== null && _a !== void 0 ? _a : data.particles_nb;
+        if (quantity !== undefined) {
+            this.quantity = quantity;
+        }
+    }
+}
+exports.Remove = Remove;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Repulse.js":
+/*!**************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Repulse.js ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Repulse = void 0;
+const RepulseDiv_1 = __webpack_require__(/*! ./RepulseDiv */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/RepulseDiv.js");
+const RepulseBase_1 = __webpack_require__(/*! ./RepulseBase */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/RepulseBase.js");
+class Repulse extends RepulseBase_1.RepulseBase {
+    load(data) {
+        super.load(data);
+        if ((data === null || data === void 0 ? void 0 : data.divs) === undefined) {
+            return;
+        }
+        if (data.divs instanceof Array) {
+            this.divs = data.divs.map((s) => {
+                const tmp = new RepulseDiv_1.RepulseDiv();
+                tmp.load(s);
+                return tmp;
+            });
+        }
+        else {
+            if (this.divs instanceof Array || !this.divs) {
+                this.divs = new RepulseDiv_1.RepulseDiv();
+            }
+            this.divs.load(data.divs);
+        }
+    }
+}
+exports.Repulse = Repulse;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/RepulseBase.js":
+/*!******************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/RepulseBase.js ***!
+  \******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RepulseBase = void 0;
+class RepulseBase {
+    constructor() {
+        this.distance = 200;
+        this.duration = 0.4;
+        this.speed = 1;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.distance !== undefined) {
+            this.distance = data.distance;
+        }
+        if (data.duration !== undefined) {
+            this.duration = data.duration;
+        }
+        if (data.speed !== undefined) {
+            this.speed = data.speed;
+        }
+    }
+}
+exports.RepulseBase = RepulseBase;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/RepulseDiv.js":
+/*!*****************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/RepulseDiv.js ***!
+  \*****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RepulseDiv = void 0;
+const RepulseBase_1 = __webpack_require__(/*! ./RepulseBase */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/RepulseBase.js");
+class RepulseDiv extends RepulseBase_1.RepulseBase {
+    constructor() {
+        super();
+        this.ids = [];
+    }
+    load(data) {
+        super.load(data);
+        if (data === undefined) {
+            return;
+        }
+        if (data.ids === undefined) {
+            return;
+        }
+        this.ids = data.ids;
+    }
+}
+exports.RepulseDiv = RepulseDiv;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Slow.js":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Interactivity/Modes/Slow.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Slow = void 0;
+class Slow {
+    constructor() {
+        this.factor = 3;
+        this.radius = 200;
+    }
+    get active() {
+        return false;
+    }
+    set active(_value) {
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.factor !== undefined) {
+            this.factor = data.factor;
+        }
+        if (data.radius !== undefined) {
+            this.radius = data.radius;
+        }
+    }
+}
+exports.Slow = Slow;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Options.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Options.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Options = void 0;
+const Interactivity_1 = __webpack_require__(/*! ./Interactivity/Interactivity */ "./node_modules/tsparticles/dist/Options/Classes/Interactivity/Interactivity.js");
+const Particles_1 = __webpack_require__(/*! ./Particles/Particles */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Particles.js");
+const BackgroundMask_1 = __webpack_require__(/*! ./BackgroundMask/BackgroundMask */ "./node_modules/tsparticles/dist/Options/Classes/BackgroundMask/BackgroundMask.js");
+const Background_1 = __webpack_require__(/*! ./Background/Background */ "./node_modules/tsparticles/dist/Options/Classes/Background/Background.js");
+const Infection_1 = __webpack_require__(/*! ./Infection/Infection */ "./node_modules/tsparticles/dist/Options/Classes/Infection/Infection.js");
+const Utils_1 = __webpack_require__(/*! ../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+class Options {
+    constructor() {
+        this.background = new Background_1.Background();
+        this.backgroundMask = new BackgroundMask_1.BackgroundMask();
+        this.detectRetina = true;
+        this.fpsLimit = 30;
+        this.infection = new Infection_1.Infection();
+        this.interactivity = new Interactivity_1.Interactivity();
+        this.particles = new Particles_1.Particles();
+        this.pauseOnBlur = true;
+    }
+    get fps_limit() {
+        return this.fpsLimit;
+    }
+    set fps_limit(value) {
+        this.fpsLimit = value;
+    }
+    get retina_detect() {
+        return this.detectRetina;
+    }
+    set retina_detect(value) {
+        this.detectRetina = value;
+    }
+    load(data) {
+        var _a, _b;
+        if (data === undefined) {
+            return;
+        }
+        if (data.preset !== undefined) {
+            if (data.preset instanceof Array) {
+                for (const preset of data.preset) {
+                    this.importPreset(preset);
+                }
+            }
+            else {
+                this.importPreset(data.preset);
+            }
+        }
+        const detectRetina = (_a = data.detectRetina) !== null && _a !== void 0 ? _a : data.retina_detect;
+        if (detectRetina !== undefined) {
+            this.detectRetina = detectRetina;
+        }
+        const fpsLimit = (_b = data.fpsLimit) !== null && _b !== void 0 ? _b : data.fps_limit;
+        if (fpsLimit !== undefined) {
+            this.fpsLimit = fpsLimit;
+        }
+        if (data.pauseOnBlur !== undefined) {
+            this.pauseOnBlur = data.pauseOnBlur;
+        }
+        this.background.load(data.background);
+        this.particles.load(data.particles);
+        this.infection.load(data.infection);
+        this.interactivity.load(data.interactivity);
+        this.backgroundMask.load(data.backgroundMask);
+        Utils_1.Plugins.loadOptions(this, data);
+    }
+    importPreset(preset) {
+        this.load(Utils_1.Plugins.getPreset(preset));
+    }
+}
+exports.Options = Options;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OptionsColor = void 0;
+class OptionsColor {
+    constructor() {
+        this.value = "#fff";
+    }
+    static create(source, data) {
+        const color = source !== null && source !== void 0 ? source : new OptionsColor();
+        if (data !== undefined) {
+            color.load(typeof data === "string" ? { value: data } : data);
+        }
+        return color;
+    }
+    load(data) {
+        if ((data === null || data === void 0 ? void 0 : data.value) === undefined) {
+            return;
+        }
+        this.value = data.value;
+    }
+}
+exports.OptionsColor = OptionsColor;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/AnimatableColor.js":
+/*!************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/AnimatableColor.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AnimatableColor = void 0;
+const OptionsColor_1 = __webpack_require__(/*! ../OptionsColor */ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js");
+const ColorAnimation_1 = __webpack_require__(/*! ./ColorAnimation */ "./node_modules/tsparticles/dist/Options/Classes/Particles/ColorAnimation.js");
+class AnimatableColor extends OptionsColor_1.OptionsColor {
+    constructor() {
+        super();
+        this.animation = new ColorAnimation_1.ColorAnimation();
+    }
+    static create(source, data) {
+        const color = source !== null && source !== void 0 ? source : new AnimatableColor();
+        if (data !== undefined) {
+            color.load(typeof data === "string" ? { value: data } : data);
+        }
+        return color;
+    }
+    load(data) {
+        super.load(data);
+        this.animation.load(data === null || data === void 0 ? void 0 : data.animation);
+    }
+}
+exports.AnimatableColor = AnimatableColor;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Attract.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Attract.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Attract = void 0;
+class Attract {
+    constructor() {
+        this.enable = false;
+        this.rotate = {
+            x: 3000,
+            y: 3000,
+        };
+    }
+    get rotateX() {
+        return this.rotate.x;
+    }
+    set rotateX(value) {
+        this.rotate.x = value;
+    }
+    get rotateY() {
+        return this.rotate.y;
+    }
+    set rotateY(value) {
+        this.rotate.y = value;
+    }
+    load(data) {
+        var _a, _b, _c, _d;
+        if (data === undefined) {
+            return;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        const rotateX = (_b = (_a = data.rotate) === null || _a === void 0 ? void 0 : _a.x) !== null && _b !== void 0 ? _b : data.rotateX;
+        if (rotateX !== undefined) {
+            this.rotate.x = rotateX;
+        }
+        const rotateY = (_d = (_c = data.rotate) === null || _c === void 0 ? void 0 : _c.y) !== null && _d !== void 0 ? _d : data.rotateY;
+        if (rotateY !== undefined) {
+            this.rotate.y = rotateY;
+        }
+    }
+}
+exports.Attract = Attract;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Collisions.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Collisions.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Collisions = void 0;
+const Enums_1 = __webpack_require__(/*! ../../../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+class Collisions {
+    constructor() {
+        this.enable = false;
+        this.mode = Enums_1.CollisionMode.bounce;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        if (data.mode !== undefined) {
+            this.mode = data.mode;
+        }
+    }
+}
+exports.Collisions = Collisions;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/ColorAnimation.js":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/ColorAnimation.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ColorAnimation = void 0;
+class ColorAnimation {
+    constructor() {
+        this.enable = false;
+        this.speed = 1;
+        this.sync = true;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        if (data.speed !== undefined) {
+            this.speed = data.speed;
+        }
+        if (data.sync !== undefined) {
+            this.sync = data.sync;
+        }
+    }
+}
+exports.ColorAnimation = ColorAnimation;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Density.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Density.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Density = void 0;
+class Density {
+    constructor() {
+        this.enable = false;
+        this.area = 800;
+        this.factor = 1000;
+    }
+    get value_area() {
+        return this.area;
+    }
+    set value_area(value) {
+        this.area = value;
+    }
+    load(data) {
+        var _a;
+        if (data === undefined) {
+            return;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        const area = (_a = data.area) !== null && _a !== void 0 ? _a : data.value_area;
+        if (area !== undefined) {
+            this.area = area;
+        }
+        if (data.factor !== undefined) {
+            this.factor = data.factor;
+        }
+    }
+}
+exports.Density = Density;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Links/Links.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Links/Links.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Links = void 0;
+const LinksShadow_1 = __webpack_require__(/*! ./LinksShadow */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Links/LinksShadow.js");
+const LinksTriangle_1 = __webpack_require__(/*! ./LinksTriangle */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Links/LinksTriangle.js");
+const OptionsColor_1 = __webpack_require__(/*! ../../OptionsColor */ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js");
+class Links {
+    constructor() {
+        this.blink = false;
+        this.color = new OptionsColor_1.OptionsColor();
+        this.consent = false;
+        this.distance = 100;
+        this.enable = false;
+        this.opacity = 1;
+        this.shadow = new LinksShadow_1.LinksShadow();
+        this.triangles = new LinksTriangle_1.LinksTriangle();
+        this.width = 1;
+        this.warp = false;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.id !== undefined) {
+            this.id = data.id;
+        }
+        if (data.blink !== undefined) {
+            this.blink = data.blink;
+        }
+        this.color = OptionsColor_1.OptionsColor.create(this.color, data.color);
+        if (data.consent !== undefined) {
+            this.consent = data.consent;
+        }
+        if (data.distance !== undefined) {
+            this.distance = data.distance;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        if (data.opacity !== undefined) {
+            this.opacity = data.opacity;
+        }
+        this.shadow.load(data.shadow);
+        this.triangles.load(data.triangles);
+        if (data.width !== undefined) {
+            this.width = data.width;
+        }
+        if (data.warp !== undefined) {
+            this.warp = data.warp;
+        }
+    }
+}
+exports.Links = Links;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Links/LinksShadow.js":
+/*!**************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Links/LinksShadow.js ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LinksShadow = void 0;
+const OptionsColor_1 = __webpack_require__(/*! ../../OptionsColor */ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js");
+class LinksShadow {
+    constructor() {
+        this.blur = 5;
+        this.color = new OptionsColor_1.OptionsColor();
+        this.enable = false;
+        this.color.value = "lime";
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.blur !== undefined) {
+            this.blur = data.blur;
+        }
+        this.color = OptionsColor_1.OptionsColor.create(this.color, data.color);
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+    }
+}
+exports.LinksShadow = LinksShadow;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Links/LinksTriangle.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Links/LinksTriangle.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LinksTriangle = void 0;
+const OptionsColor_1 = __webpack_require__(/*! ../../OptionsColor */ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js");
+class LinksTriangle {
+    constructor() {
+        this.enable = false;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.color !== undefined) {
+            this.color = OptionsColor_1.OptionsColor.create(this.color, data.color);
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        if (data.opacity !== undefined) {
+            this.opacity = data.opacity;
+        }
+    }
+}
+exports.LinksTriangle = LinksTriangle;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Move.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Move.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Move = void 0;
+const Attract_1 = __webpack_require__(/*! ./Attract */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Attract.js");
+const Enums_1 = __webpack_require__(/*! ../../../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+const Trail_1 = __webpack_require__(/*! ./Trail */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Trail.js");
+const Noise_1 = __webpack_require__(/*! ./Noise/Noise */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Noise/Noise.js");
+class Move {
+    constructor() {
+        this.angle = 90;
+        this.attract = new Attract_1.Attract();
+        this.direction = Enums_1.MoveDirection.none;
+        this.enable = false;
+        this.noise = new Noise_1.Noise();
+        this.outMode = Enums_1.OutMode.out;
+        this.random = false;
+        this.speed = 2;
+        this.straight = false;
+        this.trail = new Trail_1.Trail();
+        this.vibrate = false;
+        this.warp = false;
+    }
+    get collisions() {
+        return false;
+    }
+    set collisions(value) {
+    }
+    get bounce() {
+        return this.collisions;
+    }
+    set bounce(value) {
+        this.collisions = value;
+    }
+    get out_mode() {
+        return this.outMode;
+    }
+    set out_mode(value) {
+        this.outMode = value;
+    }
+    load(data) {
+        var _a;
+        if (data === undefined) {
+            return;
+        }
+        if (data.angle !== undefined) {
+            this.angle = data.angle;
+        }
+        this.attract.load(data.attract);
+        if (data.direction !== undefined) {
+            this.direction = data.direction;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        this.noise.load(data.noise);
+        const outMode = (_a = data.outMode) !== null && _a !== void 0 ? _a : data.out_mode;
+        if (outMode !== undefined) {
+            this.outMode = outMode;
+        }
+        if (data.random !== undefined) {
+            this.random = data.random;
+        }
+        if (data.speed !== undefined) {
+            this.speed = data.speed;
+        }
+        if (data.straight !== undefined) {
+            this.straight = data.straight;
+        }
+        this.trail.load(data.trail);
+        if (data.vibrate !== undefined) {
+            this.vibrate = data.vibrate;
+        }
+        if (data.warp !== undefined) {
+            this.warp = data.warp;
+        }
+    }
+}
+exports.Move = Move;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Noise/Noise.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Noise/Noise.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Noise = void 0;
+const NoiseDelay_1 = __webpack_require__(/*! ./NoiseDelay */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Noise/NoiseDelay.js");
+class Noise {
+    constructor() {
+        this.delay = new NoiseDelay_1.NoiseDelay();
+        this.enable = false;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        this.delay.load(data.delay);
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+    }
+}
+exports.Noise = Noise;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Noise/NoiseDelay.js":
+/*!*************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Noise/NoiseDelay.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.NoiseDelay = void 0;
+const NoiseRandom_1 = __webpack_require__(/*! ./NoiseRandom */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Noise/NoiseRandom.js");
+class NoiseDelay {
+    constructor() {
+        this.random = new NoiseRandom_1.NoiseRandom();
+        this.value = 0;
+    }
+    load(data) {
+        var _a;
+        if (data === undefined) {
+            return;
+        }
+        (_a = this.random) === null || _a === void 0 ? void 0 : _a.load(data.random);
+        if (data.value !== undefined) {
+            this.value = data.value;
+        }
+    }
+}
+exports.NoiseDelay = NoiseDelay;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Noise/NoiseRandom.js":
+/*!**************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Noise/NoiseRandom.js ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.NoiseRandom = void 0;
+class NoiseRandom {
+    constructor() {
+        this.enable = false;
+        this.minimumValue = 0;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        if (data.minimumValue !== undefined) {
+            this.minimumValue = data.minimumValue;
+        }
+    }
+}
+exports.NoiseRandom = NoiseRandom;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Opacity/Opacity.js":
+/*!************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Opacity/Opacity.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Opacity = void 0;
+const OpacityAnimation_1 = __webpack_require__(/*! ./OpacityAnimation */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Opacity/OpacityAnimation.js");
+const OpacityRandom_1 = __webpack_require__(/*! ./OpacityRandom */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Opacity/OpacityRandom.js");
+class Opacity {
+    constructor() {
+        this.animation = new OpacityAnimation_1.OpacityAnimation();
+        this.random = new OpacityRandom_1.OpacityRandom();
+        this.value = 1;
+    }
+    get anim() {
+        return this.animation;
+    }
+    set anim(value) {
+        this.animation = value;
+    }
+    load(data) {
+        var _a;
+        if (data === undefined) {
+            return;
+        }
+        this.animation.load((_a = data.animation) !== null && _a !== void 0 ? _a : data.anim);
+        if (data.random !== undefined) {
+            if (typeof data.random === "boolean") {
+                this.random.enable = data.random;
+            }
+            else {
+                this.random.load(data.random);
+            }
+        }
+        if (data.value !== undefined) {
+            this.value = data.value;
+        }
+    }
+}
+exports.Opacity = Opacity;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Opacity/OpacityAnimation.js":
+/*!*********************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Opacity/OpacityAnimation.js ***!
+  \*********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OpacityAnimation = void 0;
+class OpacityAnimation {
+    constructor() {
+        this.enable = false;
+        this.minimumValue = 0;
+        this.speed = 2;
+        this.sync = false;
+    }
+    get opacity_min() {
+        return this.minimumValue;
+    }
+    set opacity_min(value) {
+        this.minimumValue = value;
+    }
+    load(data) {
+        var _a;
+        if (data === undefined) {
+            return;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        const minimumValue = (_a = data.minimumValue) !== null && _a !== void 0 ? _a : data.opacity_min;
+        if (minimumValue !== undefined) {
+            this.minimumValue = minimumValue;
+        }
+        if (data.speed !== undefined) {
+            this.speed = data.speed;
+        }
+        if (data.sync !== undefined) {
+            this.sync = data.sync;
+        }
+    }
+}
+exports.OpacityAnimation = OpacityAnimation;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Opacity/OpacityRandom.js":
+/*!******************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Opacity/OpacityRandom.js ***!
+  \******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OpacityRandom = void 0;
+class OpacityRandom {
+    constructor() {
+        this.enable = false;
+        this.minimumValue = 1;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        if (data.minimumValue !== undefined) {
+            this.minimumValue = data.minimumValue;
+        }
+    }
+}
+exports.OpacityRandom = OpacityRandom;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Particles.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Particles.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Particles = void 0;
+const Links_1 = __webpack_require__(/*! ./Links/Links */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Links/Links.js");
+const Move_1 = __webpack_require__(/*! ./Move */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Move.js");
+const ParticlesNumber_1 = __webpack_require__(/*! ./ParticlesNumber */ "./node_modules/tsparticles/dist/Options/Classes/Particles/ParticlesNumber.js");
+const Opacity_1 = __webpack_require__(/*! ./Opacity/Opacity */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Opacity/Opacity.js");
+const Shape_1 = __webpack_require__(/*! ./Shape/Shape */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Shape/Shape.js");
+const Size_1 = __webpack_require__(/*! ./Size/Size */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Size/Size.js");
+const Rotate_1 = __webpack_require__(/*! ./Rotate/Rotate */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Rotate/Rotate.js");
+const Shadow_1 = __webpack_require__(/*! ./Shadow */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Shadow.js");
+const Stroke_1 = __webpack_require__(/*! ./Stroke */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Stroke.js");
+const Collisions_1 = __webpack_require__(/*! ./Collisions */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Collisions.js");
+const Twinkle_1 = __webpack_require__(/*! ./Twinkle/Twinkle */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Twinkle/Twinkle.js");
+const AnimatableColor_1 = __webpack_require__(/*! ./AnimatableColor */ "./node_modules/tsparticles/dist/Options/Classes/Particles/AnimatableColor.js");
+class Particles {
+    constructor() {
+        this.collisions = new Collisions_1.Collisions();
+        this.color = new AnimatableColor_1.AnimatableColor();
+        this.links = new Links_1.Links();
+        this.move = new Move_1.Move();
+        this.number = new ParticlesNumber_1.ParticlesNumber();
+        this.opacity = new Opacity_1.Opacity();
+        this.rotate = new Rotate_1.Rotate();
+        this.shadow = new Shadow_1.Shadow();
+        this.shape = new Shape_1.Shape();
+        this.size = new Size_1.Size();
+        this.stroke = new Stroke_1.Stroke();
+        this.twinkle = new Twinkle_1.Twinkle();
+    }
+    get line_linked() {
+        return this.links;
+    }
+    set line_linked(value) {
+        this.links = value;
+    }
+    get lineLinked() {
+        return this.links;
+    }
+    set lineLinked(value) {
+        this.links = value;
+    }
+    load(data) {
+        var _a, _b, _c, _d, _e, _f, _g;
+        if (data === undefined) {
+            return;
+        }
+        if (data.color !== undefined) {
+            this.color = AnimatableColor_1.AnimatableColor.create(this.color, data.color);
+        }
+        const links = (_b = (_a = data.links) !== null && _a !== void 0 ? _a : data.lineLinked) !== null && _b !== void 0 ? _b : data.line_linked;
+        if (links !== undefined) {
+            this.links.load(links);
+        }
+        this.move.load(data.move);
+        this.number.load(data.number);
+        this.opacity.load(data.opacity);
+        this.rotate.load(data.rotate);
+        this.shape.load(data.shape);
+        this.size.load(data.size);
+        this.shadow.load(data.shadow);
+        this.twinkle.load(data.twinkle);
+        const collisions = (_d = (_c = data.move) === null || _c === void 0 ? void 0 : _c.collisions) !== null && _d !== void 0 ? _d : (_e = data.move) === null || _e === void 0 ? void 0 : _e.bounce;
+        if (collisions !== undefined) {
+            this.collisions.enable = collisions;
+        }
+        this.collisions.load(data.collisions);
+        const strokeToLoad = (_f = data.stroke) !== null && _f !== void 0 ? _f : (_g = data.shape) === null || _g === void 0 ? void 0 : _g.stroke;
+        if (strokeToLoad === undefined) {
+            return;
+        }
+        if (strokeToLoad instanceof Array) {
+            this.stroke = strokeToLoad.map((s) => {
+                const tmp = new Stroke_1.Stroke();
+                tmp.load(s);
+                return tmp;
+            });
+        }
+        else {
+            if (this.stroke instanceof Array) {
+                this.stroke = new Stroke_1.Stroke();
+            }
+            this.stroke.load(strokeToLoad);
+        }
+    }
+}
+exports.Particles = Particles;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/ParticlesNumber.js":
+/*!************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/ParticlesNumber.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ParticlesNumber = void 0;
+const Density_1 = __webpack_require__(/*! ./Density */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Density.js");
+class ParticlesNumber {
+    constructor() {
+        this.density = new Density_1.Density();
+        this.limit = 0;
+        this.value = 100;
+    }
+    get max() {
+        return this.limit;
+    }
+    set max(value) {
+        this.limit = value;
+    }
+    load(data) {
+        var _a;
+        if (data === undefined) {
+            return;
+        }
+        this.density.load(data.density);
+        const limit = (_a = data.limit) !== null && _a !== void 0 ? _a : data.max;
+        if (limit !== undefined) {
+            this.limit = limit;
+        }
+        if (data.value !== undefined) {
+            this.value = data.value;
+        }
+    }
+}
+exports.ParticlesNumber = ParticlesNumber;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Rotate/Rotate.js":
+/*!**********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Rotate/Rotate.js ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Rotate = void 0;
+const RotateAnimation_1 = __webpack_require__(/*! ./RotateAnimation */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Rotate/RotateAnimation.js");
+const Enums_1 = __webpack_require__(/*! ../../../../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+class Rotate {
+    constructor() {
+        this.animation = new RotateAnimation_1.RotateAnimation();
+        this.direction = Enums_1.RotateDirection.clockwise;
+        this.random = false;
+        this.value = 0;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        this.animation.load(data.animation);
+        if (data.random !== undefined) {
+            this.random = data.random;
+        }
+        if (data.direction !== undefined) {
+            this.direction = data.direction;
+        }
+        if (data.value !== undefined) {
+            this.value = data.value;
+        }
+    }
+}
+exports.Rotate = Rotate;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Rotate/RotateAnimation.js":
+/*!*******************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Rotate/RotateAnimation.js ***!
+  \*******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RotateAnimation = void 0;
+class RotateAnimation {
+    constructor() {
+        this.enable = false;
+        this.speed = 0;
+        this.sync = false;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        if (data.speed !== undefined) {
+            this.speed = data.speed;
+        }
+        if (data.sync !== undefined) {
+            this.sync = data.sync;
+        }
+    }
+}
+exports.RotateAnimation = RotateAnimation;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Shadow.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Shadow.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Shadow = void 0;
+const OptionsColor_1 = __webpack_require__(/*! ../OptionsColor */ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js");
+class Shadow {
+    constructor() {
+        this.blur = 0;
+        this.color = new OptionsColor_1.OptionsColor();
+        this.enable = false;
+        this.offset = {
+            x: 0,
+            y: 0,
+        };
+        this.color.value = "#000000";
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.blur !== undefined) {
+            this.blur = data.blur;
+        }
+        this.color = OptionsColor_1.OptionsColor.create(this.color, data.color);
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        if (data.offset === undefined) {
+            return;
+        }
+        if (data.offset.x !== undefined) {
+            this.offset.x = data.offset.x;
+        }
+        if (data.offset.y !== undefined) {
+            this.offset.y = data.offset.y;
+        }
+    }
+}
+exports.Shadow = Shadow;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Shape/Shape.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Shape/Shape.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Shape = void 0;
+const Enums_1 = __webpack_require__(/*! ../../../../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+const Utils_1 = __webpack_require__(/*! ../../../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+class Shape {
+    constructor() {
+        this.options = {};
+        this.type = Enums_1.ShapeType.circle;
+    }
+    get image() {
+        var _a;
+        return ((_a = this.options[Enums_1.ShapeType.image]) !== null && _a !== void 0 ? _a : this.options[Enums_1.ShapeType.images]);
+    }
+    set image(value) {
+        this.options[Enums_1.ShapeType.image] = value;
+        this.options[Enums_1.ShapeType.images] = value;
+    }
+    get custom() {
+        return this.options;
+    }
+    set custom(value) {
+        this.options = value;
+    }
+    get images() {
+        return this.image instanceof Array ? this.image : [this.image];
+    }
+    set images(value) {
+        this.image = value;
+    }
+    get stroke() {
+        return [];
+    }
+    set stroke(_value) {
+    }
+    get character() {
+        var _a;
+        return ((_a = this.options[Enums_1.ShapeType.character]) !== null && _a !== void 0 ? _a : this.options[Enums_1.ShapeType.char]);
+    }
+    set character(value) {
+        this.options[Enums_1.ShapeType.character] = value;
+        this.options[Enums_1.ShapeType.char] = value;
+    }
+    get polygon() {
+        var _a;
+        return ((_a = this.options[Enums_1.ShapeType.polygon]) !== null && _a !== void 0 ? _a : this.options[Enums_1.ShapeType.star]);
+    }
+    set polygon(value) {
+        this.options[Enums_1.ShapeType.polygon] = value;
+        this.options[Enums_1.ShapeType.star] = value;
+    }
+    load(data) {
+        var _a, _b, _c;
+        if (data === undefined) {
+            return;
+        }
+        const options = (_a = data.options) !== null && _a !== void 0 ? _a : data.custom;
+        if (options !== undefined) {
+            for (const shape in options) {
+                const item = options[shape];
+                if (item !== undefined) {
+                    this.options[shape] = Utils_1.Utils.deepExtend((_b = this.options[shape]) !== null && _b !== void 0 ? _b : {}, item);
+                }
+            }
+        }
+        this.loadShape(data.character, Enums_1.ShapeType.character, Enums_1.ShapeType.char, true);
+        this.loadShape(data.polygon, Enums_1.ShapeType.polygon, Enums_1.ShapeType.star, false);
+        this.loadShape((_c = data.image) !== null && _c !== void 0 ? _c : data.images, Enums_1.ShapeType.image, Enums_1.ShapeType.images, true);
+        if (data.type !== undefined) {
+            this.type = data.type;
+        }
+    }
+    loadShape(item, mainKey, altKey, altOverride) {
+        var _a, _b, _c, _d;
+        if (item === undefined) {
+            return;
+        }
+        if (item instanceof Array) {
+            if (!(this.options[mainKey] instanceof Array)) {
+                this.options[mainKey] = [];
+                if (!this.options[altKey] || altOverride) {
+                    this.options[altKey] = [];
+                }
+            }
+            this.options[mainKey] = Utils_1.Utils.deepExtend((_a = this.options[mainKey]) !== null && _a !== void 0 ? _a : [], item);
+            if (!this.options[altKey] || altOverride) {
+                this.options[altKey] = Utils_1.Utils.deepExtend((_b = this.options[altKey]) !== null && _b !== void 0 ? _b : [], item);
+            }
+        }
+        else {
+            if (this.options[mainKey] instanceof Array) {
+                this.options[mainKey] = {};
+                if (!this.options[altKey] || altOverride) {
+                    this.options[altKey] = {};
+                }
+            }
+            this.options[mainKey] = Utils_1.Utils.deepExtend((_c = this.options[mainKey]) !== null && _c !== void 0 ? _c : {}, item);
+            if (!this.options[altKey] || altOverride) {
+                this.options[altKey] = Utils_1.Utils.deepExtend((_d = this.options[altKey]) !== null && _d !== void 0 ? _d : {}, item);
+            }
+        }
+    }
+}
+exports.Shape = Shape;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Size/Size.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Size/Size.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Size = void 0;
+const SizeAnimation_1 = __webpack_require__(/*! ./SizeAnimation */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Size/SizeAnimation.js");
+const SizeRandom_1 = __webpack_require__(/*! ./SizeRandom */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Size/SizeRandom.js");
+class Size {
+    constructor() {
+        this.animation = new SizeAnimation_1.SizeAnimation();
+        this.random = new SizeRandom_1.SizeRandom();
+        this.value = 3;
+    }
+    get anim() {
+        return this.animation;
+    }
+    set anim(value) {
+        this.animation = value;
+    }
+    load(data) {
+        var _a;
+        if (data === undefined) {
+            return;
+        }
+        const animation = (_a = data.animation) !== null && _a !== void 0 ? _a : data.anim;
+        if (animation !== undefined) {
+            this.animation.load(animation);
+        }
+        if (data.random !== undefined) {
+            if (typeof data.random === "boolean") {
+                this.random.enable = data.random;
+            }
+            else {
+                this.random.load(data.random);
+            }
+        }
+        if (data.value !== undefined) {
+            this.value = data.value;
+        }
+    }
+}
+exports.Size = Size;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Size/SizeAnimation.js":
+/*!***************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Size/SizeAnimation.js ***!
+  \***************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SizeAnimation = void 0;
+const Enums_1 = __webpack_require__(/*! ../../../../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+class SizeAnimation {
+    constructor() {
+        this.destroy = Enums_1.DestroyType.none;
+        this.enable = false;
+        this.minimumValue = 0;
+        this.speed = 5;
+        this.startValue = Enums_1.StartValueType.max;
+        this.sync = false;
+    }
+    get size_min() {
+        return this.minimumValue;
+    }
+    set size_min(value) {
+        this.minimumValue = value;
+    }
+    load(data) {
+        var _a;
+        if (data === undefined) {
+            return;
+        }
+        if (data.destroy !== undefined) {
+            this.destroy = data.destroy;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        const minimumValue = (_a = data.minimumValue) !== null && _a !== void 0 ? _a : data.size_min;
+        if (minimumValue !== undefined) {
+            this.minimumValue = minimumValue;
+        }
+        if (data.speed !== undefined) {
+            this.speed = data.speed;
+        }
+        if (data.startValue !== undefined) {
+            this.startValue = data.startValue;
+        }
+        if (data.sync !== undefined) {
+            this.sync = data.sync;
+        }
+    }
+}
+exports.SizeAnimation = SizeAnimation;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Size/SizeRandom.js":
+/*!************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Size/SizeRandom.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SizeRandom = void 0;
+class SizeRandom {
+    constructor() {
+        this.enable = false;
+        this.minimumValue = 1;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        if (data.minimumValue !== undefined) {
+            this.minimumValue = data.minimumValue;
+        }
+    }
+}
+exports.SizeRandom = SizeRandom;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Stroke.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Stroke.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Stroke = void 0;
+const OptionsColor_1 = __webpack_require__(/*! ../OptionsColor */ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js");
+class Stroke {
+    constructor() {
+        this.color = new OptionsColor_1.OptionsColor();
+        this.width = 0;
+        this.opacity = 1;
+        this.color.value = "#ff0000";
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        this.color = OptionsColor_1.OptionsColor.create(this.color, data.color);
+        if (data.width !== undefined) {
+            this.width = data.width;
+        }
+        if (data.opacity !== undefined) {
+            this.opacity = data.opacity;
+        }
+    }
+}
+exports.Stroke = Stroke;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Trail.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Trail.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Trail = void 0;
+const OptionsColor_1 = __webpack_require__(/*! ../OptionsColor */ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js");
+class Trail {
+    constructor() {
+        this.enable = false;
+        this.length = 10;
+        this.fillColor = new OptionsColor_1.OptionsColor();
+        this.fillColor.value = "#000000";
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        this.fillColor = OptionsColor_1.OptionsColor.create(this.fillColor, data.fillColor);
+        if (data.length !== undefined) {
+            this.length = data.length;
+        }
+    }
+}
+exports.Trail = Trail;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Twinkle/Twinkle.js":
+/*!************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Twinkle/Twinkle.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Twinkle = void 0;
+const TwinkleValues_1 = __webpack_require__(/*! ./TwinkleValues */ "./node_modules/tsparticles/dist/Options/Classes/Particles/Twinkle/TwinkleValues.js");
+class Twinkle {
+    constructor() {
+        this.lines = new TwinkleValues_1.TwinkleValues();
+        this.particles = new TwinkleValues_1.TwinkleValues();
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        this.lines.load(data.lines);
+        this.particles.load(data.particles);
+    }
+}
+exports.Twinkle = Twinkle;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Options/Classes/Particles/Twinkle/TwinkleValues.js":
+/*!******************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Options/Classes/Particles/Twinkle/TwinkleValues.js ***!
+  \******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TwinkleValues = void 0;
+const OptionsColor_1 = __webpack_require__(/*! ../../OptionsColor */ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js");
+class TwinkleValues {
+    constructor() {
+        this.enable = false;
+        this.frequency = 0.05;
+        this.opacity = 1;
+    }
+    load(data) {
+        if (data === undefined) {
+            return;
+        }
+        if (data.color !== undefined) {
+            this.color = OptionsColor_1.OptionsColor.create(this.color, data.color);
+        }
+        if (data.enable !== undefined) {
+            this.enable = data.enable;
+        }
+        if (data.frequency !== undefined) {
+            this.frequency = data.frequency;
+        }
+        if (data.opacity !== undefined) {
+            this.opacity = data.opacity;
+        }
+    }
+}
+exports.TwinkleValues = TwinkleValues;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Absorbers/AbsorberInstance.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Absorbers/AbsorberInstance.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AbsorberInstance = void 0;
+const Utils_1 = __webpack_require__(/*! ../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+class AbsorberInstance {
+    constructor(absorbers, container, options, position) {
+        var _a, _b;
+        this.absorbers = absorbers;
+        this.container = container;
+        this.initialPosition = position;
+        this.options = options;
+        let size = options.size.value * container.retina.pixelRatio;
+        const random = typeof options.size.random === "boolean" ? options.size.random : options.size.random.enable;
+        const minSize = typeof options.size.random === "boolean" ? 1 : options.size.random.minimumValue;
+        if (random) {
+            size = Utils_1.Utils.randomInRange(minSize, size);
+        }
+        this.opacity = this.options.opacity;
+        this.size = size * container.retina.pixelRatio;
+        this.mass = this.size * options.size.density;
+        const limit = options.size.limit;
+        this.limit = limit !== undefined ? limit * container.retina.pixelRatio : limit;
+        const color = typeof options.color === "string" ? { value: options.color } : options.color;
+        this.color = (_a = Utils_1.ColorUtils.colorToRgb(color)) !== null && _a !== void 0 ? _a : {
+            b: 0,
+            g: 0,
+            r: 0,
+        };
+        this.position = (_b = this.initialPosition) !== null && _b !== void 0 ? _b : this.calcPosition();
+    }
+    attract(particle) {
+        const pos = particle.getPosition();
+        const { dx, dy, distance } = Utils_1.Utils.getDistances(this.position, pos);
+        const angle = Math.atan2(dx, dy) * (180 / Math.PI);
+        const acceleration = this.mass / Math.pow(distance, 2);
+        if (distance < this.size + particle.size.value) {
+            const sizeFactor = particle.size.value * 0.033;
+            if (this.size > particle.size.value && distance < this.size - particle.size.value) {
+                particle.destroy();
+            }
+            else {
+                particle.size.value -= sizeFactor;
+                particle.velocity.horizontal += Math.sin(angle * (Math.PI / 180)) * acceleration;
+                particle.velocity.vertical += Math.cos(angle * (Math.PI / 180)) * acceleration;
+            }
+            if (this.limit === undefined || this.size < this.limit) {
+                this.size += sizeFactor;
+            }
+            this.mass += sizeFactor * this.options.size.density;
+        }
+        else {
+            particle.velocity.horizontal += Math.sin(angle * (Math.PI / 180)) * acceleration;
+            particle.velocity.vertical += Math.cos(angle * (Math.PI / 180)) * acceleration;
+        }
+    }
+    resize() {
+        const initialPosition = this.initialPosition;
+        this.position =
+            initialPosition && Utils_1.Utils.isPointInside(initialPosition, this.container.canvas.size)
+                ? initialPosition
+                : this.calcPosition();
+    }
+    draw(context) {
+        context.translate(this.position.x, this.position.y);
+        context.beginPath();
+        context.arc(0, 0, this.size, 0, Math.PI * 2, false);
+        context.closePath();
+        context.fillStyle = Utils_1.ColorUtils.getStyleFromRgb(this.color, this.opacity);
+        context.fill();
+    }
+    calcPosition() {
+        var _a;
+        const container = this.container;
+        const percentPosition = (_a = this.options.position) !== null && _a !== void 0 ? _a : {
+            x: Math.random() * 100,
+            y: Math.random() * 100,
+        };
+        return {
+            x: (percentPosition.x / 100) * container.canvas.size.width,
+            y: (percentPosition.y / 100) * container.canvas.size.height,
+        };
+    }
+}
+exports.AbsorberInstance = AbsorberInstance;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Absorbers/Absorbers.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Absorbers/Absorbers.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Absorbers = void 0;
+const AbsorberInstance_1 = __webpack_require__(/*! ./AbsorberInstance */ "./node_modules/tsparticles/dist/Plugins/Absorbers/AbsorberInstance.js");
+const Utils_1 = __webpack_require__(/*! ../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const Absorber_1 = __webpack_require__(/*! ./Options/Classes/Absorber */ "./node_modules/tsparticles/dist/Plugins/Absorbers/Options/Classes/Absorber.js");
+const Enums_1 = __webpack_require__(/*! ./Enums */ "./node_modules/tsparticles/dist/Plugins/Absorbers/Enums/index.js");
+class Absorbers {
+    constructor(container) {
+        this.container = container;
+        this.array = [];
+        this.absorbers = [];
+        this.interactivityAbsorbers = [];
+    }
+    init(options) {
+        var _a, _b;
+        if (!options) {
+            return;
+        }
+        if (options.absorbers) {
+            if (options.absorbers instanceof Array) {
+                this.absorbers = options.absorbers.map((s) => {
+                    const tmp = new Absorber_1.Absorber();
+                    tmp.load(s);
+                    return tmp;
+                });
+            }
+            else {
+                if (this.absorbers instanceof Array) {
+                    this.absorbers = new Absorber_1.Absorber();
+                }
+                this.absorbers.load(options.absorbers);
+            }
+        }
+        const interactivityAbsorbers = (_b = (_a = options.interactivity) === null || _a === void 0 ? void 0 : _a.modes) === null || _b === void 0 ? void 0 : _b.absorbers;
+        if (interactivityAbsorbers) {
+            if (interactivityAbsorbers instanceof Array) {
+                this.interactivityAbsorbers = interactivityAbsorbers.map((s) => {
+                    const tmp = new Absorber_1.Absorber();
+                    tmp.load(s);
+                    return tmp;
+                });
+            }
+            else {
+                if (this.interactivityAbsorbers instanceof Array) {
+                    this.interactivityAbsorbers = new Absorber_1.Absorber();
+                }
+                this.interactivityAbsorbers.load(interactivityAbsorbers);
+            }
+        }
+        if (this.absorbers instanceof Array) {
+            for (const absorberOptions of this.absorbers) {
+                const absorber = new AbsorberInstance_1.AbsorberInstance(this, this.container, absorberOptions);
+                this.addAbsorber(absorber);
+            }
+        }
+        else {
+            const absorberOptions = this.absorbers;
+            const absorber = new AbsorberInstance_1.AbsorberInstance(this, this.container, absorberOptions);
+            this.addAbsorber(absorber);
+        }
+    }
+    particleUpdate(particle) {
+        for (const absorber of this.array) {
+            absorber.attract(particle);
+            if (particle.destroyed) {
+                break;
+            }
+        }
+    }
+    draw(context) {
+        for (const absorber of this.array) {
+            context.save();
+            absorber.draw(context);
+            context.restore();
+        }
+    }
+    stop() {
+        this.array = [];
+    }
+    resize() {
+        for (const absorber of this.array) {
+            absorber.resize();
+        }
+    }
+    handleClickMode(mode) {
+        const container = this.container;
+        const absorberOptions = this.absorbers;
+        const modeAbsorbers = this.interactivityAbsorbers;
+        if (mode === Enums_1.AbsorberClickMode.absorber) {
+            let absorbersModeOptions;
+            if (modeAbsorbers instanceof Array) {
+                if (modeAbsorbers.length > 0) {
+                    absorbersModeOptions = Utils_1.Utils.itemFromArray(modeAbsorbers);
+                }
+            }
+            else {
+                absorbersModeOptions = modeAbsorbers;
+            }
+            const absorbersOptions = absorbersModeOptions !== null && absorbersModeOptions !== void 0 ? absorbersModeOptions : (absorberOptions instanceof Array ? Utils_1.Utils.itemFromArray(absorberOptions) : absorberOptions);
+            const aPosition = container.interactivity.mouse.clickPosition;
+            const absorber = new AbsorberInstance_1.AbsorberInstance(this, this.container, absorbersOptions, aPosition);
+            this.addAbsorber(absorber);
+        }
+    }
+    addAbsorber(absorber) {
+        this.array.push(absorber);
+    }
+    removeAbsorber(absorber) {
+        const index = this.array.indexOf(absorber);
+        if (index >= 0) {
+            this.array.splice(index, 1);
+        }
+    }
+}
+exports.Absorbers = Absorbers;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Absorbers/AbsorbersPlugin.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Absorbers/AbsorbersPlugin.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AbsorbersPlugin = void 0;
+const Absorbers_1 = __webpack_require__(/*! ./Absorbers */ "./node_modules/tsparticles/dist/Plugins/Absorbers/Absorbers.js");
+const Utils_1 = __webpack_require__(/*! ../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const Enums_1 = __webpack_require__(/*! ./Enums */ "./node_modules/tsparticles/dist/Plugins/Absorbers/Enums/index.js");
+const Absorber_1 = __webpack_require__(/*! ./Options/Classes/Absorber */ "./node_modules/tsparticles/dist/Plugins/Absorbers/Options/Classes/Absorber.js");
+class AbsorbersPlugin {
+    constructor() {
+        this.id = "absorbers";
+    }
+    getPlugin(container) {
+        return new Absorbers_1.Absorbers(container);
+    }
+    needsPlugin(options) {
+        var _a, _b, _c;
+        if (!(options === null || options === void 0 ? void 0 : options.absorbers)) {
+            return false;
+        }
+        const absorbers = options.absorbers;
+        let loadAbsorbers = false;
+        if (absorbers instanceof Array) {
+            if (absorbers.length) {
+                loadAbsorbers = true;
+            }
+        }
+        else if (absorbers !== undefined) {
+            loadAbsorbers = true;
+        }
+        else if (((_c = (_b = (_a = options.interactivity) === null || _a === void 0 ? void 0 : _a.events) === null || _b === void 0 ? void 0 : _b.onClick) === null || _c === void 0 ? void 0 : _c.mode) &&
+            Utils_1.Utils.isInArray(Enums_1.AbsorberClickMode.absorber, options.interactivity.events.onClick.mode)) {
+            loadAbsorbers = true;
+        }
+        return loadAbsorbers;
+    }
+    loadOptions(options, source) {
+        var _a, _b;
+        if (!this.needsPlugin(source)) {
+            return;
+        }
+        const optionsCast = options;
+        if (optionsCast.absorbers === undefined) {
+            optionsCast.absorbers = new Absorber_1.Absorber();
+        }
+        if (source === null || source === void 0 ? void 0 : source.absorbers) {
+            if ((source === null || source === void 0 ? void 0 : source.absorbers) instanceof Array) {
+                optionsCast.absorbers = source === null || source === void 0 ? void 0 : source.absorbers.map((s) => {
+                    const tmp = new Absorber_1.Absorber();
+                    tmp.load(s);
+                    return tmp;
+                });
+            }
+            else {
+                if (optionsCast.absorbers instanceof Array) {
+                    optionsCast.absorbers = new Absorber_1.Absorber();
+                }
+                optionsCast.absorbers.load(source === null || source === void 0 ? void 0 : source.absorbers);
+            }
+        }
+        const interactivityAbsorbers = (_b = (_a = source === null || source === void 0 ? void 0 : source.interactivity) === null || _a === void 0 ? void 0 : _a.modes) === null || _b === void 0 ? void 0 : _b.absorbers;
+        if (interactivityAbsorbers) {
+            if (interactivityAbsorbers instanceof Array) {
+                optionsCast.interactivity.modes.absorbers = interactivityAbsorbers.map((s) => {
+                    const tmp = new Absorber_1.Absorber();
+                    tmp.load(s);
+                    return tmp;
+                });
+            }
+            else {
+                if (optionsCast.interactivity.modes.absorbers instanceof Array ||
+                    optionsCast.interactivity.modes.absorbers === undefined) {
+                    optionsCast.interactivity.modes.absorbers = new Absorber_1.Absorber();
+                }
+                optionsCast.interactivity.modes.absorbers.load(interactivityAbsorbers);
+            }
+        }
+    }
+}
+const plugin = new AbsorbersPlugin();
+exports.AbsorbersPlugin = plugin;
+__exportStar(__webpack_require__(/*! ./Enums */ "./node_modules/tsparticles/dist/Plugins/Absorbers/Enums/index.js"), exports);
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Absorbers/Enums/AbsorberClickMode.js":
+/*!************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Absorbers/Enums/AbsorberClickMode.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AbsorberClickMode = void 0;
+var AbsorberClickMode;
+(function (AbsorberClickMode) {
+    AbsorberClickMode["absorber"] = "absorber";
+})(AbsorberClickMode = exports.AbsorberClickMode || (exports.AbsorberClickMode = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Absorbers/Enums/index.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Absorbers/Enums/index.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AbsorberClickMode = void 0;
+const AbsorberClickMode_1 = __webpack_require__(/*! ./AbsorberClickMode */ "./node_modules/tsparticles/dist/Plugins/Absorbers/Enums/AbsorberClickMode.js");
+Object.defineProperty(exports, "AbsorberClickMode", { enumerable: true, get: function () { return AbsorberClickMode_1.AbsorberClickMode; } });
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Absorbers/Options/Classes/Absorber.js":
+/*!*************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Absorbers/Options/Classes/Absorber.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Absorber = void 0;
+const AbsorberSize_1 = __webpack_require__(/*! ./AbsorberSize */ "./node_modules/tsparticles/dist/Plugins/Absorbers/Options/Classes/AbsorberSize.js");
+const OptionsColor_1 = __webpack_require__(/*! ../../../../Options/Classes/OptionsColor */ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js");
+class Absorber {
+    constructor() {
+        this.color = new OptionsColor_1.OptionsColor();
+        this.color.value = "#000000";
+        this.opacity = 1;
+        this.size = new AbsorberSize_1.AbsorberSize();
+    }
+    load(data) {
+        if (data !== undefined) {
+            if (data.color !== undefined) {
+                this.color = OptionsColor_1.OptionsColor.create(this.color, data.color);
+            }
+            if (data.opacity !== undefined) {
+                this.opacity = data.opacity;
+            }
+            if (data.position !== undefined) {
+                this.position = {
+                    x: data.position.x,
+                    y: data.position.y,
+                };
+            }
+            if (data.size !== undefined) {
+                this.size.load(data.size);
+            }
+        }
+    }
+}
+exports.Absorber = Absorber;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Absorbers/Options/Classes/AbsorberRandomSize.js":
+/*!***********************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Absorbers/Options/Classes/AbsorberRandomSize.js ***!
+  \***********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AbsorberRandomSize = void 0;
+class AbsorberRandomSize {
+    constructor() {
+        this.enable = false;
+        this.minimumValue = 1;
+    }
+    load(data) {
+        if (data !== undefined) {
+            if (data.enable !== undefined) {
+                this.enable = data.enable;
+            }
+            if (data.minimumValue !== undefined) {
+                this.minimumValue = data.minimumValue;
+            }
+        }
+    }
+}
+exports.AbsorberRandomSize = AbsorberRandomSize;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Absorbers/Options/Classes/AbsorberSize.js":
+/*!*****************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Absorbers/Options/Classes/AbsorberSize.js ***!
+  \*****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AbsorberSize = void 0;
+const AbsorberRandomSize_1 = __webpack_require__(/*! ./AbsorberRandomSize */ "./node_modules/tsparticles/dist/Plugins/Absorbers/Options/Classes/AbsorberRandomSize.js");
+class AbsorberSize {
+    constructor() {
+        this.density = 5;
+        this.random = new AbsorberRandomSize_1.AbsorberRandomSize();
+        this.value = 50;
+    }
+    load(data) {
+        if (data !== undefined) {
+            if (data.density !== undefined) {
+                this.density = data.density;
+            }
+            if (data.value !== undefined) {
+                this.value = data.value;
+            }
+            if (data.random !== undefined) {
+                if (typeof data.random === "boolean") {
+                    this.random.load({ enable: data.random });
+                }
+                else {
+                    this.random.load(data.random);
+                }
+            }
+            if (data.limit !== undefined) {
+                this.limit = data.limit;
+            }
+        }
+    }
+}
+exports.AbsorberSize = AbsorberSize;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Emitters/EmitterInstance.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Emitters/EmitterInstance.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EmitterInstance = void 0;
+const Utils_1 = __webpack_require__(/*! ../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const Enums_1 = __webpack_require__(/*! ../../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+const EmitterSize_1 = __webpack_require__(/*! ./Options/Classes/EmitterSize */ "./node_modules/tsparticles/dist/Plugins/Emitters/Options/Classes/EmitterSize.js");
+class EmitterInstance {
+    constructor(emitters, container, emitterOptions, position) {
+        var _a, _b, _c;
+        this.emitters = emitters;
+        this.container = container;
+        this.initialPosition = position;
+        this.emitterOptions = Utils_1.Utils.deepExtend({}, emitterOptions);
+        this.position = (_a = this.initialPosition) !== null && _a !== void 0 ? _a : this.calcPosition();
+        let particlesOptions = Utils_1.Utils.deepExtend({}, this.emitterOptions.particles);
+        if (particlesOptions === undefined) {
+            particlesOptions = {};
+        }
+        if (particlesOptions.move === undefined) {
+            particlesOptions.move = {};
+        }
+        if (particlesOptions.move.direction === undefined) {
+            particlesOptions.move.direction = this.emitterOptions.direction;
+        }
+        this.particlesOptions = particlesOptions;
+        this.size = (_b = this.emitterOptions.size) !== null && _b !== void 0 ? _b : (() => {
+            const size = new EmitterSize_1.EmitterSize();
+            size.load({
+                height: 0,
+                mode: Enums_1.SizeMode.percent,
+                width: 0,
+            });
+            return size;
+        })();
+        this.lifeCount = (_c = this.emitterOptions.life.count) !== null && _c !== void 0 ? _c : -1;
+        this.play();
+    }
+    play() {
+        if (this.lifeCount > 0 || !this.emitterOptions.life.count) {
+            if (this.startInterval === undefined) {
+                this.startInterval = window.setInterval(() => {
+                    this.emit();
+                }, 1000 * this.emitterOptions.rate.delay);
+            }
+            if (this.lifeCount > 0) {
+                this.prepareToDie();
+            }
+        }
+    }
+    pause() {
+        const interval = this.startInterval;
+        if (interval !== undefined) {
+            clearInterval(interval);
+            delete this.startInterval;
+        }
+    }
+    resize() {
+        const initialPosition = this.initialPosition;
+        this.position =
+            initialPosition && Utils_1.Utils.isPointInside(initialPosition, this.container.canvas.size)
+                ? initialPosition
+                : this.calcPosition();
+    }
+    prepareToDie() {
+        var _a;
+        if (this.lifeCount > 0 && ((_a = this.emitterOptions.life) === null || _a === void 0 ? void 0 : _a.duration) !== undefined) {
+            window.setTimeout(() => {
+                var _a;
+                this.pause();
+                this.lifeCount--;
+                if (this.lifeCount > 0) {
+                    this.position = this.calcPosition();
+                    window.setTimeout(() => {
+                        this.play();
+                    }, (_a = this.emitterOptions.life.delay) !== null && _a !== void 0 ? _a : 0);
+                }
+                else {
+                    this.destroy();
+                }
+            }, this.emitterOptions.life.duration * 1000);
+        }
+    }
+    destroy() {
+        this.emitters.removeEmitter(this);
+    }
+    calcPosition() {
+        var _a;
+        const container = this.container;
+        const percentPosition = (_a = this.emitterOptions.position) !== null && _a !== void 0 ? _a : {
+            x: Math.random() * 100,
+            y: Math.random() * 100,
+        };
+        return {
+            x: (percentPosition.x / 100) * container.canvas.size.width,
+            y: (percentPosition.y / 100) * container.canvas.size.height,
+        };
+    }
+    emit() {
+        const container = this.container;
+        const position = this.position;
+        const offset = {
+            x: this.size.mode === Enums_1.SizeMode.percent
+                ? (container.canvas.size.width * this.size.width) / 100
+                : this.size.width,
+            y: this.size.mode === Enums_1.SizeMode.percent
+                ? (container.canvas.size.height * this.size.height) / 100
+                : this.size.height,
+        };
+        for (let i = 0; i < this.emitterOptions.rate.quantity; i++) {
+            container.particles.addParticle({
+                x: position.x + offset.x * (Math.random() - 0.5),
+                y: position.y + offset.y * (Math.random() - 0.5),
+            }, this.particlesOptions);
+        }
+    }
+}
+exports.EmitterInstance = EmitterInstance;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Emitters/Emitters.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Emitters/Emitters.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Emitters = void 0;
+const EmitterInstance_1 = __webpack_require__(/*! ./EmitterInstance */ "./node_modules/tsparticles/dist/Plugins/Emitters/EmitterInstance.js");
+const Utils_1 = __webpack_require__(/*! ../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const Emitter_1 = __webpack_require__(/*! ./Options/Classes/Emitter */ "./node_modules/tsparticles/dist/Plugins/Emitters/Options/Classes/Emitter.js");
+const Enums_1 = __webpack_require__(/*! ./Enums */ "./node_modules/tsparticles/dist/Plugins/Emitters/Enums/index.js");
+class Emitters {
+    constructor(container) {
+        this.container = container;
+        this.array = [];
+        this.emitters = [];
+        this.interactivityEmitters = [];
+    }
+    init(options) {
+        var _a, _b;
+        if (!options) {
+            return;
+        }
+        if (options.emitters) {
+            if (options.emitters instanceof Array) {
+                this.emitters = options.emitters.map((s) => {
+                    const tmp = new Emitter_1.Emitter();
+                    tmp.load(s);
+                    return tmp;
+                });
+            }
+            else {
+                if (this.emitters instanceof Array) {
+                    this.emitters = new Emitter_1.Emitter();
+                }
+                this.emitters.load(options.emitters);
+            }
+        }
+        const interactivityEmitters = (_b = (_a = options.interactivity) === null || _a === void 0 ? void 0 : _a.modes) === null || _b === void 0 ? void 0 : _b.emitters;
+        if (interactivityEmitters) {
+            if (interactivityEmitters instanceof Array) {
+                this.interactivityEmitters = interactivityEmitters.map((s) => {
+                    const tmp = new Emitter_1.Emitter();
+                    tmp.load(s);
+                    return tmp;
+                });
+            }
+            else {
+                if (this.interactivityEmitters instanceof Array) {
+                    this.interactivityEmitters = new Emitter_1.Emitter();
+                }
+                this.interactivityEmitters.load(interactivityEmitters);
+            }
+        }
+        if (this.emitters instanceof Array) {
+            for (const emitterOptions of this.emitters) {
+                const emitter = new EmitterInstance_1.EmitterInstance(this, this.container, emitterOptions);
+                this.addEmitter(emitter);
+            }
+        }
+        else {
+            const emitterOptions = this.emitters;
+            const emitter = new EmitterInstance_1.EmitterInstance(this, this.container, emitterOptions);
+            this.addEmitter(emitter);
+        }
+    }
+    play() {
+        for (const emitter of this.array) {
+            emitter.play();
+        }
+    }
+    pause() {
+        for (const emitter of this.array) {
+            emitter.pause();
+        }
+    }
+    stop() {
+        this.array = [];
+    }
+    handleClickMode(mode) {
+        const container = this.container;
+        const emitterOptions = this.emitters;
+        const modeEmitters = this.interactivityEmitters;
+        if (mode === Enums_1.EmitterClickMode.emitter) {
+            let emitterModeOptions;
+            if (modeEmitters instanceof Array) {
+                if (modeEmitters.length > 0) {
+                    emitterModeOptions = Utils_1.Utils.itemFromArray(modeEmitters);
+                }
+            }
+            else {
+                emitterModeOptions = modeEmitters;
+            }
+            const emittersOptions = emitterModeOptions !== null && emitterModeOptions !== void 0 ? emitterModeOptions : (emitterOptions instanceof Array ? Utils_1.Utils.itemFromArray(emitterOptions) : emitterOptions);
+            const ePosition = container.interactivity.mouse.clickPosition;
+            const emitter = new EmitterInstance_1.EmitterInstance(this, this.container, Utils_1.Utils.deepExtend({}, emittersOptions), ePosition);
+            this.addEmitter(emitter);
+        }
+    }
+    resize() {
+        for (const emitter of this.array) {
+            emitter.resize();
+        }
+    }
+    addEmitter(emitter) {
+        this.array.push(emitter);
+    }
+    removeEmitter(emitter) {
+        const index = this.array.indexOf(emitter);
+        if (index >= 0) {
+            this.array.splice(index, 1);
+        }
+    }
+}
+exports.Emitters = Emitters;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Emitters/EmittersPlugin.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Emitters/EmittersPlugin.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EmittersPlugin = void 0;
+const Utils_1 = __webpack_require__(/*! ../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const Emitters_1 = __webpack_require__(/*! ./Emitters */ "./node_modules/tsparticles/dist/Plugins/Emitters/Emitters.js");
+const Enums_1 = __webpack_require__(/*! ./Enums */ "./node_modules/tsparticles/dist/Plugins/Emitters/Enums/index.js");
+const Emitter_1 = __webpack_require__(/*! ./Options/Classes/Emitter */ "./node_modules/tsparticles/dist/Plugins/Emitters/Options/Classes/Emitter.js");
+class EmittersPlugin {
+    constructor() {
+        this.id = "emitters";
+    }
+    getPlugin(container) {
+        return new Emitters_1.Emitters(container);
+    }
+    needsPlugin(options) {
+        var _a, _b, _c;
+        if (!(options === null || options === void 0 ? void 0 : options.emitters)) {
+            return false;
+        }
+        const emitters = options.emitters;
+        let loadEmitters = false;
+        if (emitters instanceof Array) {
+            if (emitters.length) {
+                loadEmitters = true;
+            }
+        }
+        else if (emitters !== undefined) {
+            loadEmitters = true;
+        }
+        else if (((_c = (_b = (_a = options.interactivity) === null || _a === void 0 ? void 0 : _a.events) === null || _b === void 0 ? void 0 : _b.onClick) === null || _c === void 0 ? void 0 : _c.mode) &&
+            Utils_1.Utils.isInArray(Enums_1.EmitterClickMode.emitter, options.interactivity.events.onClick.mode)) {
+            loadEmitters = true;
+        }
+        return loadEmitters;
+    }
+    loadOptions(options, source) {
+        var _a, _b;
+        if (!this.needsPlugin(source)) {
+            return;
+        }
+        const optionsCast = options;
+        if (optionsCast.emitters === undefined) {
+            optionsCast.emitters = new Emitter_1.Emitter();
+        }
+        if (source === null || source === void 0 ? void 0 : source.emitters) {
+            if ((source === null || source === void 0 ? void 0 : source.emitters) instanceof Array) {
+                optionsCast.emitters = source === null || source === void 0 ? void 0 : source.emitters.map((s) => {
+                    const tmp = new Emitter_1.Emitter();
+                    tmp.load(s);
+                    return tmp;
+                });
+            }
+            else {
+                if (optionsCast.emitters instanceof Array) {
+                    optionsCast.emitters = new Emitter_1.Emitter();
+                }
+                optionsCast.emitters.load(source === null || source === void 0 ? void 0 : source.emitters);
+            }
+        }
+        const interactivityEmitters = (_b = (_a = source === null || source === void 0 ? void 0 : source.interactivity) === null || _a === void 0 ? void 0 : _a.modes) === null || _b === void 0 ? void 0 : _b.emitters;
+        if (interactivityEmitters) {
+            if (interactivityEmitters instanceof Array) {
+                optionsCast.interactivity.modes.emitters = interactivityEmitters.map((s) => {
+                    const tmp = new Emitter_1.Emitter();
+                    tmp.load(s);
+                    return tmp;
+                });
+            }
+            else {
+                if (optionsCast.interactivity.modes.emitters instanceof Array ||
+                    optionsCast.interactivity.modes.emitters === undefined) {
+                    optionsCast.interactivity.modes.emitters = new Emitter_1.Emitter();
+                }
+                optionsCast.interactivity.modes.emitters.load(interactivityEmitters);
+            }
+        }
+    }
+}
+const plugin = new EmittersPlugin();
+exports.EmittersPlugin = plugin;
+__exportStar(__webpack_require__(/*! ./Enums */ "./node_modules/tsparticles/dist/Plugins/Emitters/Enums/index.js"), exports);
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Emitters/Enums/EmitterClickMode.js":
+/*!**********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Emitters/Enums/EmitterClickMode.js ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EmitterClickMode = void 0;
+var EmitterClickMode;
+(function (EmitterClickMode) {
+    EmitterClickMode["emitter"] = "emitter";
+})(EmitterClickMode = exports.EmitterClickMode || (exports.EmitterClickMode = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Emitters/Enums/index.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Emitters/Enums/index.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EmitterClickMode = void 0;
+const EmitterClickMode_1 = __webpack_require__(/*! ./EmitterClickMode */ "./node_modules/tsparticles/dist/Plugins/Emitters/Enums/EmitterClickMode.js");
+Object.defineProperty(exports, "EmitterClickMode", { enumerable: true, get: function () { return EmitterClickMode_1.EmitterClickMode; } });
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Emitters/Options/Classes/Emitter.js":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Emitters/Options/Classes/Emitter.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Emitter = void 0;
+const Enums_1 = __webpack_require__(/*! ../../../../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+const EmitterRate_1 = __webpack_require__(/*! ./EmitterRate */ "./node_modules/tsparticles/dist/Plugins/Emitters/Options/Classes/EmitterRate.js");
+const EmitterLife_1 = __webpack_require__(/*! ./EmitterLife */ "./node_modules/tsparticles/dist/Plugins/Emitters/Options/Classes/EmitterLife.js");
+const Utils_1 = __webpack_require__(/*! ../../../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const EmitterSize_1 = __webpack_require__(/*! ./EmitterSize */ "./node_modules/tsparticles/dist/Plugins/Emitters/Options/Classes/EmitterSize.js");
+class Emitter {
+    constructor() {
+        this.direction = Enums_1.MoveDirection.none;
+        this.life = new EmitterLife_1.EmitterLife();
+        this.rate = new EmitterRate_1.EmitterRate();
+    }
+    load(data) {
+        if (data !== undefined) {
+            if (data.size !== undefined) {
+                if (this.size === undefined) {
+                    this.size = new EmitterSize_1.EmitterSize();
+                }
+                this.size.load(data.size);
+            }
+            if (data.direction !== undefined) {
+                this.direction = data.direction;
+            }
+            this.life.load(data.life);
+            if (data.particles !== undefined) {
+                this.particles = Utils_1.Utils.deepExtend({}, data.particles);
+            }
+            this.rate.load(data.rate);
+            if (data.position !== undefined) {
+                this.position = {
+                    x: data.position.x,
+                    y: data.position.y,
+                };
+            }
+        }
+    }
+}
+exports.Emitter = Emitter;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Emitters/Options/Classes/EmitterLife.js":
+/*!***************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Emitters/Options/Classes/EmitterLife.js ***!
+  \***************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EmitterLife = void 0;
+class EmitterLife {
+    load(data) {
+        if (data !== undefined) {
+            if (data.count !== undefined) {
+                this.count = data.count;
+            }
+            if (data.delay !== undefined) {
+                this.delay = data.delay;
+            }
+            if (data.duration !== undefined) {
+                this.duration = data.duration;
+            }
+        }
+    }
+}
+exports.EmitterLife = EmitterLife;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Emitters/Options/Classes/EmitterRate.js":
+/*!***************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Emitters/Options/Classes/EmitterRate.js ***!
+  \***************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EmitterRate = void 0;
+class EmitterRate {
+    constructor() {
+        this.quantity = 1;
+        this.delay = 0.1;
+    }
+    load(data) {
+        if (data !== undefined) {
+            if (data.quantity !== undefined) {
+                this.quantity = data.quantity;
+            }
+            if (data.delay !== undefined) {
+                this.delay = data.delay;
+            }
+        }
+    }
+}
+exports.EmitterRate = EmitterRate;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/Emitters/Options/Classes/EmitterSize.js":
+/*!***************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/Emitters/Options/Classes/EmitterSize.js ***!
+  \***************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EmitterSize = void 0;
+const Enums_1 = __webpack_require__(/*! ../../../../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+class EmitterSize {
+    constructor() {
+        this.mode = Enums_1.SizeMode.percent;
+        this.height = 0;
+        this.width = 0;
+    }
+    load(data) {
+        if (data !== undefined) {
+            if (data.mode !== undefined) {
+                this.mode = data.mode;
+            }
+            if (data.height !== undefined) {
+                this.height = data.height;
+            }
+            if (data.width !== undefined) {
+                this.width = data.width;
+            }
+        }
+    }
+}
+exports.EmitterSize = EmitterSize;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/InlineArrangement.js":
+/*!**************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/InlineArrangement.js ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.InlineArrangement = void 0;
+var InlineArrangement;
+(function (InlineArrangement) {
+    InlineArrangement["equidistant"] = "equidistant";
+    InlineArrangement["onePerPoint"] = "one-per-point";
+    InlineArrangement["perPoint"] = "per-point";
+    InlineArrangement["randomLength"] = "random-length";
+    InlineArrangement["randomPoint"] = "random-point";
+})(InlineArrangement = exports.InlineArrangement || (exports.InlineArrangement = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/MoveType.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/MoveType.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MoveType = void 0;
+var MoveType;
+(function (MoveType) {
+    MoveType["path"] = "path";
+    MoveType["radius"] = "radius";
+})(MoveType = exports.MoveType || (exports.MoveType = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/Type.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/Type.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Type = void 0;
+var Type;
+(function (Type) {
+    Type["inline"] = "inline";
+    Type["inside"] = "inside";
+    Type["outside"] = "outside";
+    Type["none"] = "none";
+})(Type = exports.Type || (exports.Type = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/index.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/index.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Type = exports.MoveType = exports.InlineArrangement = void 0;
+const InlineArrangement_1 = __webpack_require__(/*! ./InlineArrangement */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/InlineArrangement.js");
+Object.defineProperty(exports, "InlineArrangement", { enumerable: true, get: function () { return InlineArrangement_1.InlineArrangement; } });
+const MoveType_1 = __webpack_require__(/*! ./MoveType */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/MoveType.js");
+Object.defineProperty(exports, "MoveType", { enumerable: true, get: function () { return MoveType_1.MoveType; } });
+const Type_1 = __webpack_require__(/*! ./Type */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/Type.js");
+Object.defineProperty(exports, "Type", { enumerable: true, get: function () { return Type_1.Type; } });
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/Draw.js":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/Draw.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Draw = void 0;
+const DrawStroke_1 = __webpack_require__(/*! ./DrawStroke */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/DrawStroke.js");
+const OptionsColor_1 = __webpack_require__(/*! ../../../../Options/Classes/OptionsColor */ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js");
+class Draw {
+    constructor() {
+        this.enable = false;
+        this.stroke = new DrawStroke_1.DrawStroke();
+    }
+    get lineWidth() {
+        return this.stroke.width;
+    }
+    set lineWidth(value) {
+        this.stroke.width = value;
+    }
+    get lineColor() {
+        return this.stroke.color;
+    }
+    set lineColor(value) {
+        this.stroke.color = OptionsColor_1.OptionsColor.create(this.stroke.color, value);
+    }
+    load(data) {
+        var _a;
+        if (data !== undefined) {
+            if (data.enable !== undefined) {
+                this.enable = data.enable;
+            }
+            const stroke = (_a = data.stroke) !== null && _a !== void 0 ? _a : {
+                color: data.lineColor,
+                width: data.lineWidth,
+            };
+            this.stroke.load(stroke);
+        }
+    }
+}
+exports.Draw = Draw;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/DrawStroke.js":
+/*!*****************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/DrawStroke.js ***!
+  \*****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DrawStroke = void 0;
+const OptionsColor_1 = __webpack_require__(/*! ../../../../Options/Classes/OptionsColor */ "./node_modules/tsparticles/dist/Options/Classes/OptionsColor.js");
+const Utils_1 = __webpack_require__(/*! ../../../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+class DrawStroke {
+    constructor() {
+        this.color = new OptionsColor_1.OptionsColor();
+        this.width = 0.5;
+        this.opacity = 1;
+    }
+    load(data) {
+        var _a;
+        if (data !== undefined) {
+            this.color = OptionsColor_1.OptionsColor.create(this.color, data.color);
+            if (typeof this.color.value === "string") {
+                this.opacity = (_a = Utils_1.ColorUtils.stringToAlpha(this.color.value)) !== null && _a !== void 0 ? _a : this.opacity;
+            }
+            if (data.opacity !== undefined) {
+                this.opacity = data.opacity;
+            }
+            if (data.width !== undefined) {
+                this.width = data.width;
+            }
+        }
+    }
+}
+exports.DrawStroke = DrawStroke;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/Inline.js":
+/*!*************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/Inline.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Inline = void 0;
+const InlineArrangement_1 = __webpack_require__(/*! ../../Enums/InlineArrangement */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/InlineArrangement.js");
+class Inline {
+    constructor() {
+        this.arrangement = InlineArrangement_1.InlineArrangement.onePerPoint;
+    }
+    load(data) {
+        if (data !== undefined) {
+            if (data.arrangement !== undefined) {
+                this.arrangement = data.arrangement;
+            }
+        }
+    }
+}
+exports.Inline = Inline;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/LocalSvg.js":
+/*!***************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/LocalSvg.js ***!
+  \***************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LocalSvg = void 0;
+class LocalSvg {
+    constructor() {
+        this.path = [];
+        this.size = {
+            height: 0,
+            width: 0,
+        };
+    }
+    load(data) {
+        if (data !== undefined) {
+            if (data.path !== undefined) {
+                this.path = data.path;
+            }
+            if (data.size !== undefined) {
+                if (data.size.width !== undefined) {
+                    this.size.width = data.size.width;
+                }
+                if (data.size.height !== undefined) {
+                    this.size.height = data.size.height;
+                }
+            }
+        }
+    }
+}
+exports.LocalSvg = LocalSvg;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/Move.js":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/Move.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Move = void 0;
+const MoveType_1 = __webpack_require__(/*! ../../Enums/MoveType */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/MoveType.js");
+class Move {
+    constructor() {
+        this.radius = 10;
+        this.type = MoveType_1.MoveType.path;
+    }
+    load(data) {
+        if (data !== undefined) {
+            if (data.radius !== undefined) {
+                this.radius = data.radius;
+            }
+            if (data.type !== undefined) {
+                this.type = data.type;
+            }
+        }
+    }
+}
+exports.Move = Move;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/PolygonMask.js":
+/*!******************************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/PolygonMask.js ***!
+  \******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PolygonMask = void 0;
+const Type_1 = __webpack_require__(/*! ../../Enums/Type */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/Type.js");
+const Draw_1 = __webpack_require__(/*! ./Draw */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/Draw.js");
+const Move_1 = __webpack_require__(/*! ./Move */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/Move.js");
+const Inline_1 = __webpack_require__(/*! ./Inline */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/Inline.js");
+const LocalSvg_1 = __webpack_require__(/*! ./LocalSvg */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/LocalSvg.js");
+class PolygonMask {
+    constructor() {
+        this.draw = new Draw_1.Draw();
+        this.enable = false;
+        this.inline = new Inline_1.Inline();
+        this.move = new Move_1.Move();
+        this.scale = 1;
+        this.type = Type_1.Type.none;
+    }
+    get inlineArrangement() {
+        return this.inline.arrangement;
+    }
+    set inlineArrangement(value) {
+        this.inline.arrangement = value;
+    }
+    load(data) {
+        var _a;
+        if (data !== undefined) {
+            this.draw.load(data.draw);
+            const inline = (_a = data.inline) !== null && _a !== void 0 ? _a : {
+                arrangement: data.inlineArrangement,
+            };
+            if (inline !== undefined) {
+                this.inline.load(inline);
+            }
+            this.move.load(data.move);
+            if (data.scale !== undefined) {
+                this.scale = data.scale;
+            }
+            if (data.type !== undefined) {
+                this.type = data.type;
+            }
+            if (data.enable !== undefined) {
+                this.enable = data.enable;
+            }
+            else {
+                this.enable = this.type !== Type_1.Type.none;
+            }
+            if (data.url !== undefined) {
+                this.url = data.url;
+            }
+            if (data.data !== undefined) {
+                if (typeof data.data === "string") {
+                    this.data = data.data;
+                }
+                else {
+                    this.data = new LocalSvg_1.LocalSvg();
+                    this.data.load(data.data);
+                }
+            }
+            if (data.position !== undefined) {
+                this.position = {
+                    x: data.position.x,
+                    y: data.position.y,
+                };
+            }
+        }
+    }
+}
+exports.PolygonMask = PolygonMask;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/PolygonMask/PolygonMaskInstance.js":
+/*!**********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/PolygonMask/PolygonMaskInstance.js ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PolygonMaskInstance = void 0;
+const Enums_1 = __webpack_require__(/*! ./Enums */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/index.js");
+const Utils_1 = __webpack_require__(/*! ../../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const PolygonMask_1 = __webpack_require__(/*! ./Options/Classes/PolygonMask */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/PolygonMask.js");
+class PolygonMaskInstance {
+    constructor(container) {
+        this.container = container;
+        this.dimension = {
+            height: 0,
+            width: 0,
+        };
+        this.path2DSupported = !!window.Path2D;
+        this.options = new PolygonMask_1.PolygonMask();
+        this.polygonMaskMoveRadius = this.options.move.radius * container.retina.pixelRatio;
+    }
+    static polygonBounce(particle) {
+        particle.velocity.horizontal = particle.velocity.vertical / 2 - particle.velocity.horizontal;
+        particle.velocity.vertical = particle.velocity.horizontal / 2 - particle.velocity.vertical;
+    }
+    static drawPolygonMask(context, rawData, stroke) {
+        const color = Utils_1.ColorUtils.colorToRgb(stroke.color);
+        if (!color) {
+            return;
+        }
+        context.beginPath();
+        context.moveTo(rawData[0].x, rawData[0].y);
+        for (const item of rawData) {
+            context.lineTo(item.x, item.y);
+        }
+        context.closePath();
+        context.strokeStyle = Utils_1.ColorUtils.getStyleFromRgb(color);
+        context.lineWidth = stroke.width;
+        context.stroke();
+    }
+    static drawPolygonMaskPath(context, path, stroke, position) {
+        context.translate(position.x, position.y);
+        const color = Utils_1.ColorUtils.colorToRgb(stroke.color);
+        if (!color) {
+            return;
+        }
+        context.strokeStyle = Utils_1.ColorUtils.getStyleFromRgb(color, stroke.opacity);
+        context.lineWidth = stroke.width;
+        context.stroke(path);
+    }
+    static parsePaths(paths, scale, offset) {
+        const res = [];
+        for (const path of paths) {
+            const segments = path.element.pathSegList;
+            const len = segments.numberOfItems;
+            const p = {
+                x: 0,
+                y: 0,
+            };
+            for (let i = 0; i < len; i++) {
+                const segment = segments.getItem(i);
+                const svgPathSeg = window.SVGPathSeg;
+                switch (segment.pathSegType) {
+                    case svgPathSeg.PATHSEG_MOVETO_ABS:
+                    case svgPathSeg.PATHSEG_LINETO_ABS:
+                    case svgPathSeg.PATHSEG_CURVETO_CUBIC_ABS:
+                    case svgPathSeg.PATHSEG_CURVETO_QUADRATIC_ABS:
+                    case svgPathSeg.PATHSEG_ARC_ABS:
+                    case svgPathSeg.PATHSEG_CURVETO_CUBIC_SMOOTH_ABS:
+                    case svgPathSeg.PATHSEG_CURVETO_QUADRATIC_SMOOTH_ABS: {
+                        const absSeg = segment;
+                        p.x = absSeg.x;
+                        p.y = absSeg.y;
+                        break;
+                    }
+                    case svgPathSeg.PATHSEG_LINETO_HORIZONTAL_ABS:
+                        p.x = segment.x;
+                        break;
+                    case svgPathSeg.PATHSEG_LINETO_VERTICAL_ABS:
+                        p.y = segment.y;
+                        break;
+                    case svgPathSeg.PATHSEG_LINETO_REL:
+                    case svgPathSeg.PATHSEG_MOVETO_REL:
+                    case svgPathSeg.PATHSEG_CURVETO_CUBIC_REL:
+                    case svgPathSeg.PATHSEG_CURVETO_QUADRATIC_REL:
+                    case svgPathSeg.PATHSEG_ARC_REL:
+                    case svgPathSeg.PATHSEG_CURVETO_CUBIC_SMOOTH_REL:
+                    case svgPathSeg.PATHSEG_CURVETO_QUADRATIC_SMOOTH_REL: {
+                        const relSeg = segment;
+                        p.x += relSeg.x;
+                        p.y += relSeg.y;
+                        break;
+                    }
+                    case svgPathSeg.PATHSEG_LINETO_HORIZONTAL_REL:
+                        p.x += segment.x;
+                        break;
+                    case svgPathSeg.PATHSEG_LINETO_VERTICAL_REL:
+                        p.y += segment.y;
+                        break;
+                    case svgPathSeg.PATHSEG_UNKNOWN:
+                    case svgPathSeg.PATHSEG_CLOSEPATH:
+                        continue;
+                }
+                res.push({
+                    x: p.x * scale + offset.x,
+                    y: p.y * scale + offset.y,
+                });
+            }
+        }
+        return res;
+    }
+    initAsync(options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.options.load(options === null || options === void 0 ? void 0 : options.polygon);
+            const polygonMaskOptions = this.options;
+            this.polygonMaskMoveRadius = polygonMaskOptions.move.radius * this.container.retina.pixelRatio;
+            if (polygonMaskOptions.enable) {
+                yield this.initRawData();
+            }
+        });
+    }
+    resize() {
+        const container = this.container;
+        const options = this.options;
+        if (!(options.enable && options.type !== Enums_1.Type.none)) {
+            return;
+        }
+        if (this.redrawTimeout) {
+            clearTimeout(this.redrawTimeout);
+        }
+        this.redrawTimeout = window.setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+            yield this.initRawData(true);
+            container.particles.redraw();
+        }), 250);
+    }
+    stop() {
+        delete this.raw;
+        delete this.paths;
+    }
+    particlesInitialization() {
+        const options = this.options;
+        if (options.enable &&
+            options.type === Enums_1.Type.inline &&
+            (options.inline.arrangement === Enums_1.InlineArrangement.onePerPoint ||
+                options.inline.arrangement === Enums_1.InlineArrangement.perPoint)) {
+            this.drawPoints();
+            return true;
+        }
+        return false;
+    }
+    particlePosition(position, particle) {
+        var _a, _b;
+        const options = this.options;
+        if (!(options.enable && ((_b = (_a = this.raw) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0) > 0)) {
+            return;
+        }
+        const pos = Utils_1.Utils.deepExtend({}, position ? position : this.randomPoint());
+        if (options.type === Enums_1.Type.inline && particle) {
+            particle.initialPosition = pos;
+        }
+        return pos;
+    }
+    particleBounce(particle) {
+        const options = this.options;
+        if (options.enable && options.type !== Enums_1.Type.none && options.type !== Enums_1.Type.inline) {
+            if (!this.checkInsidePolygon(particle.getPosition())) {
+                PolygonMaskInstance.polygonBounce(particle);
+                return true;
+            }
+        }
+        else if (options.enable && options.type === Enums_1.Type.inline && particle.initialPosition) {
+            const dist = Utils_1.Utils.getDistance(particle.initialPosition, particle.getPosition());
+            if (dist > this.polygonMaskMoveRadius) {
+                PolygonMaskInstance.polygonBounce(particle);
+                return true;
+            }
+        }
+        return false;
+    }
+    clickPositionValid(position) {
+        const options = this.options;
+        return (options.enable &&
+            options.type !== Enums_1.Type.none &&
+            options.type !== Enums_1.Type.inline &&
+            this.checkInsidePolygon(position));
+    }
+    draw(context) {
+        var _a;
+        if (!((_a = this.paths) === null || _a === void 0 ? void 0 : _a.length)) {
+            return;
+        }
+        const options = this.options;
+        const polygonDraw = options.draw;
+        if (!(options.enable && polygonDraw.enable)) {
+            return;
+        }
+        const rawData = this.raw;
+        for (const path of this.paths) {
+            const path2d = path.path2d;
+            const path2dSupported = this.path2DSupported;
+            if (!context) {
+                continue;
+            }
+            if (path2dSupported && path2d && this.offset) {
+                PolygonMaskInstance.drawPolygonMaskPath(context, path2d, polygonDraw.stroke, this.offset);
+            }
+            else if (rawData) {
+                PolygonMaskInstance.drawPolygonMask(context, rawData, polygonDraw.stroke);
+            }
+        }
+    }
+    checkInsidePolygon(position) {
+        var _a, _b;
+        const container = this.container;
+        const options = this.options;
+        if (!options.enable || options.type === Enums_1.Type.none || options.type === Enums_1.Type.inline) {
+            return true;
+        }
+        if (!this.raw) {
+            throw new Error(Utils_1.Constants.noPolygonFound);
+        }
+        const canvasSize = container.canvas.size;
+        const x = (_a = position === null || position === void 0 ? void 0 : position.x) !== null && _a !== void 0 ? _a : Math.random() * canvasSize.width;
+        const y = (_b = position === null || position === void 0 ? void 0 : position.y) !== null && _b !== void 0 ? _b : Math.random() * canvasSize.height;
+        let inside = false;
+        for (let i = 0, j = this.raw.length - 1; i < this.raw.length; j = i++) {
+            const pi = this.raw[i];
+            const pj = this.raw[j];
+            const intersect = pi.y > y !== pj.y > y && x < ((pj.x - pi.x) * (y - pi.y)) / (pj.y - pi.y) + pi.x;
+            if (intersect) {
+                inside = !inside;
+            }
+        }
+        return options.type === Enums_1.Type.inside ? inside : options.type === Enums_1.Type.outside ? !inside : false;
+    }
+    parseSvgPath(xml, force) {
+        var _a, _b, _c;
+        const forceDownload = force !== null && force !== void 0 ? force : false;
+        if (this.paths !== undefined && !forceDownload) {
+            return this.raw;
+        }
+        const container = this.container;
+        const options = this.options;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(xml, "image/svg+xml");
+        const svg = doc.getElementsByTagName("svg")[0];
+        let svgPaths = svg.getElementsByTagName("path");
+        if (!svgPaths.length) {
+            svgPaths = doc.getElementsByTagName("path");
+        }
+        this.paths = [];
+        for (let i = 0; i < svgPaths.length; i++) {
+            const path = svgPaths.item(i);
+            if (path) {
+                this.paths.push({
+                    element: path,
+                    length: path.getTotalLength(),
+                });
+            }
+        }
+        const pxRatio = container.retina.pixelRatio;
+        const scale = options.scale / pxRatio;
+        this.dimension.width = parseFloat((_a = svg.getAttribute("width")) !== null && _a !== void 0 ? _a : "0") * scale;
+        this.dimension.height = parseFloat((_b = svg.getAttribute("height")) !== null && _b !== void 0 ? _b : "0") * scale;
+        const position = (_c = options.position) !== null && _c !== void 0 ? _c : {
+            x: 50,
+            y: 50,
+        };
+        this.offset = {
+            x: (container.canvas.size.width * position.x) / (100 * pxRatio) - this.dimension.width / 2,
+            y: (container.canvas.size.height * position.y) / (100 * pxRatio) - this.dimension.height / 2,
+        };
+        return PolygonMaskInstance.parsePaths(this.paths, scale, this.offset);
+    }
+    downloadSvgPath(svgUrl, force) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const options = this.options;
+            const url = svgUrl || options.url;
+            const forceDownload = force !== null && force !== void 0 ? force : false;
+            if (!url || (this.paths !== undefined && !forceDownload)) {
+                return this.raw;
+            }
+            const req = yield fetch(url);
+            if (!req.ok) {
+                throw new Error("tsParticles Error - Error occurred during polygon mask download");
+            }
+            return this.parseSvgPath(yield req.text(), force);
+        });
+    }
+    drawPoints() {
+        if (!this.raw) {
+            return;
+        }
+        for (const item of this.raw) {
+            this.container.particles.addParticle({
+                x: item.x,
+                y: item.y,
+            });
+        }
+    }
+    randomPoint() {
+        const container = this.container;
+        const options = this.options;
+        let position;
+        if (options.type === Enums_1.Type.inline) {
+            switch (options.inline.arrangement) {
+                case Enums_1.InlineArrangement.randomPoint:
+                    position = this.getRandomPoint();
+                    break;
+                case Enums_1.InlineArrangement.randomLength:
+                    position = this.getRandomPointByLength();
+                    break;
+                case Enums_1.InlineArrangement.equidistant:
+                    position = this.getEquidistantPointByIndex(container.particles.count);
+                    break;
+                case Enums_1.InlineArrangement.onePerPoint:
+                case Enums_1.InlineArrangement.perPoint:
+                default:
+                    position = this.getPointByIndex(container.particles.count);
+            }
+        }
+        else {
+            position = {
+                x: Math.random() * container.canvas.size.width,
+                y: Math.random() * container.canvas.size.height,
+            };
+        }
+        if (this.checkInsidePolygon(position)) {
+            return position;
+        }
+        else {
+            return this.randomPoint();
+        }
+    }
+    getRandomPoint() {
+        if (!this.raw || !this.raw.length) {
+            throw new Error(Utils_1.Constants.noPolygonDataLoaded);
+        }
+        const coords = Utils_1.Utils.itemFromArray(this.raw);
+        return {
+            x: coords.x,
+            y: coords.y,
+        };
+    }
+    getRandomPointByLength() {
+        var _a, _b, _c;
+        const options = this.options;
+        if (!this.raw || !this.raw.length || !((_a = this.paths) === null || _a === void 0 ? void 0 : _a.length)) {
+            throw new Error(Utils_1.Constants.noPolygonDataLoaded);
+        }
+        const path = Utils_1.Utils.itemFromArray(this.paths);
+        const distance = Math.floor(Math.random() * path.length) + 1;
+        const point = path.element.getPointAtLength(distance);
+        return {
+            x: point.x * options.scale + (((_b = this.offset) === null || _b === void 0 ? void 0 : _b.x) || 0),
+            y: point.y * options.scale + (((_c = this.offset) === null || _c === void 0 ? void 0 : _c.y) || 0),
+        };
+    }
+    getEquidistantPointByIndex(index) {
+        var _a, _b, _c, _d, _e, _f, _g;
+        const options = this.container.options;
+        const polygonMaskOptions = this.options;
+        if (!this.raw || !this.raw.length || !((_a = this.paths) === null || _a === void 0 ? void 0 : _a.length))
+            throw new Error(Utils_1.Constants.noPolygonDataLoaded);
+        let offset = 0;
+        let point;
+        const totalLength = this.paths.reduce((tot, path) => tot + path.length, 0);
+        const distance = totalLength / options.particles.number.value;
+        for (const path of this.paths) {
+            const pathDistance = distance * index - offset;
+            if (pathDistance <= path.length) {
+                point = path.element.getPointAtLength(pathDistance);
+                break;
+            }
+            else {
+                offset += path.length;
+            }
+        }
+        return {
+            x: ((_b = point === null || point === void 0 ? void 0 : point.x) !== null && _b !== void 0 ? _b : 0) * polygonMaskOptions.scale + ((_d = (_c = this.offset) === null || _c === void 0 ? void 0 : _c.x) !== null && _d !== void 0 ? _d : 0),
+            y: ((_e = point === null || point === void 0 ? void 0 : point.y) !== null && _e !== void 0 ? _e : 0) * polygonMaskOptions.scale + ((_g = (_f = this.offset) === null || _f === void 0 ? void 0 : _f.y) !== null && _g !== void 0 ? _g : 0),
+        };
+    }
+    getPointByIndex(index) {
+        if (!this.raw || !this.raw.length) {
+            throw new Error(Utils_1.Constants.noPolygonDataLoaded);
+        }
+        const coords = this.raw[index % this.raw.length];
+        return {
+            x: coords.x,
+            y: coords.y,
+        };
+    }
+    createPath2D() {
+        var _a, _b;
+        const options = this.options;
+        if (!this.path2DSupported || !((_a = this.paths) === null || _a === void 0 ? void 0 : _a.length)) {
+            return;
+        }
+        for (const path of this.paths) {
+            const pathData = (_b = path.element) === null || _b === void 0 ? void 0 : _b.getAttribute("d");
+            if (pathData) {
+                const path2d = new Path2D(pathData);
+                const matrix = document.createElementNS("http://www.w3.org/2000/svg", "svg").createSVGMatrix();
+                const finalPath = new Path2D();
+                const transform = matrix.scale(options.scale);
+                if (finalPath.addPath) {
+                    finalPath.addPath(path2d, transform);
+                    path.path2d = finalPath;
+                }
+                else {
+                    delete path.path2d;
+                }
+            }
+            else {
+                delete path.path2d;
+            }
+            if (path.path2d || !this.raw) {
+                continue;
+            }
+            path.path2d = new Path2D();
+            path.path2d.moveTo(this.raw[0].x, this.raw[0].y);
+            this.raw.forEach((pos, i) => {
+                var _a;
+                if (i > 0) {
+                    (_a = path.path2d) === null || _a === void 0 ? void 0 : _a.lineTo(pos.x, pos.y);
+                }
+            });
+            path.path2d.closePath();
+        }
+    }
+    initRawData(force) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const options = this.options;
+            if (options.url) {
+                this.raw = yield this.downloadSvgPath(options.url, force);
+            }
+            else if (options.data) {
+                const data = options.data;
+                let svg;
+                if (typeof data !== "string") {
+                    const path = data.path instanceof Array
+                        ? data.path.map((t) => `<path d="${t}" />`).join("")
+                        : `<path d="${data.path}" />`;
+                    const namespaces = 'xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"';
+                    svg = `<svg ${namespaces} width="${data.size.width}" height="${data.size.height}">${path}</svg>`;
+                }
+                else {
+                    svg = data;
+                }
+                this.raw = this.parseSvgPath(svg, force);
+            }
+            this.createPath2D();
+        });
+    }
+}
+exports.PolygonMaskInstance = PolygonMaskInstance;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Plugins/PolygonMask/PolygonMaskPlugin.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Plugins/PolygonMask/PolygonMaskPlugin.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PolygonMaskPlugin = void 0;
+const PolygonMaskInstance_1 = __webpack_require__(/*! ./PolygonMaskInstance */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/PolygonMaskInstance.js");
+const PolygonMask_1 = __webpack_require__(/*! ./Options/Classes/PolygonMask */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Options/Classes/PolygonMask.js");
+const Enums_1 = __webpack_require__(/*! ./Enums */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/index.js");
+class PolygonMaskPlugin {
+    constructor() {
+        this.id = "polygonMask";
+    }
+    getPlugin(container) {
+        return new PolygonMaskInstance_1.PolygonMaskInstance(container);
+    }
+    needsPlugin(options) {
+        var _a, _b, _c;
+        return (_b = (_a = options === null || options === void 0 ? void 0 : options.polygon) === null || _a === void 0 ? void 0 : _a.enable) !== null && _b !== void 0 ? _b : (((_c = options === null || options === void 0 ? void 0 : options.polygon) === null || _c === void 0 ? void 0 : _c.type) !== undefined && options.polygon.type !== Enums_1.Type.none);
+    }
+    loadOptions(options, source) {
+        if (!this.needsPlugin(source)) {
+            return;
+        }
+        const optionsCast = options;
+        if (optionsCast.polygon === undefined) {
+            optionsCast.polygon = new PolygonMask_1.PolygonMask();
+        }
+        optionsCast.polygon.load(source === null || source === void 0 ? void 0 : source.polygon);
+    }
+}
+const plugin = new PolygonMaskPlugin();
+exports.PolygonMaskPlugin = plugin;
+__exportStar(__webpack_require__(/*! ./Enums */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/Enums/index.js"), exports);
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/ShapeDrawers/CircleDrawer.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/ShapeDrawers/CircleDrawer.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CircleDrawer = void 0;
+class CircleDrawer {
+    draw(context, particle, radius) {
+        context.arc(0, 0, radius, 0, Math.PI * 2, false);
+    }
+}
+exports.CircleDrawer = CircleDrawer;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/ShapeDrawers/ImageDrawer.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/ShapeDrawers/ImageDrawer.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ImageDrawer = void 0;
+const Utils_1 = __webpack_require__(/*! ../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const Enums_1 = __webpack_require__(/*! ../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+class ImageDrawer {
+    constructor() {
+        this.images = [];
+    }
+    getImages(container) {
+        const containerImages = this.images.filter((t) => t.id === container.id);
+        if (!containerImages.length) {
+            this.images.push({
+                id: container.id,
+                images: [],
+            });
+            return this.getImages(container);
+        }
+        else {
+            return containerImages[0];
+        }
+    }
+    addImage(container, image) {
+        const containerImages = this.getImages(container);
+        containerImages === null || containerImages === void 0 ? void 0 : containerImages.images.push(image);
+    }
+    init(container) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const options = container.options;
+            const shapeOptions = options.particles.shape;
+            if (!Utils_1.Utils.isInArray(Enums_1.ShapeType.image, shapeOptions.type) &&
+                !Utils_1.Utils.isInArray(Enums_1.ShapeType.images, shapeOptions.type)) {
+                return;
+            }
+            const imageOptions = (_a = shapeOptions.options[Enums_1.ShapeType.images]) !== null && _a !== void 0 ? _a : shapeOptions.options[Enums_1.ShapeType.image];
+            if (imageOptions instanceof Array) {
+                for (const optionsImage of imageOptions) {
+                    yield this.loadImageShape(container, optionsImage);
+                }
+            }
+            else {
+                yield this.loadImageShape(container, imageOptions);
+            }
+        });
+    }
+    destroy() {
+        this.images = [];
+    }
+    loadImageShape(container, imageShape) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const image = imageShape.replaceColor
+                    ? yield Utils_1.Utils.downloadSvgImage(imageShape.src)
+                    : yield Utils_1.Utils.loadImage(imageShape.src);
+                this.addImage(container, image);
+            }
+            catch (_a) {
+                console.log(`tsParticles error - ${imageShape.src} not found`);
+            }
+        });
+    }
+    draw(context, particle, radius, opacity) {
+        var _a, _b;
+        if (!context) {
+            return;
+        }
+        const image = particle.image;
+        const element = (_a = image === null || image === void 0 ? void 0 : image.data) === null || _a === void 0 ? void 0 : _a.element;
+        if (!element) {
+            return;
+        }
+        const ratio = (_b = image === null || image === void 0 ? void 0 : image.ratio) !== null && _b !== void 0 ? _b : 1;
+        const pos = {
+            x: -radius,
+            y: -radius,
+        };
+        if (!(image === null || image === void 0 ? void 0 : image.data.svgData) || !(image === null || image === void 0 ? void 0 : image.replaceColor)) {
+            context.globalAlpha = opacity;
+        }
+        context.drawImage(element, pos.x, pos.y, radius * 2, (radius * 2) / ratio);
+        if (!(image === null || image === void 0 ? void 0 : image.data.svgData) || !(image === null || image === void 0 ? void 0 : image.replaceColor)) {
+            context.globalAlpha = 1;
+        }
+    }
+}
+exports.ImageDrawer = ImageDrawer;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/ShapeDrawers/LineDrawer.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/ShapeDrawers/LineDrawer.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LineDrawer = void 0;
+class LineDrawer {
+    draw(context, particle, radius) {
+        context.moveTo(0, -radius / 2);
+        context.lineTo(0, radius / 2);
+    }
+}
+exports.LineDrawer = LineDrawer;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/ShapeDrawers/PolygonDrawer.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/ShapeDrawers/PolygonDrawer.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PolygonDrawer = void 0;
+const PolygonDrawerBase_1 = __webpack_require__(/*! ./PolygonDrawerBase */ "./node_modules/tsparticles/dist/ShapeDrawers/PolygonDrawerBase.js");
+class PolygonDrawer extends PolygonDrawerBase_1.PolygonDrawerBase {
+    getSidesData(particle, radius) {
+        var _a, _b;
+        const polygon = particle.shapeData;
+        const sides = (_b = (_a = polygon === null || polygon === void 0 ? void 0 : polygon.sides) !== null && _a !== void 0 ? _a : polygon === null || polygon === void 0 ? void 0 : polygon.nb_sides) !== null && _b !== void 0 ? _b : 5;
+        return {
+            count: {
+                denominator: 1,
+                numerator: sides,
+            },
+            length: (radius * 2.66) / (sides / 3),
+        };
+    }
+    getCenter(particle, radius) {
+        var _a, _b;
+        const polygon = particle.shapeData;
+        const sides = (_b = (_a = polygon === null || polygon === void 0 ? void 0 : polygon.sides) !== null && _a !== void 0 ? _a : polygon === null || polygon === void 0 ? void 0 : polygon.nb_sides) !== null && _b !== void 0 ? _b : 5;
+        return {
+            x: -radius / (sides / 3.5),
+            y: -radius / (2.66 / 3.5),
+        };
+    }
+}
+exports.PolygonDrawer = PolygonDrawer;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/ShapeDrawers/PolygonDrawerBase.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/ShapeDrawers/PolygonDrawerBase.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PolygonDrawerBase = void 0;
+class PolygonDrawerBase {
+    draw(context, particle, radius) {
+        const start = this.getCenter(particle, radius);
+        const side = this.getSidesData(particle, radius);
+        const sideCount = side.count.numerator * side.count.denominator;
+        const decimalSides = side.count.numerator / side.count.denominator;
+        const interiorAngleDegrees = (180 * (decimalSides - 2)) / decimalSides;
+        const interiorAngle = Math.PI - (Math.PI * interiorAngleDegrees) / 180;
+        if (!context) {
+            return;
+        }
+        context.beginPath();
+        context.translate(start.x, start.y);
+        context.moveTo(0, 0);
+        for (let i = 0; i < sideCount; i++) {
+            context.lineTo(side.length, 0);
+            context.translate(side.length, 0);
+            context.rotate(interiorAngle);
+        }
+    }
+}
+exports.PolygonDrawerBase = PolygonDrawerBase;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/ShapeDrawers/SquareDrawer.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/ShapeDrawers/SquareDrawer.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SquareDrawer = void 0;
+class SquareDrawer {
+    draw(context, particle, radius) {
+        context.rect(-radius, -radius, radius * 2, radius * 2);
+    }
+}
+exports.SquareDrawer = SquareDrawer;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/ShapeDrawers/StarDrawer.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/ShapeDrawers/StarDrawer.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.StarDrawer = void 0;
+class StarDrawer {
+    draw(context, particle, radius) {
+        var _a, _b, _c;
+        const star = particle.shapeData;
+        const sides = (_b = (_a = star === null || star === void 0 ? void 0 : star.sides) !== null && _a !== void 0 ? _a : star === null || star === void 0 ? void 0 : star.nb_sides) !== null && _b !== void 0 ? _b : 5;
+        const inset = (_c = star === null || star === void 0 ? void 0 : star.inset) !== null && _c !== void 0 ? _c : 2;
+        context.moveTo(0, 0 - radius);
+        for (let i = 0; i < sides; i++) {
+            context.rotate(Math.PI / sides);
+            context.lineTo(0, 0 - radius * inset);
+            context.rotate(Math.PI / sides);
+            context.lineTo(0, 0 - radius);
+        }
+    }
+}
+exports.StarDrawer = StarDrawer;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/ShapeDrawers/TextDrawer.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/ShapeDrawers/TextDrawer.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TextDrawer = void 0;
+const Utils_1 = __webpack_require__(/*! ../Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const Enums_1 = __webpack_require__(/*! ../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+class TextDrawer {
+    init(container) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const options = container.options;
+            if (Utils_1.Utils.isInArray(Enums_1.ShapeType.char, options.particles.shape.type) ||
+                Utils_1.Utils.isInArray(Enums_1.ShapeType.character, options.particles.shape.type)) {
+                const shapeOptions = ((_a = options.particles.shape.options[Enums_1.ShapeType.character]) !== null && _a !== void 0 ? _a : options.particles.shape.options[Enums_1.ShapeType.char]);
+                if (shapeOptions instanceof Array) {
+                    for (const character of shapeOptions) {
+                        yield Utils_1.Utils.loadFont(character);
+                    }
+                }
+                else {
+                    if (shapeOptions !== undefined) {
+                        yield Utils_1.Utils.loadFont(shapeOptions);
+                    }
+                }
+            }
+        });
+    }
+    draw(context, particle, radius) {
+        const character = particle.shapeData;
+        if (character === undefined) {
+            return;
+        }
+        const textData = character.value;
+        if (textData === undefined) {
+            return;
+        }
+        const textParticle = particle;
+        if (textParticle.text === undefined) {
+            if (textData instanceof Array) {
+                textParticle.text = Utils_1.Utils.itemFromArray(textData, particle.randomIndexData);
+            }
+            else {
+                textParticle.text = textData;
+            }
+        }
+        const text = textParticle.text;
+        const style = character.style;
+        const weight = character.weight;
+        const size = Math.round(radius) * 2;
+        const font = character.font;
+        const fill = particle.fill;
+        context.font = `${style} ${weight} ${size}px "${font}"`;
+        const pos = {
+            x: -radius / 2,
+            y: radius / 2,
+        };
+        if (fill) {
+            context.fillText(text, pos.x, pos.y);
+        }
+        else {
+            context.strokeText(text, pos.x, pos.y);
+        }
+    }
+}
+exports.TextDrawer = TextDrawer;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/ShapeDrawers/TriangleDrawer.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/ShapeDrawers/TriangleDrawer.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TriangleDrawer = void 0;
+const PolygonDrawerBase_1 = __webpack_require__(/*! ./PolygonDrawerBase */ "./node_modules/tsparticles/dist/ShapeDrawers/PolygonDrawerBase.js");
+class TriangleDrawer extends PolygonDrawerBase_1.PolygonDrawerBase {
+    getSidesData(particle, radius) {
+        return {
+            count: {
+                denominator: 2,
+                numerator: 3,
+            },
+            length: radius * 2,
+        };
+    }
+    getCenter(particle, radius) {
+        return {
+            x: -radius,
+            y: radius / 1.66,
+        };
+    }
+}
+exports.TriangleDrawer = TriangleDrawer;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Utils/CanvasUtils.js":
+/*!************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Utils/CanvasUtils.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CanvasUtils = void 0;
+const ColorUtils_1 = __webpack_require__(/*! ./ColorUtils */ "./node_modules/tsparticles/dist/Utils/ColorUtils.js");
+const Utils_1 = __webpack_require__(/*! ./Utils */ "./node_modules/tsparticles/dist/Utils/Utils.js");
+class CanvasUtils {
+    static paintBase(context, dimension, baseColor) {
+        context.save();
+        context.fillStyle = baseColor !== null && baseColor !== void 0 ? baseColor : "rgba(0,0,0,0)";
+        context.fillRect(0, 0, dimension.width, dimension.height);
+        context.restore();
+    }
+    static clear(context, dimension) {
+        context.clearRect(0, 0, dimension.width, dimension.height);
+    }
+    static drawLinkLine(context, width, begin, end, maxDistance, canvasSize, warp, backgroundMask, colorLine, opacity, shadow) {
+        let drawn = false;
+        if (Utils_1.Utils.getDistance(begin, end) <= maxDistance) {
+            this.drawLine(context, begin, end);
+            drawn = true;
+        }
+        else if (warp) {
+            let pi1;
+            let pi2;
+            const endNE = {
+                x: end.x - canvasSize.width,
+                y: end.y,
+            };
+            const { dx, dy, distance } = Utils_1.Utils.getDistances(begin, endNE);
+            if (distance <= maxDistance) {
+                const yi = begin.y - (dy / dx) * begin.x;
+                pi1 = { x: 0, y: yi };
+                pi2 = { x: canvasSize.width, y: yi };
+            }
+            else {
+                const endSW = {
+                    x: end.x,
+                    y: end.y - canvasSize.height,
+                };
+                const { dx, dy, distance } = Utils_1.Utils.getDistances(begin, endSW);
+                if (distance <= maxDistance) {
+                    const yi = begin.y - (dy / dx) * begin.x;
+                    const xi = -yi / (dy / dx);
+                    pi1 = { x: xi, y: 0 };
+                    pi2 = { x: xi, y: canvasSize.height };
+                }
+                else {
+                    const endSE = {
+                        x: end.x - canvasSize.width,
+                        y: end.y - canvasSize.height,
+                    };
+                    const { dx, dy, distance } = Utils_1.Utils.getDistances(begin, endSE);
+                    if (distance <= maxDistance) {
+                        const yi = begin.y - (dy / dx) * begin.x;
+                        const xi = -yi / (dy / dx);
+                        pi1 = { x: xi, y: yi };
+                        pi2 = { x: pi1.x + canvasSize.width, y: pi1.y + canvasSize.height };
+                    }
+                }
+            }
+            if (pi1 && pi2) {
+                this.drawLine(context, begin, pi1);
+                this.drawLine(context, end, pi2);
+                drawn = true;
+            }
+        }
+        if (!drawn) {
+            return;
+        }
+        context.lineWidth = width;
+        if (backgroundMask) {
+            context.globalCompositeOperation = "destination-out";
+        }
+        context.strokeStyle = ColorUtils_1.ColorUtils.getStyleFromRgb(colorLine, opacity);
+        if (shadow.enable) {
+            const shadowColor = ColorUtils_1.ColorUtils.colorToRgb(shadow.color);
+            if (shadowColor) {
+                context.shadowBlur = shadow.blur;
+                context.shadowColor = ColorUtils_1.ColorUtils.getStyleFromRgb(shadowColor);
+            }
+        }
+        context.stroke();
+    }
+    static drawLinkTriangle(context, width, pos1, pos2, pos3, backgroundMask, colorTriangle, opacityTriangle) {
+        this.drawTriangle(context, pos1, pos2, pos3);
+        context.lineWidth = width;
+        if (backgroundMask) {
+            context.globalCompositeOperation = "destination-out";
+        }
+        context.fillStyle = ColorUtils_1.ColorUtils.getStyleFromRgb(colorTriangle, opacityTriangle);
+        context.fill();
+    }
+    static drawConnectLine(context, width, lineStyle, begin, end) {
+        context.save();
+        this.drawLine(context, begin, end);
+        context.lineWidth = width;
+        context.strokeStyle = lineStyle;
+        context.stroke();
+        context.restore();
+    }
+    static gradient(context, p1, p2, opacity) {
+        const gradStop = Math.floor(p2.size.value / p1.size.value);
+        const color1 = p1.getColor();
+        const color2 = p2.getColor();
+        if (!color1 || !color2) {
+            return;
+        }
+        const sourcePos = p1.getPosition();
+        const destPos = p2.getPosition();
+        const midRgb = ColorUtils_1.ColorUtils.mix(color1, color2, p1.size.value, p2.size.value);
+        const grad = context.createLinearGradient(sourcePos.x, sourcePos.y, destPos.x, destPos.y);
+        grad.addColorStop(0, ColorUtils_1.ColorUtils.getStyleFromHsl(color1, opacity));
+        grad.addColorStop(gradStop > 1 ? 1 : gradStop, ColorUtils_1.ColorUtils.getStyleFromRgb(midRgb, opacity));
+        grad.addColorStop(1, ColorUtils_1.ColorUtils.getStyleFromHsl(color2, opacity));
+        return grad;
+    }
+    static drawGrabLine(context, width, begin, end, colorLine, opacity) {
+        context.save();
+        this.drawLine(context, begin, end);
+        context.strokeStyle = ColorUtils_1.ColorUtils.getStyleFromRgb(colorLine, opacity);
+        context.lineWidth = width;
+        context.stroke();
+        context.restore();
+    }
+    static drawParticle(container, context, particle, delta, colorValue, backgroundMask, radius, opacity, shadow) {
+        const pos = particle.getPosition();
+        context.save();
+        context.translate(pos.x, pos.y);
+        context.beginPath();
+        if (particle.angle !== 0) {
+            context.rotate((particle.angle * Math.PI) / 180);
+        }
+        if (backgroundMask) {
+            context.globalCompositeOperation = "destination-out";
+        }
+        const shadowColor = particle.shadowColor;
+        if (shadow.enable && shadowColor) {
+            context.shadowBlur = shadow.blur;
+            context.shadowColor = ColorUtils_1.ColorUtils.getStyleFromRgb(shadowColor);
+            context.shadowOffsetX = shadow.offset.x;
+            context.shadowOffsetY = shadow.offset.y;
+        }
+        context.fillStyle = colorValue;
+        const stroke = particle.stroke;
+        context.lineWidth = stroke.width;
+        if (particle.strokeColor) {
+            context.strokeStyle = ColorUtils_1.ColorUtils.getStyleFromRgb(particle.strokeColor, particle.stroke.opacity);
+        }
+        if (particle.close) {
+            context.closePath();
+        }
+        this.drawShape(container, context, particle, radius, opacity, delta);
+        if (stroke.width > 0 && particle.strokeColor) {
+            context.stroke();
+        }
+        if (particle.fill) {
+            context.fill();
+        }
+        context.restore();
+        context.save();
+        context.translate(pos.x, pos.y);
+        if (particle.angle !== 0) {
+            context.rotate((particle.angle * Math.PI) / 180);
+        }
+        if (backgroundMask) {
+            context.globalCompositeOperation = "destination-out";
+        }
+        this.drawShapeAfterEffect(container, context, particle, radius, opacity, delta);
+        context.restore();
+    }
+    static drawShape(container, context, particle, radius, opacity, delta) {
+        if (!particle.shape) {
+            return;
+        }
+        const drawer = container.drawers.get(particle.shape);
+        if (!drawer) {
+            return;
+        }
+        drawer.draw(context, particle, radius, opacity, delta);
+    }
+    static drawShapeAfterEffect(container, context, particle, radius, opacity, delta) {
+        if (!particle.shape) {
+            return;
+        }
+        const drawer = container.drawers.get(particle.shape);
+        if (!(drawer === null || drawer === void 0 ? void 0 : drawer.afterEffect)) {
+            return;
+        }
+        drawer.afterEffect(context, particle, radius, opacity, delta);
+    }
+    static drawPlugin(context, plugin, delta) {
+        if (plugin.draw !== undefined) {
+            context.save();
+            plugin.draw(context, delta);
+            context.restore();
+        }
+    }
+    static drawLine(context, begin, end) {
+        context.beginPath();
+        context.moveTo(begin.x, begin.y);
+        context.lineTo(end.x, end.y);
+        context.closePath();
+    }
+    static drawTriangle(context, p1, p2, p3) {
+        context.beginPath();
+        context.moveTo(p1.x, p1.y);
+        context.lineTo(p2.x, p2.y);
+        context.lineTo(p3.x, p3.y);
+        context.closePath();
+    }
+}
+exports.CanvasUtils = CanvasUtils;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Utils/Circle.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Utils/Circle.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Circle = void 0;
+const Range_1 = __webpack_require__(/*! ./Range */ "./node_modules/tsparticles/dist/Utils/Range.js");
+class Circle extends Range_1.Range {
+    constructor(x, y, radius) {
+        super(x, y);
+        this.radius = radius;
+    }
+    contains(point) {
+        const d = Math.pow(point.x - this.position.x, 2) + Math.pow(point.y - this.position.y, 2);
+        return d <= this.radius * this.radius;
+    }
+    intersects(range) {
+        const rect = range;
+        const circle = range;
+        const pos1 = this.position;
+        const pos2 = range.position;
+        const xDist = Math.abs(pos2.x - pos1.x);
+        const yDist = Math.abs(pos2.y - pos1.y);
+        const r = this.radius;
+        if (circle.radius !== undefined) {
+            const r2 = circle.radius;
+            const rSum = r + r2;
+            const dist = Math.sqrt(xDist * xDist + yDist + yDist);
+            return rSum > dist;
+        }
+        else if (rect.size !== undefined) {
+            const w = rect.size.width;
+            const h = rect.size.height;
+            const edges = Math.pow(xDist - w, 2) + Math.pow(yDist - h, 2);
+            if (xDist > r + w || yDist > r + h) {
+                return false;
+            }
+            if (xDist <= w || yDist <= h) {
+                return true;
+            }
+            return edges <= r * r;
+        }
+        return false;
+    }
+}
+exports.Circle = Circle;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Utils/CircleWarp.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Utils/CircleWarp.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CircleWarp = void 0;
+const Rectangle_1 = __webpack_require__(/*! ./Rectangle */ "./node_modules/tsparticles/dist/Utils/Rectangle.js");
+const Circle_1 = __webpack_require__(/*! ./Circle */ "./node_modules/tsparticles/dist/Utils/Circle.js");
+class CircleWarp extends Circle_1.Circle {
+    constructor(x, y, radius, canvasSize) {
+        super(x, y, radius);
+        this.canvasSize = canvasSize;
+        this.canvasSize = {
+            height: canvasSize.height,
+            width: canvasSize.width,
+        };
+    }
+    contains(point) {
+        if (super.contains(point)) {
+            return true;
+        }
+        const posNE = {
+            x: point.x - this.canvasSize.width,
+            y: point.y,
+        };
+        if (super.contains(posNE)) {
+            return true;
+        }
+        const posSE = {
+            x: point.x - this.canvasSize.width,
+            y: point.y - this.canvasSize.height,
+        };
+        if (super.contains(posSE)) {
+            return true;
+        }
+        const posSW = {
+            x: point.x,
+            y: point.y - this.canvasSize.height,
+        };
+        return super.contains(posSW);
+    }
+    intersects(range) {
+        if (super.intersects(range)) {
+            return true;
+        }
+        const rect = range;
+        const circle = range;
+        const newPos = {
+            x: range.position.x - this.canvasSize.width,
+            y: range.position.y - this.canvasSize.height,
+        };
+        if (circle.radius !== undefined) {
+            const biggerCircle = new Circle_1.Circle(newPos.x, newPos.y, circle.radius * 2);
+            return super.intersects(biggerCircle);
+        }
+        else if (rect.size !== undefined) {
+            const rectSW = new Rectangle_1.Rectangle(newPos.x, newPos.y, rect.size.width * 2, rect.size.height * 2);
+            return super.intersects(rectSW);
+        }
+        return false;
+    }
+}
+exports.CircleWarp = CircleWarp;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Utils/ColorUtils.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Utils/ColorUtils.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ColorUtils = void 0;
+const Utils_1 = __webpack_require__(/*! ./Utils */ "./node_modules/tsparticles/dist/Utils/Utils.js");
+const Constants_1 = __webpack_require__(/*! ./Constants */ "./node_modules/tsparticles/dist/Utils/Constants.js");
+class ColorUtils {
+    static colorToRgb(input) {
+        var _a, _b;
+        if (input === undefined) {
+            return;
+        }
+        const color = typeof input === "string" ? { value: input } : input;
+        let res;
+        if (typeof color.value === "string") {
+            if (color.value === Constants_1.Constants.randomColorValue) {
+                res = this.getRandomRgbColor();
+            }
+            else {
+                res = ColorUtils.stringToRgb(color.value);
+            }
+        }
+        else {
+            if (color.value instanceof Array) {
+                const colorSelected = Utils_1.Utils.itemFromArray(color.value);
+                res = ColorUtils.colorToRgb({ value: colorSelected });
+            }
+            else {
+                const colorValue = color.value;
+                const rgbColor = (_a = colorValue.rgb) !== null && _a !== void 0 ? _a : color.value;
+                if (rgbColor.r !== undefined) {
+                    res = rgbColor;
+                }
+                else {
+                    const hslColor = (_b = colorValue.hsl) !== null && _b !== void 0 ? _b : color.value;
+                    if (hslColor.h !== undefined) {
+                        res = ColorUtils.hslToRgb(hslColor);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+    static colorToHsl(color) {
+        const rgb = this.colorToRgb(color);
+        return rgb !== undefined ? this.rgbToHsl(rgb) : rgb;
+    }
+    static rgbToHsl(color) {
+        const r1 = color.r / 255;
+        const g1 = color.g / 255;
+        const b1 = color.b / 255;
+        const maxColor = Math.max(r1, g1, b1);
+        const minColor = Math.min(r1, g1, b1);
+        const res = {
+            h: 0,
+            l: (maxColor + minColor) / 2,
+            s: 0,
+        };
+        if (maxColor != minColor) {
+            res.s =
+                res.l < 0.5
+                    ? (maxColor - minColor) / (maxColor + minColor)
+                    : (maxColor - minColor) / (2.0 - maxColor - minColor);
+            res.h =
+                r1 === maxColor
+                    ? (g1 - b1) / (maxColor - minColor)
+                    : (res.h =
+                        g1 === maxColor
+                            ? 2.0 + (b1 - r1) / (maxColor - minColor)
+                            : 4.0 + (r1 - g1) / (maxColor - minColor));
+        }
+        res.l *= 100;
+        res.s *= 100;
+        res.h *= 60;
+        if (res.h < 0) {
+            res.h += 360;
+        }
+        return res;
+    }
+    static stringToAlpha(input) {
+        var _a;
+        return (_a = ColorUtils.stringToRgba(input)) === null || _a === void 0 ? void 0 : _a.a;
+    }
+    static stringToRgb(input) {
+        return ColorUtils.stringToRgba(input);
+    }
+    static hslToRgb(hsl) {
+        const result = { b: 0, g: 0, r: 0 };
+        const hslPercent = {
+            h: hsl.h / 360,
+            l: hsl.l / 100,
+            s: hsl.s / 100,
+        };
+        if (hslPercent.s === 0) {
+            result.b = hslPercent.l;
+            result.g = hslPercent.l;
+            result.r = hslPercent.l;
+        }
+        else {
+            const q = hslPercent.l < 0.5
+                ? hslPercent.l * (1 + hslPercent.s)
+                : hslPercent.l + hslPercent.s - hslPercent.l * hslPercent.s;
+            const p = 2 * hslPercent.l - q;
+            result.r = ColorUtils.hue2rgb(p, q, hslPercent.h + 1 / 3);
+            result.g = ColorUtils.hue2rgb(p, q, hslPercent.h);
+            result.b = ColorUtils.hue2rgb(p, q, hslPercent.h - 1 / 3);
+        }
+        result.r = Math.floor(result.r * 255);
+        result.g = Math.floor(result.g * 255);
+        result.b = Math.floor(result.b * 255);
+        return result;
+    }
+    static hslaToRgba(hsla) {
+        const rgbResult = ColorUtils.hslToRgb(hsla);
+        return {
+            a: hsla.a,
+            b: rgbResult.b,
+            g: rgbResult.g,
+            r: rgbResult.r,
+        };
+    }
+    static getRandomRgbColor(min) {
+        var _a;
+        const fixedMin = min || 0;
+        const minColor = fixedMin + fixedMin * Math.pow(16, 2) + fixedMin * Math.pow(16, 4);
+        const factor = minColor ^ 0xffffff;
+        const randomColor = Math.floor((Math.random() * factor) | minColor).toString(16);
+        return ((_a = this.stringToRgb(`#${randomColor}`)) !== null && _a !== void 0 ? _a : {
+            b: 0,
+            g: 0,
+            r: 0,
+        });
+    }
+    static getStyleFromRgb(color, opacity) {
+        return `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity !== null && opacity !== void 0 ? opacity : 1})`;
+    }
+    static getStyleFromHsl(color, opacity) {
+        return `hsla(${color.h}, ${color.s}%, ${color.l}%, ${opacity !== null && opacity !== void 0 ? opacity : 1})`;
+    }
+    static mix(color1, color2, size1, size2) {
+        let rgb1 = color1;
+        let rgb2 = color2;
+        if (rgb1.r === undefined) {
+            rgb1 = this.hslToRgb(color1);
+        }
+        if (rgb2.r === undefined) {
+            rgb2 = this.hslToRgb(color2);
+        }
+        return {
+            b: Utils_1.Utils.mix(rgb1.b, rgb2.b, size1, size2),
+            g: Utils_1.Utils.mix(rgb1.g, rgb2.g, size1, size2),
+            r: Utils_1.Utils.mix(rgb1.r, rgb2.r, size1, size2),
+        };
+    }
+    static hue2rgb(p, q, t) {
+        let tCalc = t;
+        if (tCalc < 0) {
+            tCalc += 1;
+        }
+        if (tCalc > 1) {
+            tCalc -= 1;
+        }
+        if (tCalc < 1 / 6) {
+            return p + (q - p) * 6 * tCalc;
+        }
+        if (tCalc < 1 / 2) {
+            return q;
+        }
+        if (tCalc < 2 / 3) {
+            return p + (q - p) * (2 / 3 - tCalc) * 6;
+        }
+        return p;
+    }
+    static stringToRgba(input) {
+        if (input.startsWith("rgb")) {
+            const regex = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*([\d.]+)\s*)?\)/i;
+            const result = regex.exec(input);
+            return result
+                ? {
+                    a: result.length > 4 ? parseFloat(result[5]) : 1,
+                    b: parseInt(result[3], 10),
+                    g: parseInt(result[2], 10),
+                    r: parseInt(result[1], 10),
+                }
+                : undefined;
+        }
+        else if (input.startsWith("hsl")) {
+            const regex = /hsla?\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*(,\s*([\d.]+)\s*)?\)/i;
+            const result = regex.exec(input);
+            return result
+                ? ColorUtils.hslaToRgba({
+                    a: result.length > 4 ? parseFloat(result[5]) : 1,
+                    h: parseInt(result[1], 10),
+                    l: parseInt(result[3], 10),
+                    s: parseInt(result[2], 10),
+                })
+                : undefined;
+        }
+        else {
+            const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])([a-f\d])?$/i;
+            const hexFixed = input.replace(shorthandRegex, (_m, r, g, b, a) => {
+                return r + r + g + g + b + b + (a !== undefined ? a + a : "");
+            });
+            const regex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i;
+            const result = regex.exec(hexFixed);
+            return result
+                ? {
+                    a: result[4] !== undefined ? parseInt(result[4], 16) / 0xff : 1,
+                    b: parseInt(result[3], 16),
+                    g: parseInt(result[2], 16),
+                    r: parseInt(result[1], 16),
+                }
+                : undefined;
+        }
+    }
+}
+exports.ColorUtils = ColorUtils;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Utils/Constants.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Utils/Constants.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Constants = void 0;
+class Constants {
+}
+exports.Constants = Constants;
+Constants.canvasClass = "tsparticles-canvas-el";
+Constants.randomColorValue = "random";
+Constants.midColorValue = "mid";
+Constants.touchEndEvent = "touchend";
+Constants.mouseUpEvent = "mouseup";
+Constants.mouseMoveEvent = "mousemove";
+Constants.touchStartEvent = "touchstart";
+Constants.touchMoveEvent = "touchmove";
+Constants.mouseLeaveEvent = "mouseleave";
+Constants.touchCancelEvent = "touchcancel";
+Constants.resizeEvent = "resize";
+Constants.visibilityChangeEvent = "visibilitychange";
+Constants.noPolygonDataLoaded = "No polygon data loaded.";
+Constants.noPolygonFound = "No polygon found, you need to specify SVG url in config.";
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Utils/EventListeners.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Utils/EventListeners.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EventListeners = void 0;
+const Enums_1 = __webpack_require__(/*! ../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+const Constants_1 = __webpack_require__(/*! ./Constants */ "./node_modules/tsparticles/dist/Utils/Constants.js");
+class EventListeners {
+    constructor(container) {
+        this.container = container;
+        this.canPush = true;
+        this.mouseMoveHandler = (e) => this.mouseTouchMove(e);
+        this.touchStartHandler = (e) => this.mouseTouchMove(e);
+        this.touchMoveHandler = (e) => this.mouseTouchMove(e);
+        this.touchEndHandler = () => this.mouseTouchFinish();
+        this.mouseLeaveHandler = () => this.mouseTouchFinish();
+        this.touchCancelHandler = () => this.mouseTouchFinish();
+        this.touchEndClickHandler = (e) => this.mouseTouchClick(e);
+        this.mouseUpHandler = (e) => this.mouseTouchClick(e);
+        this.visibilityChangeHandler = () => this.handleVisibilityChange();
+        this.resizeHandler = () => this.handleWindowResize();
+    }
+    static manageListener(element, event, handler, add, options) {
+        if (add) {
+            let addOptions = { passive: true };
+            if (typeof options === "boolean") {
+                addOptions.capture = options;
+            }
+            else if (options !== undefined) {
+                addOptions = options;
+            }
+            element.addEventListener(event, handler, addOptions);
+        }
+        else {
+            const removeOptions = options;
+            element.removeEventListener(event, handler, removeOptions);
+        }
+    }
+    addListeners() {
+        this.manageListeners(true);
+    }
+    removeListeners() {
+        this.manageListeners(false);
+    }
+    manageListeners(add) {
+        const container = this.container;
+        const options = container.options;
+        const detectType = options.interactivity.detectsOn;
+        if (detectType === Enums_1.InteractivityDetect.window) {
+            container.interactivity.element = window;
+        }
+        else if (detectType === Enums_1.InteractivityDetect.parent && container.canvas.element) {
+            container.interactivity.element = container.canvas.element.parentNode;
+        }
+        else {
+            container.interactivity.element = container.canvas.element;
+        }
+        const interactivityEl = container.interactivity.element;
+        if (interactivityEl &&
+            (options.interactivity.events.onHover.enable || options.interactivity.events.onClick.enable)) {
+            EventListeners.manageListener(interactivityEl, Constants_1.Constants.mouseMoveEvent, this.mouseMoveHandler, add);
+            EventListeners.manageListener(interactivityEl, Constants_1.Constants.touchStartEvent, this.touchStartHandler, add);
+            EventListeners.manageListener(interactivityEl, Constants_1.Constants.touchMoveEvent, this.touchMoveHandler, add);
+            if (!options.interactivity.events.onClick.enable) {
+                EventListeners.manageListener(interactivityEl, Constants_1.Constants.touchEndEvent, this.touchEndHandler, add);
+            }
+            EventListeners.manageListener(interactivityEl, Constants_1.Constants.mouseLeaveEvent, this.mouseLeaveHandler, add);
+            EventListeners.manageListener(interactivityEl, Constants_1.Constants.touchCancelEvent, this.touchCancelHandler, add);
+        }
+        if (options.interactivity.events.onClick.enable && interactivityEl) {
+            EventListeners.manageListener(interactivityEl, Constants_1.Constants.touchEndEvent, this.touchEndClickHandler, add);
+            EventListeners.manageListener(interactivityEl, Constants_1.Constants.mouseUpEvent, this.mouseUpHandler, add);
+        }
+        if (options.interactivity.events.resize) {
+            EventListeners.manageListener(window, Constants_1.Constants.resizeEvent, this.resizeHandler, add);
+        }
+        if (document) {
+            EventListeners.manageListener(document, Constants_1.Constants.visibilityChangeEvent, this.visibilityChangeHandler, add, false);
+        }
+    }
+    handleWindowResize() {
+        const container = this.container;
+        const options = container.options;
+        const canvas = container.canvas.element;
+        if (!canvas) {
+            return;
+        }
+        const pxRatio = container.retina.pixelRatio;
+        container.canvas.size.width = canvas.offsetWidth * pxRatio;
+        container.canvas.size.height = canvas.offsetHeight * pxRatio;
+        canvas.width = container.canvas.size.width;
+        canvas.height = container.canvas.size.height;
+        if (!options.particles.move.enable) {
+            container.particles.redraw();
+        }
+        container.densityAutoParticles();
+        for (const [, plugin] of container.plugins) {
+            if (plugin.resize !== undefined) {
+                plugin.resize();
+            }
+        }
+    }
+    handleVisibilityChange() {
+        const container = this.container;
+        const options = container.options;
+        if (!options.pauseOnBlur) {
+            return;
+        }
+        if (document === null || document === void 0 ? void 0 : document.hidden) {
+            container.pageHidden = true;
+            container.pause();
+        }
+        else {
+            container.pageHidden = false;
+            if (container.getAnimationStatus()) {
+                container.play(true);
+            }
+            else {
+                container.draw();
+            }
+        }
+    }
+    mouseTouchMove(e) {
+        var _a, _b, _c;
+        const container = this.container;
+        const options = container.options;
+        let pos;
+        const canvas = container.canvas.element;
+        if (e.type.startsWith("mouse")) {
+            this.canPush = true;
+            const mouseEvent = e;
+            if (((_a = container.interactivity) === null || _a === void 0 ? void 0 : _a.element) === undefined) {
+                return;
+            }
+            if (container.interactivity.element === window) {
+                if (canvas) {
+                    const clientRect = canvas.getBoundingClientRect();
+                    pos = {
+                        x: mouseEvent.clientX - clientRect.left,
+                        y: mouseEvent.clientY - clientRect.top,
+                    };
+                }
+            }
+            else if (options.interactivity.detectsOn === Enums_1.InteractivityDetect.parent) {
+                const source = mouseEvent.target;
+                const target = mouseEvent.currentTarget;
+                if (source && target) {
+                    const sourceRect = source.getBoundingClientRect();
+                    const targetRect = target.getBoundingClientRect();
+                    pos = {
+                        x: mouseEvent.offsetX + sourceRect.left - targetRect.left,
+                        y: mouseEvent.offsetY + sourceRect.top - targetRect.top,
+                    };
+                }
+                else {
+                    pos = {
+                        x: mouseEvent.offsetX || mouseEvent.clientX,
+                        y: mouseEvent.offsetY || mouseEvent.clientY,
+                    };
+                }
+            }
+            else {
+                if (mouseEvent.target === container.canvas.element) {
+                    pos = {
+                        x: mouseEvent.offsetX || mouseEvent.clientX,
+                        y: mouseEvent.offsetY || mouseEvent.clientY,
+                    };
+                }
+            }
+        }
+        else {
+            this.canPush = e.type !== "touchmove";
+            const touchEvent = e;
+            const lastTouch = touchEvent.touches[touchEvent.touches.length - 1];
+            const canvasRect = canvas === null || canvas === void 0 ? void 0 : canvas.getBoundingClientRect();
+            pos = {
+                x: lastTouch.clientX - ((_b = canvasRect === null || canvasRect === void 0 ? void 0 : canvasRect.left) !== null && _b !== void 0 ? _b : 0),
+                y: lastTouch.clientY - ((_c = canvasRect === null || canvasRect === void 0 ? void 0 : canvasRect.top) !== null && _c !== void 0 ? _c : 0),
+            };
+        }
+        const pxRatio = container.retina.pixelRatio;
+        if (pos) {
+            pos.x *= pxRatio;
+            pos.y *= pxRatio;
+        }
+        container.interactivity.mouse.position = pos;
+        container.interactivity.status = Constants_1.Constants.mouseMoveEvent;
+    }
+    mouseTouchFinish() {
+        const container = this.container;
+        delete container.interactivity.mouse.position;
+        container.interactivity.status = Constants_1.Constants.mouseLeaveEvent;
+    }
+    mouseTouchClick(e) {
+        const container = this.container;
+        const options = container.options;
+        let handled = false;
+        const mousePosition = container.interactivity.mouse.position;
+        if (mousePosition === undefined || !options.interactivity.events.onClick.enable) {
+            return;
+        }
+        for (const [, plugin] of container.plugins) {
+            if (plugin.clickPositionValid !== undefined) {
+                handled = plugin.clickPositionValid(mousePosition);
+                if (handled) {
+                    break;
+                }
+            }
+        }
+        if (!handled) {
+            this.doMouseTouchClick(e);
+        }
+    }
+    doMouseTouchClick(e) {
+        const container = this.container;
+        const options = container.options;
+        if (this.canPush) {
+            const mousePos = container.interactivity.mouse.position;
+            if (mousePos) {
+                container.interactivity.mouse.clickPosition = {
+                    x: mousePos.x,
+                    y: mousePos.y,
+                };
+            }
+            else {
+                return;
+            }
+            container.interactivity.mouse.clickTime = new Date().getTime();
+            const onClick = options.interactivity.events.onClick;
+            if (onClick.mode instanceof Array) {
+                for (const mode of onClick.mode) {
+                    this.handleClickMode(mode);
+                }
+            }
+            else {
+                this.handleClickMode(onClick.mode);
+            }
+        }
+        if (e.type === "touchend") {
+            setTimeout(() => this.mouseTouchFinish(), 500);
+        }
+    }
+    handleClickMode(mode) {
+        const container = this.container;
+        const options = container.options;
+        const pushNb = options.interactivity.modes.push.quantity;
+        const removeNb = options.interactivity.modes.remove.quantity;
+        switch (mode) {
+            case Enums_1.ClickMode.push: {
+                if (pushNb > 0) {
+                    if (options.particles.move.enable) {
+                        container.particles.push(pushNb, container.interactivity.mouse);
+                    }
+                    else {
+                        if (pushNb === 1) {
+                            container.particles.push(pushNb, container.interactivity.mouse);
+                        }
+                        else if (pushNb > 1) {
+                            container.particles.push(pushNb);
+                        }
+                    }
+                }
+                break;
+            }
+            case Enums_1.ClickMode.remove:
+                container.particles.removeQuantity(removeNb);
+                break;
+            case Enums_1.ClickMode.bubble:
+                container.bubble.clicking = true;
+                break;
+            case Enums_1.ClickMode.repulse:
+                container.repulse.clicking = true;
+                container.repulse.count = 0;
+                for (const particle of container.repulse.particles) {
+                    particle.velocity.horizontal = particle.initialVelocity.horizontal;
+                    particle.velocity.vertical = particle.initialVelocity.vertical;
+                }
+                container.repulse.particles = [];
+                container.repulse.finish = false;
+                setTimeout(() => {
+                    if (!container.destroyed) {
+                        container.repulse.clicking = false;
+                    }
+                }, options.interactivity.modes.repulse.duration * 1000);
+                break;
+            case Enums_1.ClickMode.pause:
+                if (container.getAnimationStatus()) {
+                    container.pause();
+                }
+                else {
+                    container.play();
+                }
+                break;
+        }
+        for (const [, plugin] of container.plugins) {
+            if (plugin.handleClickMode) {
+                plugin.handleClickMode(mode);
+            }
+        }
+    }
+}
+exports.EventListeners = EventListeners;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Utils/Plugins.js":
+/*!********************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Utils/Plugins.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Plugins = void 0;
+class Plugins {
+    static getPlugin(plugin) {
+        return this.plugins.filter((t) => t.id === plugin)[0];
+    }
+    static addPlugin(plugin) {
+        if (!this.getPlugin(plugin.id)) {
+            this.plugins.push(plugin);
+        }
+    }
+    static getAvailablePlugins(container) {
+        const res = new Map();
+        const availablePlugins = this.plugins.filter((t) => t.needsPlugin(container.options));
+        for (const plugin of availablePlugins) {
+            res.set(plugin.id, plugin.getPlugin(container));
+        }
+        return res;
+    }
+    static loadOptions(options, sourceOptions) {
+        for (const plugin of this.plugins) {
+            plugin.loadOptions(options, sourceOptions);
+        }
+    }
+    static getPreset(preset) {
+        return this.presets.get(preset);
+    }
+    static addPreset(presetKey, options) {
+        if (!this.getPreset(presetKey)) {
+            this.presets.set(presetKey, options);
+        }
+    }
+    static addShapeDrawer(type, drawer) {
+        if (!this.getShapeDrawer(type)) {
+            this.drawers.set(type, drawer);
+        }
+    }
+    static getShapeDrawer(type) {
+        return this.drawers.get(type);
+    }
+    static getSupportedShapes() {
+        return this.drawers.keys();
+    }
+}
+exports.Plugins = Plugins;
+Plugins.plugins = [];
+Plugins.presets = new Map();
+Plugins.drawers = new Map();
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Utils/Point.js":
+/*!******************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Utils/Point.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Point = void 0;
+class Point {
+    constructor(position, particle) {
+        this.position = position;
+        this.particle = particle;
+    }
+}
+exports.Point = Point;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Utils/QuadTree.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Utils/QuadTree.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.QuadTree = void 0;
+const Rectangle_1 = __webpack_require__(/*! ./Rectangle */ "./node_modules/tsparticles/dist/Utils/Rectangle.js");
+class QuadTree {
+    constructor(rectangle, capacity) {
+        this.rectangle = rectangle;
+        this.capacity = capacity;
+        this.points = [];
+        this.divided = false;
+    }
+    subdivide() {
+        const x = this.rectangle.position.x;
+        const y = this.rectangle.position.y;
+        const w = this.rectangle.size.width;
+        const h = this.rectangle.size.height;
+        const capacity = this.capacity;
+        this.northEast = new QuadTree(new Rectangle_1.Rectangle(x, y, w / 2, h / 2), capacity);
+        this.northWest = new QuadTree(new Rectangle_1.Rectangle(x + w / 2, y, w / 2, h / 2), capacity);
+        this.southEast = new QuadTree(new Rectangle_1.Rectangle(x, y + h / 2, w / 2, h / 2), capacity);
+        this.southWest = new QuadTree(new Rectangle_1.Rectangle(x + w / 2, y + h / 2, w / 2, h / 2), capacity);
+        this.divided = true;
+    }
+    insert(point) {
+        var _a, _b, _c, _d, _e;
+        if (!this.rectangle.contains(point.position)) {
+            return false;
+        }
+        if (this.points.length < this.capacity) {
+            this.points.push(point);
+            return true;
+        }
+        if (!this.divided) {
+            this.subdivide();
+        }
+        return ((_e = (((_a = this.northEast) === null || _a === void 0 ? void 0 : _a.insert(point)) || ((_b = this.northWest) === null || _b === void 0 ? void 0 : _b.insert(point)) || ((_c = this.southEast) === null || _c === void 0 ? void 0 : _c.insert(point)) || ((_d = this.southWest) === null || _d === void 0 ? void 0 : _d.insert(point)))) !== null && _e !== void 0 ? _e : false);
+    }
+    query(range, found) {
+        var _a, _b, _c, _d;
+        const res = found !== null && found !== void 0 ? found : [];
+        if (!range.intersects(this.rectangle)) {
+            return [];
+        }
+        else {
+            for (const p of this.points.filter((p) => range.contains(p.position))) {
+                res.push(p.particle);
+            }
+            if (this.divided) {
+                (_a = this.northEast) === null || _a === void 0 ? void 0 : _a.query(range, res);
+                (_b = this.northWest) === null || _b === void 0 ? void 0 : _b.query(range, res);
+                (_c = this.southEast) === null || _c === void 0 ? void 0 : _c.query(range, res);
+                (_d = this.southWest) === null || _d === void 0 ? void 0 : _d.query(range, res);
+            }
+        }
+        return res;
+    }
+}
+exports.QuadTree = QuadTree;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Utils/Range.js":
+/*!******************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Utils/Range.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Range = void 0;
+class Range {
+    constructor(x, y) {
+        this.position = {
+            x: x,
+            y: y,
+        };
+    }
+}
+exports.Range = Range;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Utils/Rectangle.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Utils/Rectangle.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Rectangle = void 0;
+const Range_1 = __webpack_require__(/*! ./Range */ "./node_modules/tsparticles/dist/Utils/Range.js");
+class Rectangle extends Range_1.Range {
+    constructor(x, y, width, height) {
+        super(x, y);
+        this.size = {
+            height: height,
+            width: width,
+        };
+    }
+    contains(point) {
+        return (point.x >= this.position.x &&
+            point.x <= this.position.x + this.size.width &&
+            point.y >= this.position.y &&
+            point.y <= this.position.y + this.size.height);
+    }
+    intersects(range) {
+        const rect = range;
+        const circle = range;
+        const w = this.size.width;
+        const h = this.size.height;
+        const pos1 = this.position;
+        const pos2 = range.position;
+        if (circle.radius !== undefined) {
+            return circle.intersects(this);
+        }
+        else if (rect.size !== undefined) {
+            const size2 = rect.size;
+            const w2 = size2.width;
+            const h2 = size2.height;
+            return (pos2.x - w2 < pos1.x + w &&
+                pos2.x + w2 > pos1.x - w &&
+                pos2.y - h2 < pos1.y + h &&
+                pos2.y + h2 > pos1.y - h);
+        }
+        return false;
+    }
+}
+exports.Rectangle = Rectangle;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Utils/Utils.js":
+/*!******************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Utils/Utils.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Utils = void 0;
+const Enums_1 = __webpack_require__(/*! ../Enums */ "./node_modules/tsparticles/dist/Enums/index.js");
+const ColorUtils_1 = __webpack_require__(/*! ./ColorUtils */ "./node_modules/tsparticles/dist/Utils/ColorUtils.js");
+class Utils {
+    static isSsr() {
+        return typeof window === "undefined" || !window;
+    }
+    static get animate() {
+        return this.isSsr()
+            ? (callback) => setTimeout(callback)
+            : (callback) => (window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimationFrame ||
+                window.setTimeout)(callback);
+    }
+    static get cancelAnimation() {
+        return this.isSsr()
+            ? (handle) => clearTimeout(handle)
+            : (handle) => (window.cancelAnimationFrame ||
+                window.webkitCancelRequestAnimationFrame ||
+                window.mozCancelRequestAnimationFrame ||
+                window.oCancelRequestAnimationFrame ||
+                window.msCancelRequestAnimationFrame ||
+                window.clearTimeout)(handle);
+    }
+    static replaceColorSvg(image, color, opacity) {
+        if (!image.svgData) {
+            return "";
+        }
+        const svgXml = image.svgData;
+        const rgbHex = /#([0-9A-F]{3,6})/gi;
+        return svgXml.replace(rgbHex, () => ColorUtils_1.ColorUtils.getStyleFromHsl(color, opacity));
+    }
+    static clamp(num, min, max) {
+        return Math.min(Math.max(num, min), max);
+    }
+    static isInArray(value, array) {
+        return value === array || (array instanceof Array && array.indexOf(value) > -1);
+    }
+    static mix(comp1, comp2, weight1, weight2) {
+        return Math.floor((comp1 * weight1 + comp2 * weight2) / (weight1 + weight2));
+    }
+    static getParticleBaseVelocity(particle) {
+        let velocityBase;
+        switch (particle.direction) {
+            case Enums_1.MoveDirection.top:
+                velocityBase = { x: 0, y: -1 };
+                break;
+            case Enums_1.MoveDirection.topRight:
+                velocityBase = { x: 0.5, y: -0.5 };
+                break;
+            case Enums_1.MoveDirection.right:
+                velocityBase = { x: 1, y: -0 };
+                break;
+            case Enums_1.MoveDirection.bottomRight:
+                velocityBase = { x: 0.5, y: 0.5 };
+                break;
+            case Enums_1.MoveDirection.bottom:
+                velocityBase = { x: 0, y: 1 };
+                break;
+            case Enums_1.MoveDirection.bottomLeft:
+                velocityBase = { x: -0.5, y: 1 };
+                break;
+            case Enums_1.MoveDirection.left:
+                velocityBase = { x: -1, y: 0 };
+                break;
+            case Enums_1.MoveDirection.topLeft:
+                velocityBase = { x: -0.5, y: -0.5 };
+                break;
+            default:
+                velocityBase = { x: 0, y: 0 };
+                break;
+        }
+        return velocityBase;
+    }
+    static getDistances(pointA, pointB) {
+        const dx = pointA.x - pointB.x;
+        const dy = pointA.y - pointB.y;
+        return { dx: dx, dy: dy, distance: Math.sqrt(dx * dx + dy * dy) };
+    }
+    static getDistance(pointA, pointB) {
+        return this.getDistances(pointA, pointB).distance;
+    }
+    static loadFont(character) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield document.fonts.load(`${character.weight} 36px '${character.font}'`);
+            }
+            catch (_a) {
+            }
+        });
+    }
+    static arrayRandomIndex(array) {
+        return Math.floor(Math.random() * array.length);
+    }
+    static itemFromArray(array, index) {
+        return array[index !== undefined ? index : this.arrayRandomIndex(array)];
+    }
+    static randomInRange(r1, r2) {
+        const max = Math.max(r1, r2);
+        const min = Math.min(r1, r2);
+        return Math.random() * (max - min) + min;
+    }
+    static isPointInside(point, size, radius) {
+        return this.areBoundsInside(this.calculateBounds(point, radius !== null && radius !== void 0 ? radius : 0), size);
+    }
+    static areBoundsInside(bounds, size) {
+        return bounds.left < size.width && bounds.right > 0 && bounds.top < size.height && bounds.bottom > 0;
+    }
+    static calculateBounds(point, radius) {
+        return {
+            bottom: point.y + radius,
+            left: point.x - radius,
+            right: point.x + radius,
+            top: point.y - radius,
+        };
+    }
+    static loadImage(source) {
+        return new Promise((resolve, reject) => {
+            const image = {
+                source: source,
+                type: source.substr(source.length - 3),
+            };
+            if (source) {
+                const img = new Image();
+                img.addEventListener("load", () => {
+                    image.element = img;
+                    resolve(image);
+                });
+                img.addEventListener("error", () => {
+                    reject(`Error tsParticles - loading image: ${source}`);
+                });
+                img.src = source;
+            }
+            else {
+                reject("Error tsParticles - No image.src");
+            }
+        });
+    }
+    static downloadSvgImage(source) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (source) {
+                const image = {
+                    source: source,
+                    type: source.substr(source.length - 3),
+                };
+                if (image.type !== "svg") {
+                    return this.loadImage(source);
+                }
+                const response = yield fetch(image.source);
+                if (response.ok) {
+                    image.svgData = yield response.text();
+                    return image;
+                }
+                else {
+                    throw new Error("Error tsParticles - Image not found");
+                }
+            }
+            else {
+                throw new Error("Error tsParticles - No image.src");
+            }
+        });
+    }
+    static deepExtend(destination, ...sources) {
+        for (const source of sources) {
+            if (source === undefined || source === null) {
+                continue;
+            }
+            if (typeof source !== "object") {
+                destination = source;
+                continue;
+            }
+            const sourceIsArray = Array.isArray(source);
+            if (sourceIsArray && (typeof destination !== "object" || !destination || !Array.isArray(destination))) {
+                destination = [];
+            }
+            else if (!sourceIsArray &&
+                (typeof destination !== "object" || !destination || Array.isArray(destination))) {
+                destination = {};
+            }
+            for (const key in source) {
+                if (key === "__proto__") {
+                    continue;
+                }
+                const value = source[key];
+                const isObject = typeof value === "object";
+                destination[key] =
+                    isObject && Array.isArray(value)
+                        ? value.map((v) => this.deepExtend(destination[key], v))
+                        : this.deepExtend(destination[key], value);
+            }
+        }
+        return destination;
+    }
+    static isDivModeEnabled(mode, divs) {
+        return divs instanceof Array
+            ? divs.filter((t) => t.enable && Utils.isInArray(mode, t.mode)).length > 0
+            : Utils.isInArray(mode, divs.mode);
+    }
+    static divModeExecute(mode, divs, callback) {
+        if (divs instanceof Array) {
+            for (const div of divs) {
+                const divMode = div.mode;
+                const divEnabled = div.enable;
+                if (divEnabled && Utils.isInArray(mode, divMode)) {
+                    this.singleDivModeExecute(div, callback);
+                }
+            }
+        }
+        else {
+            const divMode = divs.mode;
+            const divEnabled = divs.enable;
+            if (divEnabled && Utils.isInArray(mode, divMode)) {
+                this.singleDivModeExecute(divs, callback);
+            }
+        }
+    }
+    static singleDivModeExecute(div, callback) {
+        const ids = div.ids;
+        if (ids instanceof Array) {
+            for (const id of ids) {
+                callback(id, div);
+            }
+        }
+        else {
+            callback(ids, div);
+        }
+    }
+    static divMode(divs, divId) {
+        if (!divId) {
+            return;
+        }
+        if (!divs) {
+            return;
+        }
+        if (divs instanceof Array) {
+            return divs.find((d) => Utils.isInArray(divId, d.ids));
+        }
+        else if (Utils.isInArray(divId, divs.ids)) {
+            return divs;
+        }
+    }
+}
+exports.Utils = Utils;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/Utils/index.js":
+/*!******************************************************!*\
+  !*** ./node_modules/tsparticles/dist/Utils/index.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(__webpack_require__(/*! ./CanvasUtils */ "./node_modules/tsparticles/dist/Utils/CanvasUtils.js"), exports);
+__exportStar(__webpack_require__(/*! ./Circle */ "./node_modules/tsparticles/dist/Utils/Circle.js"), exports);
+__exportStar(__webpack_require__(/*! ./CircleWarp */ "./node_modules/tsparticles/dist/Utils/CircleWarp.js"), exports);
+__exportStar(__webpack_require__(/*! ./ColorUtils */ "./node_modules/tsparticles/dist/Utils/ColorUtils.js"), exports);
+__exportStar(__webpack_require__(/*! ./Constants */ "./node_modules/tsparticles/dist/Utils/Constants.js"), exports);
+__exportStar(__webpack_require__(/*! ./EventListeners */ "./node_modules/tsparticles/dist/Utils/EventListeners.js"), exports);
+__exportStar(__webpack_require__(/*! ./Plugins */ "./node_modules/tsparticles/dist/Utils/Plugins.js"), exports);
+__exportStar(__webpack_require__(/*! ./Point */ "./node_modules/tsparticles/dist/Utils/Point.js"), exports);
+__exportStar(__webpack_require__(/*! ./QuadTree */ "./node_modules/tsparticles/dist/Utils/QuadTree.js"), exports);
+__exportStar(__webpack_require__(/*! ./Range */ "./node_modules/tsparticles/dist/Utils/Range.js"), exports);
+__exportStar(__webpack_require__(/*! ./Rectangle */ "./node_modules/tsparticles/dist/Utils/Rectangle.js"), exports);
+__exportStar(__webpack_require__(/*! ./Utils */ "./node_modules/tsparticles/dist/Utils/Utils.js"), exports);
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/index.js":
+/*!************************************************!*\
+  !*** ./node_modules/tsparticles/dist/index.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.tsParticles = exports.pJSDom = exports.particlesJS = void 0;
+const pjs_1 = __webpack_require__(/*! ./pjs */ "./node_modules/tsparticles/dist/pjs.js");
+const main_1 = __webpack_require__(/*! ./main */ "./node_modules/tsparticles/dist/main.js");
+const tsParticles = new main_1.Main();
+exports.tsParticles = tsParticles;
+tsParticles.init();
+const { particlesJS, pJSDom } = pjs_1.initPjs(tsParticles);
+exports.particlesJS = particlesJS;
+exports.pJSDom = pJSDom;
+__exportStar(__webpack_require__(/*! ./Enums */ "./node_modules/tsparticles/dist/Enums/index.js"), exports);
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/main.js":
+/*!***********************************************!*\
+  !*** ./node_modules/tsparticles/dist/main.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Main = void 0;
+const main_slim_1 = __webpack_require__(/*! ./main.slim */ "./node_modules/tsparticles/dist/main.slim.js");
+const AbsorbersPlugin_1 = __webpack_require__(/*! ./Plugins/Absorbers/AbsorbersPlugin */ "./node_modules/tsparticles/dist/Plugins/Absorbers/AbsorbersPlugin.js");
+const EmittersPlugin_1 = __webpack_require__(/*! ./Plugins/Emitters/EmittersPlugin */ "./node_modules/tsparticles/dist/Plugins/Emitters/EmittersPlugin.js");
+const PolygonMaskPlugin_1 = __webpack_require__(/*! ./Plugins/PolygonMask/PolygonMaskPlugin */ "./node_modules/tsparticles/dist/Plugins/PolygonMask/PolygonMaskPlugin.js");
+class Main extends main_slim_1.MainSlim {
+    constructor() {
+        super();
+        this.addPlugin(AbsorbersPlugin_1.AbsorbersPlugin);
+        this.addPlugin(EmittersPlugin_1.EmittersPlugin);
+        this.addPlugin(PolygonMaskPlugin_1.PolygonMaskPlugin);
+    }
+}
+exports.Main = Main;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/main.slim.js":
+/*!****************************************************!*\
+  !*** ./node_modules/tsparticles/dist/main.slim.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MainSlim = void 0;
+const SquareDrawer_1 = __webpack_require__(/*! ./ShapeDrawers/SquareDrawer */ "./node_modules/tsparticles/dist/ShapeDrawers/SquareDrawer.js");
+const TextDrawer_1 = __webpack_require__(/*! ./ShapeDrawers/TextDrawer */ "./node_modules/tsparticles/dist/ShapeDrawers/TextDrawer.js");
+const ImageDrawer_1 = __webpack_require__(/*! ./ShapeDrawers/ImageDrawer */ "./node_modules/tsparticles/dist/ShapeDrawers/ImageDrawer.js");
+const Utils_1 = __webpack_require__(/*! ./Utils */ "./node_modules/tsparticles/dist/Utils/index.js");
+const Types_1 = __webpack_require__(/*! ./Enums/Types */ "./node_modules/tsparticles/dist/Enums/Types/index.js");
+const LineDrawer_1 = __webpack_require__(/*! ./ShapeDrawers/LineDrawer */ "./node_modules/tsparticles/dist/ShapeDrawers/LineDrawer.js");
+const CircleDrawer_1 = __webpack_require__(/*! ./ShapeDrawers/CircleDrawer */ "./node_modules/tsparticles/dist/ShapeDrawers/CircleDrawer.js");
+const TriangleDrawer_1 = __webpack_require__(/*! ./ShapeDrawers/TriangleDrawer */ "./node_modules/tsparticles/dist/ShapeDrawers/TriangleDrawer.js");
+const StarDrawer_1 = __webpack_require__(/*! ./ShapeDrawers/StarDrawer */ "./node_modules/tsparticles/dist/ShapeDrawers/StarDrawer.js");
+const PolygonDrawer_1 = __webpack_require__(/*! ./ShapeDrawers/PolygonDrawer */ "./node_modules/tsparticles/dist/ShapeDrawers/PolygonDrawer.js");
+const Loader_1 = __webpack_require__(/*! ./Core/Loader */ "./node_modules/tsparticles/dist/Core/Loader.js");
+class MainSlim {
+    constructor() {
+        this.initialized = false;
+        const squareDrawer = new SquareDrawer_1.SquareDrawer();
+        const textDrawer = new TextDrawer_1.TextDrawer();
+        const imageDrawer = new ImageDrawer_1.ImageDrawer();
+        Utils_1.Plugins.addShapeDrawer(Types_1.ShapeType.line, new LineDrawer_1.LineDrawer());
+        Utils_1.Plugins.addShapeDrawer(Types_1.ShapeType.circle, new CircleDrawer_1.CircleDrawer());
+        Utils_1.Plugins.addShapeDrawer(Types_1.ShapeType.edge, squareDrawer);
+        Utils_1.Plugins.addShapeDrawer(Types_1.ShapeType.square, squareDrawer);
+        Utils_1.Plugins.addShapeDrawer(Types_1.ShapeType.triangle, new TriangleDrawer_1.TriangleDrawer());
+        Utils_1.Plugins.addShapeDrawer(Types_1.ShapeType.star, new StarDrawer_1.StarDrawer());
+        Utils_1.Plugins.addShapeDrawer(Types_1.ShapeType.polygon, new PolygonDrawer_1.PolygonDrawer());
+        Utils_1.Plugins.addShapeDrawer(Types_1.ShapeType.char, textDrawer);
+        Utils_1.Plugins.addShapeDrawer(Types_1.ShapeType.character, textDrawer);
+        Utils_1.Plugins.addShapeDrawer(Types_1.ShapeType.image, imageDrawer);
+        Utils_1.Plugins.addShapeDrawer(Types_1.ShapeType.images, imageDrawer);
+    }
+    init() {
+        if (!this.initialized) {
+            this.initialized = true;
+        }
+    }
+    loadFromArray(tagId, params, index) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return Loader_1.Loader.loadFromArray(tagId, params, index);
+        });
+    }
+    load(tagId, params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return Loader_1.Loader.load(tagId, params);
+        });
+    }
+    loadJSON(tagId, pathConfigJson) {
+        return Loader_1.Loader.loadJSON(tagId, pathConfigJson);
+    }
+    setOnClickHandler(callback) {
+        Loader_1.Loader.setOnClickHandler(callback);
+    }
+    dom() {
+        return Loader_1.Loader.dom();
+    }
+    domItem(index) {
+        return Loader_1.Loader.domItem(index);
+    }
+    addShape(shape, drawer, init, afterEffect, destroy) {
+        let customDrawer;
+        if (typeof drawer === "function") {
+            customDrawer = {
+                afterEffect: afterEffect,
+                destroy: destroy,
+                draw: drawer,
+                init: init,
+            };
+        }
+        else {
+            customDrawer = drawer;
+        }
+        Utils_1.Plugins.addShapeDrawer(shape, customDrawer);
+    }
+    addPreset(preset, options) {
+        Utils_1.Plugins.addPreset(preset, options);
+    }
+    addPlugin(plugin) {
+        Utils_1.Plugins.addPlugin(plugin);
+    }
+}
+exports.MainSlim = MainSlim;
+
+
+/***/ }),
+
+/***/ "./node_modules/tsparticles/dist/pjs.js":
+/*!**********************************************!*\
+  !*** ./node_modules/tsparticles/dist/pjs.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.initPjs = void 0;
+const initPjs = (main) => {
+    const particlesJS = (tagId, params) => {
+        return main.load(tagId, params);
+    };
+    particlesJS.load = (tagId, pathConfigJson, callback) => {
+        main.loadJSON(tagId, pathConfigJson).then((container) => {
+            if (container) {
+                callback(container);
+            }
+        });
+    };
+    particlesJS.setOnClickHandler = (callback) => {
+        main.setOnClickHandler(callback);
+    };
+    const pJSDom = main.dom();
+    return { particlesJS, pJSDom };
+};
+exports.initPjs = initPjs;
+
+
+/***/ })
+
+}]);
+//# sourceMappingURL=vendor.js.map
