@@ -11,14 +11,14 @@
                 <img class="object-cover h-48 w-full md:h-56 lg:h-64 xl:h-full"  src="{!! $x['image'] !!}" />
               </a>
             </div>
-            <div class="bg-white p-4 md:p-6 lg:p-8">
+            <div class="bg-white p-4 md:p-6">
               <a class="group" href="{!! $x['url'] !!}">
                 <h3 class="font-normal mb-2 hover:text-c-blue-100 xl:text-4xl">{!! $x['title'] !!}</h3>
               </a>
               <p class="font-light">{!! $x['excerpt'] !!} <a class="underline text-c-blue-100 hover:text-c-blue-200" href="{!! $x['url'] !!}">Read More</a></p>
               <div class="flex items-center">
                 @if($x['terms']['icon'])
-                  @svg($x['terms']['icon'], 'mr-1 w-3 h-3 fill-current', ['aria-label' => $x['terms']['name'], 'style' => 'color: ' . $x['terms']['color']])
+                  @svg($x['terms']['icon'], 'mr-1 w-4 h-4 fill-current', ['aria-label' => $x['terms']['name'], 'style' => 'color: ' . $x['terms']['color']])
                 @endif 
                 <span class="uppercase font-light text-xs tracking-none">{!! $x['terms']['name'] !!}</span>
               </div>

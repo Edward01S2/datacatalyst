@@ -2,7 +2,7 @@
   <nav x-data="{ open: false, dark: {!! $home !!} }" class="bg-transparent relative z-40 pt-2">
     <div class="relative z-50 container mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between">
-        <div class="flex items-center pb-2">
+        <div class="flex items-center pb-2 md:w-full md:items-start">
           <div class="flex-shrink-0 mr-8 lg:mr-12">
             <a href="{{ home_url('/') }}">
               <img :class="{'hidden' : !dark, 'block': dark }" class="block h-20 w-auto hover:opacity-75 transiton duration-200" src="{!! $logo['url'] !!}" alt="{{ $siteName }}" />
@@ -10,9 +10,9 @@
             </a>
           </div>
 
-          <div class="hidden sm:ml-2 md:block">
-            <div class="flex items-center">
-              <div>
+          <div class="hidden sm:ml-2 md:flex md:flex-col md:flex-grow">
+            <div class="md:order-2 flex items-center md:justify-end md:space-x-8 md:space-x-reverse">
+              <div class="md:order-2">
                 <div class="header-nav flex items-center space-x-6">
                   @if ($navigation)
                     <ul class="flex space-x-8 list-none lg:space-x-12">
@@ -40,31 +40,31 @@
                   @endif
                 </div>
               </div>
+              <div class="flex items-center space-x-3 md:order-1">
+                @foreach($social as $icon)
+                  <a href="{!! $icon['Link']['url'] !!}" class="bg-c-blue-100 rounded-full p-2 hover:scale-105 transform transition duration-200">
+                    @svg($icon['Icon']['url'], 'w-4 h-4 fill-current text-white', ['aria-label' => $icon['Link']['title']])
+                  </a>
+                @endforeach
+              </div>
+            </div>
+
+            {{-- SEARCH --}}
+            <div id="search-container" class="hidden items-center md:order-1 md:flex md:justify-end md:mb-2">
+              <div class="relative">
+                <form action="{!! home_url(); !!}" role="search" method="post" id="c_searchform_header">
+                  <input :class="{'border-white text-white' : !dark, 'border-c-blue-200' : dark }" type="text" id="s" name="s" value="" autocomplete="off" class="text-xs pt-1 w-32 border-b-2 pr-6 bg-transparent focus:outline-none lg:w-48" placeholder="Search">
+                  <button class="absolute right-0 bottom-0 mb-2 mr-1" type="submit" id="searchsubmit">
+                    <svg :class="{'text-white' : !dark, 'text-c-blue-200' : dark }" class="h-3 w-3 fill-current hover:text-c-blue-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/></svg>
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
 
         </div>
 
         {{-- @dump($navigation) --}}
-
-
-        <div id="search-container" class="hidden items-center md:flex">
-          <div class="relative mr-4">
-            <form action="{!! home_url(); !!}" role="search" method="post" id="c_searchform">
-              <input :class="{'border-white text-white' : !dark, 'border-c-blue-200' : dark }" type="text" id="s" name="s" value="" autocomplete="off" class="py-1 w-32 border-b-2 pr-6 bg-transparent focus:outline-none lg:w-48" placeholder="Search">
-              <button class="absolute right-0 bottom-0 mb-2 mr-1" type="submit" id="searchsubmit">
-                <svg :class="{'text-white' : !dark, 'text-c-blue-200' : dark }" class="h-4 w-4 fill-current hover:text-c-blue-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/></svg>
-              </button>
-            </form>
-          </div>
-          <div class="flex items-center space-x-3">
-            @foreach($social as $icon)
-              <a href="{!! $icon['Link']['url'] !!}" class="bg-c-blue-100 rounded-full p-2 hover:scale-105 transform transition duration-200">
-                @svg($icon['Icon']['url'], 'w-4 h-4 fill-current text-white', ['aria-label' => $icon['Link']['title']])
-              </a>
-            @endforeach
-          </div>
-        </div>
 
         {{-- @dump($user) --}}
 

@@ -11,7 +11,7 @@
         <div class="mb-2 md:mb-0">
           @include('partials.form', ['form' => $form])
         </div>
-        <p class="text-white leading-5 text-sm mb-0">We care about the protection of your data. Read our <a class="underline text-c-blue-100 hover:text-c-blue-200" href="/privacy-policy">Privacy Policy</a></p>
+        {{-- <p class="text-white leading-5 text-sm mb-0">We care about the protection of your data. Read our <a class="underline text-c-blue-100 hover:text-c-blue-200" href="/privacy-policy">Privacy Policy</a></p> --}}
       </div>
     </div>
   </div>

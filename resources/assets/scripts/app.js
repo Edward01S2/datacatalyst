@@ -14,6 +14,12 @@ $(document).ready(() => {
   // console.log('Hello world');
   $('input[type=checkbox]').addClass('form-checkbox');
 
+  $('#gform_2 .gform_footer').appendTo('#gform_2 .gform_fields');
+
+  $(document).bind('gform_post_render', function() {
+    $('#gform_2 .gform_footer').appendTo('#gform_2 .gform_fields');
+  })
+
   //console.log(particleUrl)
   // particlesJS.load('particles-js', json, function() {
   //   console.log('callback - particles.js config loaded');

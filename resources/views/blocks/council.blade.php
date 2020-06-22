@@ -1,6 +1,6 @@
 <section class="pb-8 sm:pb-12">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8 lg:grid-cols-3 xl:grid-cols-5">
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8 lg:grid-cols-4 xl:grid-cols-5">
       @foreach($people as $p)
         <div class="flex flex-col">
           <div class="">
