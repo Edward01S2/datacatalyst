@@ -1,0 +1,205 @@
+/* purgecss start ignore */
+
+.bg-video {
+  &:after {
+    @apply absolute inset-0 w-full h-full z-10 fixed;
+    content: '';
+    background: rgba(246, 250, 243, 0.89);
+  }
+}
+
+.blue-gradient {
+  background: linear-gradient(90deg,#094063, #4d8dca, #80cdd6);
+}
+
+.content-markup {
+  @apply text-c-gray-100 font-sorts-mill text-lg;
+  p {
+    @apply font-sorts-mill text-c-gray-100 leading-relaxed;
+  }
+  a {
+    @apply text-c-blue-100;
+    &:hover {
+      @apply underline;
+    }
+  }
+  h1, h2, h3, h4, h5 {
+    @apply text-c-gray-200 font-futura;
+  }
+  ul {
+    @apply pl-6 mb-4;
+  }
+  li {
+    @apply list-disc mb-2;
+    ul {
+      @apply pl-6;
+    }
+  }
+  b, strong {
+    @apply font-futura font-normal text-c-gray-200;
+  }
+}
+
+// @screen lg {
+//   .content-markup {
+//     @apply text-xl;
+//   }
+// }
+
+
+
+//PAGE MISSION
+
+.mission {
+  .content-markup {
+    @apply font-futura;
+    p, li {
+      @apply font-futura;
+    }
+  }
+}
+
+@screen md {
+  .mission-container {
+    .mission-box {
+      &:nth-child(odd) {
+        .mission-img {
+          @apply order-2 border-r-0 border-l-4;
+        }
+        .mission-content {
+          @apply order-1 border-l-0 border-r-4;
+        }
+      }
+    }
+  }
+}
+
+//PAGE RESEARCH ARCHIVE
+.research-archive {
+  .content-markup {
+    p {
+      @apply font-futura;
+    }
+  }
+}
+
+@screen md {
+  .research-archive{
+    .text-content {
+      @apply pb-4;
+    }
+  }
+}
+
+//PAGE POLICY ANALYSIS
+.policy-analysis {
+  .content-markup {
+    p {
+      @apply font-futura;
+    }
+  }
+}
+
+//PAGE REPORTS
+.reports {
+  .content-markup {
+    p {
+      @apply font-futura;
+    }
+  }
+}
+
+// @screen md {
+//   .policy-analysis {
+//     .text-content {
+//       @apply pt-8;
+//     }
+//   }
+// }
+
+//PAGE CONTACT
+.contact {
+  .column-title {
+    @apply pb-0
+  }
+}
+
+@screen lg {
+  .contact {
+    .split-content {
+      .content-left, .content-right {
+        @apply w-1/2;
+      }
+    }
+  }
+}
+
+//PAGE LAW TEMPLATE
+@screen lg {
+  .single-law {
+    .content-markup {
+      @apply text-lg;
+    }
+  }
+}
+
+//PAGE POLICY ANALYSIS
+.policy-analysis {
+  .law-container {
+    .law {
+      &:last-child {
+        @apply mb-8;
+      }
+    }
+  }
+}
+
+@screen md {
+  .policy-analysis {
+    .text-content {
+      .content-markup {
+        p {
+          @apply text-base;
+        }
+      }
+    }
+  }
+}
+
+//PAGE BLOG
+.blog {
+  .column-title {
+    @apply pt-8;
+  }
+}
+
+//EVENT PAGE
+.event-bg {
+  .content-markup {
+    @apply text-white opacity-75;
+    p {
+      @apply text-white opacity-75;
+    }
+  }
+}
+
+@screen lg {
+  .event-bg {
+    .content-markup {
+      @apply text-xl;
+      li {
+        @apply mb-6
+      }
+    }
+  }
+}
+
+@screen xl {
+  .event-bg {
+    .content-markup {
+      @apply text-2xl;
+    }
+  }
+}
+
+/* purgecss end ignore */

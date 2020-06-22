@@ -1,0 +1,14 @@
+/**
+ * Header
+ */
+ /* purgecss start ignore */
+
+ .active {
+  > a {
+    @apply text-c-blue-100;
+    &:hover {
+      @apply text-c-teal-100;
+    }
+  }
+ }
+ /* purgecss end ignore */

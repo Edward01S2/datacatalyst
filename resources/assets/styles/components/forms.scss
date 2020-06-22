@@ -1,0 +1,248 @@
+/* purgecss start ignore */
+
+.validation_error {
+  @apply text-red-600 pb-4;
+}
+
+.validation_message {
+  @apply text-red-600 pt-1;
+}
+
+.gform_validation_container {
+  @apply hidden;
+}
+
+.gfield_visibility_hidden {
+  @apply hidden;
+}
+
+.gform_ajax_spinner {
+  @apply hidden;
+}
+
+.gfield_error {
+  .validation_message {
+    @apply hidden;
+  }
+  .ginput_container input[type=text], .ginput_container input[type=email], textarea, select {
+    @apply border-2 border-red-400 box-border #{!important};
+  }
+  .ginput_container_consent {
+    input[type=checkbox] {
+      @apply border-2 border-red-400 box-border #{!important};
+    }
+  }
+}
+
+.gfield_description {
+  @apply hidden;
+}
+
+.gform_fields {
+  @apply list-none #{!important};
+}
+
+.hidden_label {
+  .gfield_label {
+    @apply hidden;
+  }
+}
+
+.ginput_container_consent {
+  input {
+    @apply mr-2;
+    &:hover {
+      @apply cursor-pointer;
+    }
+  }
+  label {
+    &:hover {
+      @apply cursor-pointer;
+    }
+  }
+}
+
+.gform_wrapper {
+  @apply w-full text-left;
+}
+.gfield {
+  @apply mb-4;
+}
+.ginput_container input[type=text], .ginput_container input[type=email], textarea, select {
+  @apply w-full py-3 px-3 text-base;
+  &::placeholder {
+    @apply opacity-75 tracking-wide text-base;
+  }
+  &:focus {
+    @apply outline-none;
+  }
+}
+.ginput_container textarea {
+  @apply h-32;
+}
+.gform_button {
+  @apply w-full py-3 block text-base tracking-wider leading-normal;
+  &:hover {
+    @apply cursor-pointer;
+  }
+}
+.gfield_required {
+  @apply hidden;
+}
+
+.ginput_container_consent{
+  @apply text-c-blue-100;
+  label {
+    @apply text-c-blue-100;
+  }
+  a {
+    @apply underline;
+  }
+}
+
+#gform_2 {
+  input {
+    @apply rounded;
+  }
+  .gform_button {
+    @apply bg-c-blue-100 text-white rounded;
+    &:hover {
+      @apply bg-c-blue-200 text-white;
+    }
+  }
+}
+
+@screen md {
+  #gform_2 {
+    @apply flex flex-wrap;
+    > * + * {
+      @apply ml-4;
+    }
+    .gform_body {
+      @apply w-1/2;
+    }
+    .gform_button {
+      @apply px-6;
+    }
+    .validation_error {
+      @apply w-full
+    }
+  }
+}
+
+@screen md {
+  #gform_2 {
+    .gform_body {
+      @apply w-1/2 ml-0;
+    }
+  }
+}
+
+@screen lg {
+  #gform_2 {
+    .gform_body {
+      @apply w-1/3;
+    }
+  }
+}
+
+@screen xl {
+  #gform_2 {
+    .gform_body {
+      width: calc(60% - 1rem);
+    }
+    .gform_footer {
+      @apply w-2/5;
+    }
+  }
+}
+
+#gform_3 {
+  .ginput_container {
+    @apply shadow-xs rounded bg-white;
+    input {
+      @apply rounded;
+    }
+  }
+  .gfield_label {
+    @apply block mb-1 text-c-blue-100;
+  }
+  .gform_button {
+    @apply bg-c-teal-100 text-white rounded;
+    &:hover {
+      @apply bg-c-blue-100 text-white;
+    }
+  }
+}
+
+@screen md {
+  #gform_3 {
+    .gform_fields {
+      @apply flex flex-wrap;
+    }
+    #field_3_1 {
+      @apply mr-8;
+    }
+    #field_3_1, #field_3_2 {
+      width: calc(50% - 1rem);
+    }
+    #field_3_3, #field_3_4 {
+      @apply w-full;
+    }
+    .gform_footer {
+      @apply text-right mt-2;
+    }
+    .gform_button {
+      @apply w-auto px-6 ml-auto;
+    }
+  }
+}
+
+@screen lg {
+  #gform_3 {
+    #field_3_5 {
+      @apply w-full;
+    }
+    .gform_button {
+      @apply px-8;
+    }
+  }
+}
+
+#gform_4 {
+  .ginput_container input[type=text], .ginput_container input[type=email], textarea, select {
+    @apply border border-c-gray-100 rounded;
+  }
+  .gform_button {
+    @apply bg-c-blue-100 text-white rounded uppercase;
+    &:hover {
+      @apply bg-c-blue-200 text-white;
+    }
+  }
+}
+
+@screen md {
+  #gform_4 {
+    .gform_fields {
+      @apply flex flex-wrap;
+    }
+    .gfield {
+      width: calc(50% - 1rem);
+      &:nth-child(odd) {
+        @apply mr-8
+      }
+    }
+    #field_4_10 {
+      @apply w-full mb-0 text-right mr-0;
+    }
+    .gform_footer {
+      @apply text-right;
+    }
+    .gform_button {
+      @apply w-auto px-8 ml-auto;
+    }
+  }
+}
+
+
+/* purgecss end ignore */

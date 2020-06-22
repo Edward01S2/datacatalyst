@@ -1,0 +1,63 @@
+/**
+ * Global
+ */
+/* purgecss start ignore */
+
+ * { 
+  margin : 0;
+  padding : 0;
+  box-sizing: border-box;
+}
+
+html {
+  @apply font-futura text-c-blue-200;
+}
+
+body {
+  @apply m-0 bg-c-tan-100;
+}
+
+h1, h2, h3, h4, h5 {
+  @apply mb-4 text-c-blue-200 leading-tight;
+}
+
+h5 {
+  @apply text-xl;
+}
+
+h4 {
+  @apply text-2xl;
+}
+
+h3 {
+  @apply text-3xl;
+}
+
+h2 {
+  @apply text-4xl;
+}
+
+h1 {
+  @apply text-5xl;
+}
+
+p {
+  @apply mb-4 leading-7;
+}
+
+strong {
+  @apply font-bold;
+}
+
+a {
+  @apply transition duration-200;
+}
+
+input[type=checkbox] {
+  @apply cursor-pointer;
+}
+
+#app {
+  @apply min-h-screen;
+}
+/* purgecss end ignore */
