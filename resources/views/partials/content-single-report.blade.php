@@ -2,7 +2,7 @@
   <div class="pt-4 mb-12 md:pt-6 lg:pt-8">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
       <div>
-        @if(@thumbnail())
+        @if(get_the_post_thumbnail_url())
           <img class="w-full object-cover object-center h-56 md:h-64 lg:h-96" src="@thumbnail('full', false)" alt="">
         @endif
       </div>
