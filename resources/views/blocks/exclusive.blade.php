@@ -17,7 +17,9 @@
               </a>
               <p class="font-light">{!! $x['excerpt'] !!} <a class="underline text-c-blue-100 hover:text-c-blue-200" href="{!! $x['url'] !!}">Read More</a></p>
               <div class="flex items-center">
-                @svg($x['terms']['icon'], 'mr-1 w-3 h-3 fill-current', ['aria-label' => $x['terms']['name'], 'style' => 'color: ' . $x['terms']['color']])
+                @if($x['terms']['icon'])
+                  @svg($x['terms']['icon'], 'mr-1 w-3 h-3 fill-current', ['aria-label' => $x['terms']['name'], 'style' => 'color: ' . $x['terms']['color']])
+                @endif 
                 <span class="uppercase font-light text-xs tracking-none">{!! $x['terms']['name'] !!}</span>
               </div>
               <p class="italic font-light text-xs mb-0 leading-normal">{!! $x['date'] !!}</p>
@@ -42,7 +44,9 @@
                     <h4 class="font-normal mb-2 text-base hover:text-c-blue-100 md:text-lg lg:text-base">{!! $x['title'] !!}</h4>
                   </a>
                   <div class="flex items-center">
-                    @svg($x['terms']['icon'], 'mr-1 w-4 h-4 fill-current', ['aria-label' => $x['terms']['name'], 'style' => 'color: ' . $x['terms']['color']])
+                    @if($x['terms']['icon'])
+                      @svg($x['terms']['icon'], 'mr-1 w-4 h-4 fill-current', ['aria-label' => $x['terms']['name'], 'style' => 'color: ' . $x['terms']['color']])
+                    @endif
                     <span class="uppercase font-light text-xs tracking-none">{!! $x['terms']['name'] !!}</span>
                   </div>
                   <p class="italic font-light text-xs mb-0 leading-normal">{!! $x['date'] !!}</p>

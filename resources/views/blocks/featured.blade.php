@@ -4,7 +4,9 @@
       @foreach($feat as $x)
         <div class="bg-white shadow-xs flex flex-col lg:w-1/3">
           <div class="flex px-4 py-3 items-center" style="background: {!! $x['Color'] !!}">
-            @svg( $x['Icon']['url'], 'w-6 h-6 text-white fill-current mr-2')
+            @if($x['Icon']['url'])
+              @svg( $x['Icon']['url'], 'w-6 h-6 text-white fill-current mr-2')
+            @endif
             <h5 class="text-white mb-0 uppercase text-lg">{!! $x['Title'] !!}</h5>
           </div>
           <div class="p-6 flex-grow flex flex-col justify-between lg:p-8">
