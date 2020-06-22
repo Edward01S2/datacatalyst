@@ -1,16 +1,9 @@
 {
-    "/scripts/app.js": "/scripts/app.js?id=c6a01f6bf16c89d2f398",
-    "/styles/app.css": "/styles/app.css?id=0480e46bf1628131a244",
-    "/styles/editor.css": "/styles/editor.css?id=d16e4bfe71b686a98288",
-    "/scripts/app.js.map": "/scripts/app.js.map?id=302ed220de98154bb08e",
-    "/styles/app.css.map": "/styles/app.css.map?id=3af38f4e305b1e1193f9",
-    "/styles/editor.css.map": "/styles/editor.css.map?id=5a8013de5313ff0cdacb",
-    "/scripts/customizer.js": "/scripts/customizer.js?id=dc3b67afc17a4a124be8",
-    "/scripts/customizer.js.map": "/scripts/customizer.js.map?id=3771cea71d64e9d3d3e9",
-    "/scripts/editor.js": "/scripts/editor.js?id=8e81082a364611a07111",
-    "/scripts/editor.js.map": "/scripts/editor.js.map?id=a6932ef798182274bff8",
-    "/scripts/manifest.js": "/scripts/manifest.js?id=039222c4964d642c317b",
-    "/scripts/manifest.js.map": "/scripts/manifest.js.map?id=b2ab14a71f9ded54320b",
-    "/scripts/vendor.js": "/scripts/vendor.js?id=05c0a4d10be34be56df8",
-    "/scripts/vendor.js.map": "/scripts/vendor.js.map?id=c36650470ea72d19fa80"
+    "/scripts/manifest.js": "/scripts/manifest.js?id=7db827d654313dce4250",
+    "/scripts/app.js": "/scripts/app.js?id=28ac59c4c512977e07ec",
+    "/styles/app.css": "/styles/app.css?id=38308674ed1b1a8b980a",
+    "/styles/editor.css": "/styles/editor.css?id=d41d8cd98f00b204e980",
+    "/scripts/customizer.js": "/scripts/customizer.js?id=48dd72865274240eba97",
+    "/scripts/editor.js": "/scripts/editor.js?id=4a8c7b89a1b4cc9a8ce7",
+    "/scripts/vendor.js": "/scripts/vendor.js?id=aaf9282e6db95c27977a"
 }
