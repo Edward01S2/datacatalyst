@@ -2,7 +2,9 @@
   <div class="pt-4 mb-12 md:pt-6 lg:pt-8">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
       <div>
-        <img class="w-full object-cover object-center h-56 md:h-64 lg:h-96" src="@thumbnail('full', false)" alt="">
+        @if(@thumbnail())
+          <img class="w-full object-cover object-center h-56 md:h-64 lg:h-96" src="@thumbnail('full', false)" alt="">
+        @endif
       </div>
       <div class="pt-4">
         <h2 class="text-2xl mb-0 md:text-3xl lg:text-4xl">@title</h2>

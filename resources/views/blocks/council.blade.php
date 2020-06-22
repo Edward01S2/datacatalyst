@@ -5,7 +5,7 @@
         <div class="flex flex-col">
           <div class="">
             <a href="{!! $p['link'] !!}">
-              <img class="object-cover w-full" src="{!! $p['image'] !!}" alt="">
+              <img class="object-cover w-full h-72 md:h-64" src="{!! $p['image'] !!}" alt="">
             </a>
           </div>
           <div class="md:flex md:flex-col md:h-full md:justify-between">
