@@ -28,7 +28,10 @@ return [
                 'tag' => array(
                     'taxonomy' => 'tag'
                 ),
-                'date',
+                'date' => array(
+                    'title' => 'Date',
+                    'default' => 'DESC',
+                ),
             ),
         ],
 
