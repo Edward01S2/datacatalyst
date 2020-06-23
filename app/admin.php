@@ -65,5 +65,5 @@ add_action('wp_dashboard_setup', function() {
 add_action('acf/init', function() {
     //Update acf key before prod
     //Datacatalyst = AIzaSyBljNJEQ2-M8cp5SAGd1d867mH5hMSeYjI
-    acf_update_setting('google_api_key', 'AIzaSyAhv4kCi2_Cl7Xqgcxs3tIWd96vOHDvFGI');
+    acf_update_setting('google_api_key', 'AIzaSyBljNJEQ2-M8cp5SAGd1d867mH5hMSeYjI');
 });

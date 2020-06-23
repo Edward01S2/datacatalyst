@@ -16,7 +16,7 @@ use function Roots\asset;
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_script('sage/vendor.js', asset('scripts/vendor.js')->uri(), ['jquery'], null, true);
     wp_enqueue_script('sage/app.js', asset('scripts/app.js')->uri(), ['sage/vendor.js', 'jquery'], null, true);
-    wp_enqueue_script('map/google', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAhv4kCi2_Cl7Xqgcxs3tIWd96vOHDvFGI', null, false);
+    wp_enqueue_script('map/google', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBljNJEQ2-M8cp5SAGd1d867mH5hMSeYjI', null, false);
 
     wp_add_inline_script('sage/vendor.js', asset('scripts/manifest.js')->contents(), 'before');
 

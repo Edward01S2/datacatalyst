@@ -1,4 +1,4 @@
-<section class="bg-c-blue-200">
+<section id="event-map" class="bg-c-blue-200">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="py-12 md:py-16 lg:py-20 xl:py-24">
       <div class="text-white text-center mb-8 lg:mb-12">
