@@ -6,7 +6,9 @@
           {!! $title !!}
         </h1>
         <p class="text-c-blue-100 text-sm mb-4">@published('F d, Y')</p>
-        <img class="object-center h-64 md:h-96 object-cover w-full" src="{!! get_the_post_thumbnail_url() !!}" alt="">
+        @if(get_the_post_thumbnail_url())
+          <img class="object-center h-64 md:h-96 object-cover w-full" src="{!! get_the_post_thumbnail_url() !!}" alt="">
+        @endif
     
         <div class="content-markup pt-8">
           @php(the_content())
