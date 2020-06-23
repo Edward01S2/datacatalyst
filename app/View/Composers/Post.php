@@ -76,6 +76,7 @@ class Post extends Composer
             'post_type' => 'post',
             'post__not_in' => [$current],
             'orderby' => 'rand',
+            'posts_per_page' => 6,
         ];
 
         $data = [];

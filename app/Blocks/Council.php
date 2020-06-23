@@ -111,6 +111,7 @@ class Council extends Block
             'post_type' => 'people',
             'post_status' => 'publish',
             'posts_per_page' => -1,
+            'order' => 'ASC',
         );
 
 

@@ -202,4 +202,24 @@
   }
 }
 
+//PAGE COUNCIL
+.council {
+  .text-content {
+    p {
+     @apply font-futura;
+    }
+  }
+}
+
+@screen md {
+  .council {
+    .column-title {
+      @apply pb-4;
+    }
+    .text-content {
+      @apply pb-4;
+    }
+  }
+}
+
 /* purgecss end ignore */
