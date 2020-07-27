@@ -222,4 +222,16 @@
   }
 }
 
+#cmplz-document {
+  @apply px-4 max-w-none py-8;
+
+  @screen sm {
+    @apply px-6;
+  }
+
+  @screen lg {
+    @apply px-8 py-16;
+  }
+}
+
 /* purgecss end ignore */
