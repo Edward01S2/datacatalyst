@@ -18,7 +18,7 @@ class Header extends Composer
             'logo_alt' => get_field('Logo Inverse', 'options'),
             'social' => get_field('Icons', 'options'),
             'navigation' => $this->navigation(),
-            'home' => ($this->home()) ? 'true' : 'false',
+            'home' => (is_front_page()) ? 'true' : 'false',
         ];
     }
 

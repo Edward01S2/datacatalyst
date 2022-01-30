@@ -8,7 +8,7 @@
             <div class="relative">
               <a href="{!! $x['url'] !!}">
                 <div class="absolute top-0 left-0 uppercase px-4 py-1 mt-4 text-white bg-red-700 leading-tight tracking-widest text-sm md:mt-6 xl:text-base">Exclusive</div>
-                <img class="object-cover h-48 w-full md:h-56 lg:h-64 xl:h-full"  src="{!! $x['image'] !!}" />
+                <img class="object-cover h-48 w-full md:h-56 lg:h-64 xl:h-80"  src="{!! $x['image'] !!}" />
               </a>
             </div>
             <div class="bg-white p-4 md:p-6">

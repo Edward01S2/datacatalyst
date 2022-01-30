@@ -13,6 +13,7 @@ class TextContent extends Block
      * @var string
      */
     public $name = 'TextContent';
+    public $slug = 'textcontent';
 
     /**
      * The description of the block.

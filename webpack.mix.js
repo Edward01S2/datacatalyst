@@ -1,7 +1,6 @@
 const mix = require('laravel-mix');
 require('@tinypixelco/laravel-mix-wp-blocks');
-require('laravel-mix-purgecss');
-require('laravel-mix-copy-watched');
+
 
 /*
  |--------------------------------------------------------------------------
@@ -15,17 +14,13 @@ require('laravel-mix-copy-watched');
  */
 
 mix.setPublicPath('./dist')
-   .browserSync('data.test');
+   .browserSync('datacatalyst.test');
 
 mix.sass('resources/assets/styles/app.scss', 'styles')
    .sass('resources/assets/styles/editor.scss', 'styles')
    .options({
       processCssUrls: false,
-      postCss: [ require('tailwindcss')('./tailwind.config.js')]
-   })
-   .purgeCss({
-     whitelist: require('purgecss-with-wordpress').whitelist,
-     whitelistPatterns: require('purgecss-with-wordpress').whitelistPatterns,
+      postCss: [ require('tailwindcss')]
    });
 
 mix.js('resources/assets/scripts/app.js', 'scripts')
@@ -33,16 +28,12 @@ mix.js('resources/assets/scripts/app.js', 'scripts')
    .blocks('resources/assets/scripts/editor.js', 'scripts')
    .extract();
 
-mix.copyWatched('resources/assets/images/**', 'dist/images')
-   .copyWatched('resources/assets/fonts/**', 'dist/fonts');
+mix.copyDirectory('resources/assets/images/**', 'dist/images')
+   .copyDirectory('resources/assets/fonts/**', 'dist/fonts');
 
 mix.autoload({
   jquery: ['$', 'window.jQuery'],
 });
 
-mix.options({
-  processCssUrls: false,
-});
-
-mix.sourceMaps(false, 'source-map')
+mix.sourceMaps()
    .version();

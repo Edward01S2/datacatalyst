@@ -14,6 +14,8 @@ class SplitText extends Block
      */
     public $name = 'SplitText';
 
+    public $slug = 'splittext';
+
     /**
      * The description of the block.
      *

@@ -14,6 +14,8 @@ class ColumnTitle extends Block
      */
     public $name = 'ColumnTitle';
 
+    public $slug = 'columntitle';
+
     /**
      * The description of the block.
      *

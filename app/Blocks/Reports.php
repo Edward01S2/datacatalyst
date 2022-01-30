@@ -115,7 +115,9 @@ class Reports extends Block
     public function getReports() {
         $args = [
             'posts_per_page' => -1,
-            'post_type' => 'report'
+            'post_type' => 'report',
+            'order' => 'DESC',
+            'post_status' => 'publish',
         ];
 
         $data = [];

@@ -112,7 +112,10 @@ class News extends Block
     public function posts() {
         $args = [
             'posts_per_page' => get_field('Post Count'),
-            'post_type' => 'post'
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'category_name' => 'dci-news',
+            'order' => 'DESC',
         ];
 
         $data = [];

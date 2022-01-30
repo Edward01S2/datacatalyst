@@ -1,16 +1,11 @@
 const { colors } = require('tailwindcss/defaultTheme')
 
 module.exports = {
-  purge: [],
+  content: [
+    './app/**/*.php',
+    './resources/**/*.{php,vue,js}',
+  ],
   theme: {
-    colors: {
-      black: colors.black,
-      white: colors.white,
-      gray: colors.gray,
-      red: colors.red,
-      transparent: colors.transparent,
-      current: colors.current,
-    },
     extend: {
       colors: {
         'c-tan' : {
@@ -36,9 +31,6 @@ module.exports = {
         'futura-c' : ['Futura Condensed', 'futura-pt-condensed', 'sans-serif'],
         'sorts-mill' : ['Sorts Mill Goudy', 'sorts-mill-goudy', 'serif']
       },
-      borderWidth: {
-        '3': '3px'
-      },
       fontSize: {
         '7xl': '6rem',
         '8xl': '7rem',
@@ -46,9 +38,6 @@ module.exports = {
       },
       rotate: {
 
-      },
-      spacing: {
-        '108' : '32rem',
       },
       screens: {
 
@@ -58,11 +47,7 @@ module.exports = {
       },
     },
   },
-  variants: {
-    scale: ['responsive', 'hover', 'focus', 'group-hover'],
-    display: ['responsive', 'hover', 'group-hover'],
-  },
   plugins: [
-    require('@tailwindcss/ui'),
+    require('@tailwindcss/line-clamp'),
   ],
 }

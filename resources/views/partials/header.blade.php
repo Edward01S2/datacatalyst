@@ -6,7 +6,7 @@
           <div class="flex-shrink-0 mr-8 lg:mr-12">
             <a href="{{ home_url('/') }}">
               <img :class="{'hidden' : !dark, 'block': dark }" class="block h-20 w-auto hover:opacity-75 transiton duration-200" src="{!! $logo['url'] !!}" alt="{{ $siteName }}" />
-              <img :class="{'block' : !dark, 'hidden': dark }" class="block h-20 w-auto hover:opacity-75 transiton duration-200 hidden" src="{!! $logo_alt['url'] !!}" alt="{{ $siteName }}" />
+              <img :class="{'block' : !dark, 'hidden': dark }" class="h-20 w-auto hover:opacity-75 transiton duration-200 hidden" src="{!! $logo_alt['url'] !!}" alt="{{ $siteName }}" />
             </a>
           </div>
 
@@ -55,7 +55,7 @@
                 <form action="{!! home_url(); !!}" role="search" method="post" id="c_searchform_header">
                   <input :class="{'border-white text-white' : !dark, 'border-c-blue-200' : dark }" type="text" id="s" name="s" value="" autocomplete="off" class="text-xs pt-1 w-32 border-b-2 pr-6 bg-transparent focus:outline-none lg:w-48" placeholder="Search">
                   <button class="absolute right-0 bottom-0 mb-2 mr-1" type="submit" id="searchsubmit">
-                    <svg :class="{'text-white' : !dark, 'text-c-blue-200' : dark }" class="h-3 w-3 fill-current hover:text-c-blue-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/></svg>
+                    <svg :class="{'text-white' : !dark, 'text-c-blue-200' : dark }" class="h-3 w-3 fill-current hover:text-c-blue-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="currentColor" d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/></svg>
                   </button>
                 </form>
               </div>

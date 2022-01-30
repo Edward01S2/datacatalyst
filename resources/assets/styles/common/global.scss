@@ -51,6 +51,9 @@ strong {
 
 a {
   @apply transition duration-200;
+  &.disabled {
+    @apply pointer-events-none cursor-default;
+  }
 }
 
 input[type=checkbox] {

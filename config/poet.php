@@ -35,17 +35,17 @@ return [
             ),
         ],
 
-        'people' => [
-            'enter_title_here' => 'Enter Name',
-            'menu_icon' => 'dashicons-groups',
-            'supports' => ['title', 'editor', 'author', 'revisions', 'thumbnail', 'excerpt'],
-            'show_in_rest' => true,
-            'has_archive' => false,
-            'labels' => [
-                'singular' => 'People',
-                'plural' => 'People',
-            ],
-        ],
+        // 'people' => [
+        //     'enter_title_here' => 'Enter Name',
+        //     'menu_icon' => 'dashicons-groups',
+        //     'supports' => ['title', 'editor', 'author', 'revisions', 'thumbnail', 'excerpt'],
+        //     'show_in_rest' => true,
+        //     'has_archive' => false,
+        //     'labels' => [
+        //         'singular' => 'People',
+        //         'plural' => 'People',
+        //     ],
+        // ],
 
         'law' => [
             'enter_title_here' => 'Enter Law Title',
@@ -69,6 +69,17 @@ return [
             'labels' => [
                 'singular' => 'Event',
                 'plural' => 'Events',
+            ],
+        ],
+        'author' => [
+            'enter_title_here' => 'Enter Author Name',
+            'menu_icon' => 'dashicons-groups',
+            'supports' => ['title', 'editor', 'thumbnail'],
+            'show_in_rest' => true,
+            'has_archive' => false,
+            'labels' => [
+                'singular' => 'Author',
+                'plural' => 'Authors',
             ],
         ]
     ],

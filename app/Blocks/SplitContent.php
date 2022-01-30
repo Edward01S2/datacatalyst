@@ -14,6 +14,9 @@ class SplitContent extends Block
      */
     public $name = 'SplitContent';
 
+    public $slug = 'splitcontent';
+
+
     /**
      * The description of the block.
      *

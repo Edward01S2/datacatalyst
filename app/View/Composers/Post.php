@@ -28,6 +28,7 @@ class Post extends Composer
         return [
             'title' => $this->title(),
             'posts' => $this->posts(),
+            'insights' => $this->getInsights(),
         ];
     }
 
@@ -98,5 +99,52 @@ class Post extends Composer
         }
 
         return $data;
+    }
+
+    public function getInsights() {
+
+        $current = get_the_ID();
+        $args = [
+            'posts_per_page' => 2,
+            'post_type' => 'post',
+            'post__not_in' => [$current],
+            'orderby' => 'rand',
+            'category__not_in' => array(25),
+        ];
+
+        $post_data = [];
+
+        $wp_query = new \WP_Query($args);
+
+        while($wp_query->have_posts()): $wp_query->the_post(); 
+
+            $post = get_the_ID();
+
+            $post_author = get_post_field('post_author', $post);
+
+            if($auth = get_field('author', $post)) {
+                $author_name = get_the_title($auth);
+                $author_img = get_the_post_thumbnail_url($auth);
+            }
+            else {
+                $author_name = get_the_author_meta('display_name', $post_author);
+                $author_img = "";
+            }
+
+            $post_data[] = [
+                'image' => get_the_post_thumbnail_url($post),
+                'title' => get_the_title($post),
+                'author' => $author_name,
+                'author_img' => $author_img,
+                'link' => get_the_permalink($post),
+                'excerpt' => get_the_excerpt($post),
+            ];
+        
+
+        endwhile;
+
+        wp_reset_query();
+
+        return $post_data;
     }
 }

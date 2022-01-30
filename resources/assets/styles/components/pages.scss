@@ -2,7 +2,7 @@
 
 .bg-video {
   &:after {
-    @apply absolute inset-0 w-full h-full z-10 fixed;
+    @apply inset-0 w-full h-full z-10 fixed;
     content: '';
     background: rgba(246, 250, 243, 0.89);
   }

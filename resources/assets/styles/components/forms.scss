@@ -163,7 +163,7 @@
 
 #gform_3 {
   .ginput_container {
-    @apply shadow-xs rounded bg-white;
+    @apply shadow-sm rounded bg-white;
     input {
       @apply rounded;
     }
