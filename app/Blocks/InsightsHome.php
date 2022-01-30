@@ -98,7 +98,7 @@ class InsightsHome extends Block
             'posts_per_page' => ($count) ? $count : 2,
             'post_type' => 'post',
             'orderby' => 'DESC',
-            'category__not_in' => array(25),
+            'category__not_in' => array(24),
         ];
 
         $wp_query = new \WP_Query($args);

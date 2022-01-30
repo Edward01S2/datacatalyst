@@ -16,7 +16,7 @@ add_action('pre_get_posts', function($query) {
 
 
         $query->set('posts_per_page', 9);
-        $query->set('category__not_in', array(25));
+        $query->set('category__not_in', array(24));
 
     }
 });

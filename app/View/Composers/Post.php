@@ -109,7 +109,7 @@ class Post extends Composer
             'post_type' => 'post',
             'post__not_in' => [$current],
             'orderby' => 'rand',
-            'category__not_in' => array(25),
+            'category__not_in' => array(24),
         ];
 
         $post_data = [];
