@@ -78,20 +78,34 @@ class InsightsHome extends Block
 
         $insightsHome
             ->addText('title')
-            ->addRelationship('posts', [
-                'return_format' => 'id',
-                'post_type' => ['post'],
-            ]);
+            ->addNumber('post_count');
+            // ->addRelationship('posts', [
+            //     'return_format' => 'id',
+            //     'post_type' => ['post'],
+            // ]);
 
         return $insightsHome->build();
     }
 
     public function getPosts() {
-        $posts = get_field('posts');
+        // $posts = get_field('posts');
 
         $post_data = [];
 
-        foreach($posts as $post) {
+        $count = get_field('post_count');
+
+        $args = [
+            'posts_per_page' => ($count) ? $count : 2,
+            'post_type' => 'post',
+            'orderby' => 'DESC',
+            'category__not_in' => array(25),
+        ];
+
+        $wp_query = new \WP_Query($args);
+
+        while($wp_query->have_posts()): $wp_query->the_post();
+        
+            $post = get_the_ID();
 
             $post_author = get_post_field('post_author', $post);
 
@@ -112,7 +126,10 @@ class InsightsHome extends Block
                 'link' => get_the_permalink($post),
                 'excerpt' => get_the_excerpt($post),
             ];
-        }
+        
+        endwhile;
+
+        wp_reset_query();
 
         return $post_data;
     }
