@@ -110,6 +110,7 @@ class Post extends Composer
             'post__not_in' => [$current],
             'orderby' => 'rand',
             'category__not_in' => array(24),
+            'ignore_sticky_posts' => 1,
         ];
 
         $post_data = [];

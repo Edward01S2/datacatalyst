@@ -17,6 +17,8 @@ add_action('pre_get_posts', function($query) {
 
         $query->set('posts_per_page', 9);
         $query->set('category__not_in', array(24));
+        //'ignore_sticky_posts' => 1,
+        $query->set('ignore_sticky_posts', 1);
 
     }
 });

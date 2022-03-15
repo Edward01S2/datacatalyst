@@ -99,6 +99,7 @@ class InsightsHome extends Block
             'post_type' => 'post',
             'orderby' => 'DESC',
             'category__not_in' => array(24),
+            'ignore_sticky_posts' => 1,
         ];
 
         $wp_query = new \WP_Query($args);
